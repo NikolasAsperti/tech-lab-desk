@@ -7,7 +7,7 @@ const navItems = [
   { to: "/", label: "Início", icon: Home },
   { to: "/chamados", label: "Chamados", icon: ClipboardList },
   { to: "/maquinas", label: "Máquinas / Labs", icon: Monitor },
-  { to: "/usuarios", label: "Usuários", icon: Users },
+  { to: "/usuarios", label: "Usuários", icon: Users, tecnicoOnly: true },
   { to: "/checklists", label: "Checklists", icon: ListChecks },
 ];
 
@@ -19,12 +19,11 @@ interface SidebarProps {
 }
 
 export function Sidebar({ collapsed, onToggle, mobileOpen, onMobileClose }: SidebarProps) {
-  const { logout } = useAuth();
+  const { logout, isTecnico } = useAuth();
   const location = useLocation();
 
   return (
     <>
-      {/* Mobile overlay */}
       {mobileOpen && (
         <div className="fixed inset-0 z-40 bg-foreground/20 backdrop-blur-sm md:hidden" onClick={onMobileClose} />
       )}
@@ -36,7 +35,6 @@ export function Sidebar({ collapsed, onToggle, mobileOpen, onMobileClose }: Side
           mobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
         )}
       >
-        {/* Logo */}
         <div className="flex h-14 items-center gap-2 border-b border-sidebar-border px-4">
           <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground font-bold text-sm">
             LT
@@ -44,9 +42,9 @@ export function Sidebar({ collapsed, onToggle, mobileOpen, onMobileClose }: Side
           {!collapsed && <span className="font-semibold text-sidebar-foreground">LabTech</span>}
         </div>
 
-        {/* Nav */}
         <nav className="flex-1 space-y-1 p-2 overflow-y-auto">
           {navItems.map((item) => {
+            if (item.tecnicoOnly && !isTecnico) return null;
             const active = location.pathname === item.to || (item.to !== "/" && location.pathname.startsWith(item.to));
             return (
               <NavLink
@@ -67,7 +65,6 @@ export function Sidebar({ collapsed, onToggle, mobileOpen, onMobileClose }: Side
           })}
         </nav>
 
-        {/* Footer */}
         <div className="border-t border-sidebar-border p-2">
           <button
             onClick={logout}
@@ -78,7 +75,6 @@ export function Sidebar({ collapsed, onToggle, mobileOpen, onMobileClose }: Side
           </button>
         </div>
 
-        {/* Collapse toggle (desktop only) */}
         <button
           onClick={onToggle}
           className="absolute -right-3 top-20 hidden h-6 w-6 items-center justify-center rounded-full border bg-card text-muted-foreground shadow-sm hover:bg-accent md:flex transition-colors"

@@ -1,13 +1,19 @@
-import { ClipboardList, Clock, CheckCircle2, Monitor } from "lucide-react";
-import { chamados, maquinas } from "@/data/mock-data";
+import { useState, useMemo } from "react";
+import { ClipboardList, Clock, CheckCircle2, Monitor, TrendingUp } from "lucide-react";
+import { chamados, maquinas, getMonthlyMetrics } from "@/data/mock-data";
 import { useAuth } from "@/contexts/AuthContext";
+import {
+  BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend,
+} from "recharts";
+import {
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+} from "@/components/ui/select";
 
 const statusLabel: Record<string, string> = { aberto: "Aberto", em_andamento: "Em Andamento", concluido: "Concluído" };
 
 export default function Dashboard() {
   const { user, isTecnico } = useAuth();
 
-  const meusChams = isTecnico ? chamados : chamados.filter((c) => c.criadoPorId === user?.id);
   const abertos = chamados.filter((c) => c.status === "aberto").length;
   const emAndamento = chamados.filter((c) => c.status === "em_andamento").length;
   const concluidos = chamados.filter((c) => c.status === "concluido").length;
@@ -21,6 +27,15 @@ export default function Dashboard() {
   ];
 
   const recentChamados = [...chamados].sort((a, b) => b.criadoEm.localeCompare(a.criadoEm)).slice(0, 5);
+
+  // Efficiency metrics
+  const allMetrics = useMemo(() => getMonthlyMetrics(), []);
+  const [monthRange, setMonthRange] = useState("6");
+
+  const metrics = useMemo(() => {
+    const n = parseInt(monthRange);
+    return allMetrics.slice(-n);
+  }, [allMetrics, monthRange]);
 
   return (
     <div className="space-y-6">
@@ -46,6 +61,62 @@ export default function Dashboard() {
         ))}
       </div>
 
+      {/* Efficiency Charts */}
+      <div className="rounded-xl border bg-card shadow-sm animate-fade-in" style={{ animationDelay: "320ms" }}>
+        <div className="border-b px-5 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <TrendingUp className="h-4 w-4 text-primary" />
+            <h2 className="font-semibold text-card-foreground">Análise de Eficiência</h2>
+          </div>
+          <Select value={monthRange} onValueChange={setMonthRange}>
+            <SelectTrigger className="w-[160px] h-8 text-xs">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="3">Últimos 3 meses</SelectItem>
+              <SelectItem value="6">Últimos 6 meses</SelectItem>
+              <SelectItem value="12">Últimos 12 meses</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="p-5 grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Response & Resolution time */}
+          <div>
+            <h3 className="text-sm font-medium text-muted-foreground mb-3">Tempo Médio (horas)</h3>
+            <ResponsiveContainer width="100%" height={260}>
+              <LineChart data={metrics}>
+                <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
+                <XAxis dataKey="label" tick={{ fontSize: 12 }} className="fill-muted-foreground" />
+                <YAxis tick={{ fontSize: 12 }} className="fill-muted-foreground" />
+                <Tooltip
+                  contentStyle={{ backgroundColor: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: 8, fontSize: 12 }}
+                  labelStyle={{ color: "hsl(var(--card-foreground))" }}
+                />
+                <Legend wrapperStyle={{ fontSize: 12 }} />
+                <Line type="monotone" dataKey="tempoMedioResposta" name="Resposta" stroke="hsl(var(--status-progress))" strokeWidth={2} dot={{ r: 3 }} />
+                <Line type="monotone" dataKey="tempoMedioResolucao" name="Resolução" stroke="hsl(var(--status-done))" strokeWidth={2} dot={{ r: 3 }} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+          {/* Resolved per month */}
+          <div>
+            <h3 className="text-sm font-medium text-muted-foreground mb-3">Chamados Resolvidos por Mês</h3>
+            <ResponsiveContainer width="100%" height={260}>
+              <BarChart data={metrics}>
+                <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
+                <XAxis dataKey="label" tick={{ fontSize: 12 }} className="fill-muted-foreground" />
+                <YAxis tick={{ fontSize: 12 }} className="fill-muted-foreground" allowDecimals={false} />
+                <Tooltip
+                  contentStyle={{ backgroundColor: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: 8, fontSize: 12 }}
+                  labelStyle={{ color: "hsl(var(--card-foreground))" }}
+                />
+                <Bar dataKey="totalResolvidos" name="Resolvidos" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      </div>
+
       {/* Recent Activity */}
       <div className="rounded-xl border bg-card shadow-sm">
         <div className="border-b px-5 py-3">
@@ -69,12 +140,8 @@ export default function Dashboard() {
                   <td className="px-5 py-3 font-mono text-xs text-muted-foreground">{c.id}</td>
                   <td className="px-5 py-3 font-medium text-card-foreground">{c.titulo}</td>
                   <td className="px-5 py-3 text-muted-foreground">{c.sala}</td>
-                  <td className="px-5 py-3">
-                    <StatusBadge status={c.status} />
-                  </td>
-                  <td className="px-5 py-3">
-                    <PrioridadeBadge prioridade={c.prioridade} />
-                  </td>
+                  <td className="px-5 py-3"><StatusBadge status={c.status} /></td>
+                  <td className="px-5 py-3"><PrioridadeBadge prioridade={c.prioridade} /></td>
                   <td className="px-5 py-3 text-muted-foreground">{c.criadoEm}</td>
                 </tr>
               ))}

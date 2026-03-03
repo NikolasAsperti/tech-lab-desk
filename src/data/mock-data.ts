@@ -2,6 +2,7 @@ export interface TimelineEntry {
   data: string;
   descricao: string;
   autor: string;
+  tipo?: "sistema" | "tecnico" | "usuario";
 }
 
 export interface Chamado {
@@ -57,119 +58,237 @@ export interface LabChecklist {
 export const usuarios: Usuario[] = [
   { id: "u1", nome: "Carlos Silva", email: "carlos.silva@uni.edu.br", papel: "tecnico", criadoEm: "2024-01-15", ativo: true },
   { id: "u2", nome: "Maria Santos", email: "maria.santos@uni.edu.br", papel: "tecnico", criadoEm: "2024-02-20", ativo: true },
-  { id: "u3", nome: "João Oliveira", email: "joao.oliveira@uni.edu.br", papel: "usuario", sala: "Lab 101", criadoEm: "2024-03-10", ativo: true },
-  { id: "u4", nome: "Ana Costa", email: "ana.costa@uni.edu.br", papel: "usuario", sala: "Lab 202", criadoEm: "2024-04-05", ativo: true },
+  { id: "u3", nome: "João Oliveira", email: "joao.oliveira@uni.edu.br", papel: "usuario", sala: "Pascal", criadoEm: "2024-03-10", ativo: true },
+  { id: "u4", nome: "Ana Costa", email: "ana.costa@uni.edu.br", papel: "usuario", sala: "Jobs", criadoEm: "2024-04-05", ativo: true },
   { id: "u5", nome: "Pedro Ferreira", email: "pedro.ferreira@uni.edu.br", papel: "usuario", criadoEm: "2024-05-12", ativo: true },
   { id: "u6", nome: "Lucia Mendes", email: "lucia.mendes@uni.edu.br", papel: "tecnico", criadoEm: "2024-06-01", ativo: false },
-  { id: "u7", nome: "Roberto Lima", email: "roberto.lima@uni.edu.br", papel: "usuario", sala: "Lab 303", criadoEm: "2024-07-18", ativo: true },
+  { id: "u7", nome: "Roberto Lima", email: "roberto.lima@uni.edu.br", papel: "usuario", sala: "Faraday", criadoEm: "2024-07-18", ativo: true },
 ];
+
+export const tecnicos = usuarios.filter((u) => u.papel === "tecnico" && u.ativo);
 
 export const chamados: Chamado[] = [
+  // --- 2025-10 ---
   {
-    id: "CH-001", titulo: "Monitor não liga", descricao: "O monitor da máquina PC-101-03 não liga ao pressionar o botão power. Já tentei trocar o cabo de força.",
-    sala: "Lab 101", maquinaId: "PC-101-03", status: "aberto", prioridade: "alta",
+    id: "CH-001", titulo: "Monitor piscando intermitentemente", descricao: "Monitor Dell da máquina PC-Pascal-03 pisca a cada 10 segundos.",
+    sala: "Pascal", maquinaId: "PC-Pascal-03", status: "concluido", prioridade: "media",
+    criadoEm: "2025-10-05", criadoPor: "João Oliveira", criadoPorId: "u3", responsavel: "Carlos Silva",
+    timeline: [
+      { data: "2025-10-05 08:00", descricao: "Chamado criado", autor: "João Oliveira", tipo: "usuario" },
+      { data: "2025-10-05 10:30", descricao: "Chamado atribuído a Carlos Silva", autor: "Sistema", tipo: "sistema" },
+      { data: "2025-10-06 14:00", descricao: "Cabo VGA substituído, problema resolvido.", autor: "Carlos Silva", tipo: "tecnico" },
+      { data: "2025-10-06 14:05", descricao: "Chamado concluído", autor: "Carlos Silva", tipo: "tecnico" },
+    ],
+  },
+  {
+    id: "CH-002", titulo: "PC não liga após queda de energia", descricao: "Fonte de alimentação possivelmente queimada.",
+    sala: "Jobs", maquinaId: "PC-Jobs-07", status: "concluido", prioridade: "alta",
+    criadoEm: "2025-10-12", criadoPor: "Ana Costa", criadoPorId: "u4", responsavel: "Maria Santos",
+    timeline: [
+      { data: "2025-10-12 09:15", descricao: "Chamado criado", autor: "Ana Costa", tipo: "usuario" },
+      { data: "2025-10-12 11:00", descricao: "Chamado atribuído a Maria Santos", autor: "Sistema", tipo: "sistema" },
+      { data: "2025-10-13 16:00", descricao: "Fonte substituída por nova de 500W.", autor: "Maria Santos", tipo: "tecnico" },
+      { data: "2025-10-13 16:10", descricao: "Chamado concluído", autor: "Maria Santos", tipo: "tecnico" },
+    ],
+  },
+  {
+    id: "CH-003", titulo: "Teclado com teclas travadas", descricao: "Teclas F5, F6 e Espaço não respondem.",
+    sala: "Jobs", maquinaId: "PC-Jobs-02", status: "concluido", prioridade: "media",
+    criadoEm: "2025-10-18", criadoPor: "Ana Costa", criadoPorId: "u4", responsavel: "Carlos Silva",
+    timeline: [
+      { data: "2025-10-18 14:00", descricao: "Chamado criado", autor: "Ana Costa", tipo: "usuario" },
+      { data: "2025-10-18 16:30", descricao: "Chamado atribuído a Carlos Silva", autor: "Sistema", tipo: "sistema" },
+      { data: "2025-10-19 08:00", descricao: "Teclado substituído.", autor: "Carlos Silva", tipo: "tecnico" },
+      { data: "2025-10-19 08:05", descricao: "Chamado concluído", autor: "Carlos Silva", tipo: "tecnico" },
+    ],
+  },
+  // --- 2025-11 ---
+  {
+    id: "CH-004", titulo: "Windows não inicializa (BSOD)", descricao: "Erro IRQL_NOT_LESS_OR_EQUAL ao iniciar.",
+    sala: "Pascal", maquinaId: "PC-Pascal-08", status: "concluido", prioridade: "alta",
+    criadoEm: "2025-11-03", criadoPor: "João Oliveira", criadoPorId: "u3", responsavel: "Maria Santos",
+    timeline: [
+      { data: "2025-11-03 10:15", descricao: "Chamado criado", autor: "João Oliveira", tipo: "usuario" },
+      { data: "2025-11-03 11:00", descricao: "Chamado atribuído a Maria Santos", autor: "Sistema", tipo: "sistema" },
+      { data: "2025-11-04 09:00", descricao: "RAM com defeito. Módulo substituído.", autor: "Maria Santos", tipo: "tecnico" },
+      { data: "2025-11-04 15:00", descricao: "Chamado concluído", autor: "Maria Santos", tipo: "tecnico" },
+    ],
+  },
+  {
+    id: "CH-005", titulo: "Mouse óptico com defeito", descricao: "Cursor pula aleatoriamente na tela.",
+    sala: "Faraday", maquinaId: "PC-Faraday-02", status: "concluido", prioridade: "baixa",
+    criadoEm: "2025-11-10", criadoPor: "Roberto Lima", criadoPorId: "u7", responsavel: "Carlos Silva",
+    timeline: [
+      { data: "2025-11-10 08:45", descricao: "Chamado criado", autor: "Roberto Lima", tipo: "usuario" },
+      { data: "2025-11-10 10:00", descricao: "Chamado atribuído a Carlos Silva", autor: "Sistema", tipo: "sistema" },
+      { data: "2025-11-11 14:00", descricao: "Mouse substituído.", autor: "Carlos Silva", tipo: "tecnico" },
+      { data: "2025-11-11 14:05", descricao: "Chamado concluído", autor: "Carlos Silva", tipo: "tecnico" },
+    ],
+  },
+  {
+    id: "CH-006", titulo: "Impressora não reconhecida", descricao: "HP LaserJet não aparece nos dispositivos.",
+    sala: "Einstein", maquinaId: "PC-Einstein-01", status: "concluido", prioridade: "media",
+    criadoEm: "2025-11-20", criadoPor: "Pedro Ferreira", criadoPorId: "u5", responsavel: "Maria Santos",
+    timeline: [
+      { data: "2025-11-20 11:00", descricao: "Chamado criado", autor: "Pedro Ferreira", tipo: "usuario" },
+      { data: "2025-11-20 14:00", descricao: "Chamado atribuído a Maria Santos", autor: "Sistema", tipo: "sistema" },
+      { data: "2025-11-21 10:00", descricao: "Driver reinstalado e impressora configurada.", autor: "Maria Santos", tipo: "tecnico" },
+      { data: "2025-11-21 10:10", descricao: "Chamado concluído", autor: "Maria Santos", tipo: "tecnico" },
+    ],
+  },
+  // --- 2025-12 ---
+  {
+    id: "CH-007", titulo: "HD fazendo barulho estranho", descricao: "HD emite cliques rítmicos. Possível falha iminente.",
+    sala: "Pascal", maquinaId: "PC-Pascal-10", status: "concluido", prioridade: "alta",
+    criadoEm: "2025-12-02", criadoPor: "João Oliveira", criadoPorId: "u3", responsavel: "Carlos Silva",
+    timeline: [
+      { data: "2025-12-02 09:00", descricao: "Chamado criado", autor: "João Oliveira", tipo: "usuario" },
+      { data: "2025-12-02 10:30", descricao: "Urgente: risco de perda de dados. Atribuído a Carlos Silva.", autor: "Sistema", tipo: "sistema" },
+      { data: "2025-12-03 08:00", descricao: "Backup realizado. HD substituído por SSD 480GB.", autor: "Carlos Silva", tipo: "tecnico" },
+      { data: "2025-12-03 16:00", descricao: "Windows reinstalado. Chamado concluído.", autor: "Carlos Silva", tipo: "tecnico" },
+    ],
+  },
+  {
+    id: "CH-008", titulo: "AutoCAD travando", descricao: "AutoCAD 2024 fecha após 5 minutos de uso.",
+    sala: "Faraday", maquinaId: "PC-Faraday-05", status: "concluido", prioridade: "media",
+    criadoEm: "2025-12-10", criadoPor: "Roberto Lima", criadoPorId: "u7", responsavel: "Maria Santos",
+    timeline: [
+      { data: "2025-12-10 13:00", descricao: "Chamado criado", autor: "Roberto Lima", tipo: "usuario" },
+      { data: "2025-12-10 15:00", descricao: "Chamado atribuído a Maria Santos", autor: "Sistema", tipo: "sistema" },
+      { data: "2025-12-11 10:00", descricao: "Driver GPU atualizado. Problema resolvido.", autor: "Maria Santos", tipo: "tecnico" },
+      { data: "2025-12-11 10:15", descricao: "Chamado concluído", autor: "Maria Santos", tipo: "tecnico" },
+    ],
+  },
+  {
+    id: "CH-009", titulo: "Ventilador da CPU ruidoso", descricao: "Fan cooler barulhento. Temperatura acima de 85°C.",
+    sala: "Jobs", maquinaId: "PC-Jobs-10", status: "concluido", prioridade: "media",
+    criadoEm: "2025-12-18", criadoPor: "Ana Costa", criadoPorId: "u4", responsavel: "Maria Santos",
+    timeline: [
+      { data: "2025-12-18 10:00", descricao: "Chamado criado", autor: "Ana Costa", tipo: "usuario" },
+      { data: "2025-12-18 14:00", descricao: "Chamado atribuído a Maria Santos", autor: "Sistema", tipo: "sistema" },
+      { data: "2025-12-19 09:00", descricao: "Limpeza e pasta térmica reaplicada.", autor: "Maria Santos", tipo: "tecnico" },
+      { data: "2025-12-19 09:15", descricao: "Chamado concluído", autor: "Maria Santos", tipo: "tecnico" },
+    ],
+  },
+  // --- 2026-01 ---
+  {
+    id: "CH-010", titulo: "Sem conexão de rede", descricao: "Cabo testado e funcionando em outra máquina. Placa de rede pode estar com defeito.",
+    sala: "Jobs", maquinaId: "PC-Jobs-01", status: "concluido", prioridade: "alta",
+    criadoEm: "2026-01-08", criadoPor: "Ana Costa", criadoPorId: "u4", responsavel: "Carlos Silva",
+    timeline: [
+      { data: "2026-01-08 07:30", descricao: "Chamado criado", autor: "Ana Costa", tipo: "usuario" },
+      { data: "2026-01-08 09:00", descricao: "Chamado atribuído a Carlos Silva", autor: "Sistema", tipo: "sistema" },
+      { data: "2026-01-09 11:00", descricao: "Placa de rede substituída.", autor: "Carlos Silva", tipo: "tecnico" },
+      { data: "2026-01-09 11:10", descricao: "Chamado concluído", autor: "Carlos Silva", tipo: "tecnico" },
+    ],
+  },
+  {
+    id: "CH-011", titulo: "Projetor sem sinal HDMI", descricao: "Projetor não detecta sinal HDMI da máquina principal.",
+    sala: "Tesla", maquinaId: "PC-Tesla-01", status: "concluido", prioridade: "media",
+    criadoEm: "2026-01-15", criadoPor: "Pedro Ferreira", criadoPorId: "u5", responsavel: "Carlos Silva",
+    timeline: [
+      { data: "2026-01-15 08:15", descricao: "Chamado criado", autor: "Pedro Ferreira", tipo: "usuario" },
+      { data: "2026-01-15 10:00", descricao: "Chamado atribuído a Carlos Silva", autor: "Sistema", tipo: "sistema" },
+      { data: "2026-01-16 09:00", descricao: "Cabo HDMI trocado. Sinal restabelecido.", autor: "Carlos Silva", tipo: "tecnico" },
+      { data: "2026-01-16 09:05", descricao: "Chamado concluído", autor: "Carlos Silva", tipo: "tecnico" },
+    ],
+  },
+  {
+    id: "CH-012", titulo: "Tela azul ao abrir VS Code", descricao: "BSOD ocorre ao iniciar VS Code com extensões pesadas.",
+    sala: "Pascal", maquinaId: "PC-Pascal-06", status: "concluido", prioridade: "alta",
+    criadoEm: "2026-01-22", criadoPor: "João Oliveira", criadoPorId: "u3", responsavel: "Maria Santos",
+    timeline: [
+      { data: "2026-01-22 10:00", descricao: "Chamado criado", autor: "João Oliveira", tipo: "usuario" },
+      { data: "2026-01-22 11:30", descricao: "Chamado atribuído a Maria Santos", autor: "Sistema", tipo: "sistema" },
+      { data: "2026-01-23 14:00", descricao: "RAM expandida de 4GB para 8GB. Problema resolvido.", autor: "Maria Santos", tipo: "tecnico" },
+      { data: "2026-01-23 14:10", descricao: "Chamado concluído", autor: "Maria Santos", tipo: "tecnico" },
+    ],
+  },
+  // --- 2026-02 ---
+  {
+    id: "CH-013", titulo: "Monitor não liga", descricao: "Monitor da máquina PC-Pascal-03 não liga ao pressionar o botão power.",
+    sala: "Pascal", maquinaId: "PC-Pascal-03", status: "aberto", prioridade: "alta",
     criadoEm: "2026-02-25", criadoPor: "João Oliveira", criadoPorId: "u3",
-    timeline: [{ data: "2026-02-25 09:30", descricao: "Chamado criado", autor: "João Oliveira" }],
+    timeline: [{ data: "2026-02-25 09:30", descricao: "Chamado criado", autor: "João Oliveira", tipo: "usuario" }],
   },
   {
-    id: "CH-002", titulo: "Teclado com teclas travadas", descricao: "Teclas F5, F6 e Espaço não respondem no teclado da máquina PC-202-07.",
-    sala: "Lab 202", maquinaId: "PC-202-07", status: "em_andamento", prioridade: "media",
-    criadoEm: "2026-02-24", criadoPor: "Ana Costa", criadoPorId: "u4", responsavel: "Carlos Silva",
+    id: "CH-014", titulo: "Software Wireshark desatualizado", descricao: "Versão 3.x instalada, precisa da 4.2 para aula de redes.",
+    sala: "Jobs", maquinaId: "PC-Jobs-04", status: "em_andamento", prioridade: "media",
+    criadoEm: "2026-02-20", criadoPor: "Ana Costa", criadoPorId: "u4", responsavel: "Carlos Silva",
     timeline: [
-      { data: "2026-02-24 14:00", descricao: "Chamado criado", autor: "Ana Costa" },
-      { data: "2026-02-24 16:30", descricao: "Chamado atribuído a Carlos Silva", autor: "Sistema" },
-      { data: "2026-02-25 08:00", descricao: "Teclado será substituído. Aguardando peça do almoxarifado.", autor: "Carlos Silva" },
+      { data: "2026-02-20 10:00", descricao: "Chamado criado", autor: "Ana Costa", tipo: "usuario" },
+      { data: "2026-02-20 14:00", descricao: "Chamado atribuído a Carlos Silva", autor: "Sistema", tipo: "sistema" },
+      { data: "2026-02-21 09:00", descricao: "Atualizando em lote nas 10 máquinas do lab.", autor: "Carlos Silva", tipo: "tecnico" },
     ],
   },
   {
-    id: "CH-003", titulo: "Windows não inicializa", descricao: "A máquina trava na tela de boot com erro BSOD (IRQL_NOT_LESS_OR_EQUAL).",
-    sala: "Lab 101", maquinaId: "PC-101-08", status: "em_andamento", prioridade: "alta",
-    criadoEm: "2026-02-23", criadoPor: "João Oliveira", criadoPorId: "u3", responsavel: "Maria Santos",
-    timeline: [
-      { data: "2026-02-23 10:15", descricao: "Chamado criado", autor: "João Oliveira" },
-      { data: "2026-02-23 11:00", descricao: "Chamado atribuído a Maria Santos", autor: "Sistema" },
-      { data: "2026-02-24 09:00", descricao: "Diagnóstico: possível falha na RAM. Testando memória.", autor: "Maria Santos" },
-    ],
+    id: "CH-015", titulo: "Sem conexão WiFi", descricao: "Notebook PC-Einstein-03 não encontra redes WiFi.",
+    sala: "Einstein", maquinaId: "PC-Einstein-03", status: "aberto", prioridade: "alta",
+    criadoEm: "2026-02-26", criadoPor: "Pedro Ferreira", criadoPorId: "u5",
+    timeline: [{ data: "2026-02-26 07:30", descricao: "Chamado criado", autor: "Pedro Ferreira", tipo: "usuario" }],
   },
   {
-    id: "CH-004", titulo: "Mouse óptico com defeito", descricao: "Cursor pula aleatoriamente na tela. Já testei em outra porta USB.",
-    sala: "Lab 303", maquinaId: "PC-303-02", status: "concluido", prioridade: "baixa",
-    criadoEm: "2026-02-20", criadoPor: "Roberto Lima", criadoPorId: "u7", responsavel: "Carlos Silva",
-    timeline: [
-      { data: "2026-02-20 08:45", descricao: "Chamado criado", autor: "Roberto Lima" },
-      { data: "2026-02-20 10:00", descricao: "Chamado atribuído a Carlos Silva", autor: "Sistema" },
-      { data: "2026-02-21 14:00", descricao: "Mouse substituído por novo modelo.", autor: "Carlos Silva" },
-      { data: "2026-02-21 14:05", descricao: "Chamado concluído", autor: "Carlos Silva" },
-    ],
-  },
-  {
-    id: "CH-005", titulo: "Sem conexão de rede", descricao: "Máquina não conecta à rede cabeada. Cabo testado e funcionando em outra máquina.",
-    sala: "Lab 202", maquinaId: "PC-202-01", status: "aberto", prioridade: "alta",
-    criadoEm: "2026-02-26", criadoPor: "Ana Costa", criadoPorId: "u4",
-    timeline: [{ data: "2026-02-26 07:30", descricao: "Chamado criado", autor: "Ana Costa" }],
-  },
-  {
-    id: "CH-006", titulo: "Impressora não reconhecida", descricao: "A impressora HP LaserJet do Lab não aparece na lista de dispositivos.",
-    sala: "Sala Professores", maquinaId: "PC-SP-01", status: "aberto", prioridade: "media",
-    criadoEm: "2026-02-25", criadoPor: "Pedro Ferreira", criadoPorId: "u5",
-    timeline: [{ data: "2026-02-25 11:00", descricao: "Chamado criado", autor: "Pedro Ferreira" }],
-  },
-  {
-    id: "CH-007", titulo: "Software AutoCAD travando", descricao: "AutoCAD 2024 fecha sozinho após 5 minutos de uso. Possível problema de memória.",
-    sala: "Lab 303", maquinaId: "PC-303-05", status: "em_andamento", prioridade: "media",
+    id: "CH-016", titulo: "AutoCAD licença expirada", descricao: "Licença do AutoCAD expirou em todas as máquinas do lab.",
+    sala: "Faraday", maquinaId: "PC-Faraday-01", status: "em_andamento", prioridade: "alta",
     criadoEm: "2026-02-22", criadoPor: "Roberto Lima", criadoPorId: "u7", responsavel: "Maria Santos",
     timeline: [
-      { data: "2026-02-22 13:00", descricao: "Chamado criado", autor: "Roberto Lima" },
-      { data: "2026-02-22 15:00", descricao: "Chamado atribuído a Maria Santos", autor: "Sistema" },
-      { data: "2026-02-23 10:00", descricao: "Verificando compatibilidade de drivers GPU.", autor: "Maria Santos" },
+      { data: "2026-02-22 13:00", descricao: "Chamado criado", autor: "Roberto Lima", tipo: "usuario" },
+      { data: "2026-02-22 15:00", descricao: "Chamado atribuído a Maria Santos", autor: "Sistema", tipo: "sistema" },
+      { data: "2026-02-23 10:00", descricao: "Solicitando renovação de licença ao departamento.", autor: "Maria Santos", tipo: "tecnico" },
     ],
   },
   {
-    id: "CH-008", titulo: "HD fazendo barulho estranho", descricao: "HD da máquina emite cliques rítmicos. Possível falha iminente.",
-    sala: "Lab 101", maquinaId: "PC-101-10", status: "concluido", prioridade: "alta",
-    criadoEm: "2026-02-18", criadoPor: "João Oliveira", criadoPorId: "u3", responsavel: "Carlos Silva",
+    id: "CH-017", titulo: "Ventilador barulhento", descricao: "Fan cooler da CPU extremamente barulhento durante uso.",
+    sala: "Tesla", maquinaId: "PC-Tesla-06", status: "aberto", prioridade: "media",
+    criadoEm: "2026-02-27", criadoPor: "Pedro Ferreira", criadoPorId: "u5",
+    timeline: [{ data: "2026-02-27 08:15", descricao: "Chamado criado", autor: "Pedro Ferreira", tipo: "usuario" }],
+  },
+  {
+    id: "CH-018", titulo: "PC reiniciando sozinho", descricao: "Máquina reinicia aleatoriamente durante uso normal.",
+    sala: "Pascal", maquinaId: "PC-Pascal-01", status: "concluido", prioridade: "alta",
+    criadoEm: "2026-02-10", criadoPor: "João Oliveira", criadoPorId: "u3", responsavel: "Carlos Silva",
     timeline: [
-      { data: "2026-02-18 09:00", descricao: "Chamado criado", autor: "João Oliveira" },
-      { data: "2026-02-18 10:30", descricao: "Urgente: risco de perda de dados. Atribuído a Carlos Silva.", autor: "Sistema" },
-      { data: "2026-02-19 08:00", descricao: "Backup realizado. HD substituído por SSD 480GB.", autor: "Carlos Silva" },
-      { data: "2026-02-19 16:00", descricao: "Windows reinstalado e configurado. Chamado concluído.", autor: "Carlos Silva" },
+      { data: "2026-02-10 09:00", descricao: "Chamado criado", autor: "João Oliveira", tipo: "usuario" },
+      { data: "2026-02-10 10:00", descricao: "Chamado atribuído a Carlos Silva", autor: "Sistema", tipo: "sistema" },
+      { data: "2026-02-11 11:00", descricao: "Fonte de alimentação com defeito. Substituída.", autor: "Carlos Silva", tipo: "tecnico" },
+      { data: "2026-02-11 16:00", descricao: "Chamado concluído", autor: "Carlos Silva", tipo: "tecnico" },
     ],
   },
+  // --- 2026-03 ---
   {
-    id: "CH-009", titulo: "Projetor sem sinal HDMI", descricao: "Projetor do Lab Multimídia não detecta sinal HDMI da máquina principal.",
-    sala: "Lab Multimídia", maquinaId: "PC-LM-01", status: "aberto", prioridade: "media",
-    criadoEm: "2026-02-26", criadoPor: "Pedro Ferreira", criadoPorId: "u5",
-    timeline: [{ data: "2026-02-26 08:15", descricao: "Chamado criado", autor: "Pedro Ferreira" }],
+    id: "CH-019", titulo: "Teclado não funciona", descricao: "Teclado USB não é reconhecido pelo sistema.",
+    sala: "Einstein", maquinaId: "PC-Einstein-05", status: "aberto", prioridade: "media",
+    criadoEm: "2026-03-01", criadoPor: "Pedro Ferreira", criadoPorId: "u5",
+    timeline: [{ data: "2026-03-01 08:00", descricao: "Chamado criado", autor: "Pedro Ferreira", tipo: "usuario" }],
   },
   {
-    id: "CH-010", titulo: "Ventilador da CPU ruidoso", descricao: "Fan cooler da CPU faz barulho excessivo. Temperatura acima de 85°C.",
-    sala: "Lab 202", maquinaId: "PC-202-10", status: "concluido", prioridade: "media",
-    criadoEm: "2026-02-15", criadoPor: "Ana Costa", criadoPorId: "u4", responsavel: "Maria Santos",
+    id: "CH-020", titulo: "Máquina extremamente lenta", descricao: "PC demora mais de 10 min para iniciar o Windows.",
+    sala: "Faraday", maquinaId: "PC-Faraday-08", status: "em_andamento", prioridade: "alta",
+    criadoEm: "2026-03-02", criadoPor: "Roberto Lima", criadoPorId: "u7", responsavel: "Maria Santos",
     timeline: [
-      { data: "2026-02-15 10:00", descricao: "Chamado criado", autor: "Ana Costa" },
-      { data: "2026-02-15 14:00", descricao: "Chamado atribuído a Maria Santos", autor: "Sistema" },
-      { data: "2026-02-16 09:00", descricao: "Limpeza realizada e pasta térmica reaplicada. Temperatura normalizada.", autor: "Maria Santos" },
-      { data: "2026-02-16 09:15", descricao: "Chamado concluído", autor: "Maria Santos" },
+      { data: "2026-03-02 09:00", descricao: "Chamado criado", autor: "Roberto Lima", tipo: "usuario" },
+      { data: "2026-03-02 10:30", descricao: "Chamado atribuído a Maria Santos", autor: "Sistema", tipo: "sistema" },
+      { data: "2026-03-03 08:00", descricao: "Diagnosticando. Possível necessidade de troca de HD por SSD.", autor: "Maria Santos", tipo: "tecnico" },
     ],
   },
 ];
 
-const salas = ["Lab 101", "Lab 202", "Lab 303", "Lab Multimídia", "Sala Professores"];
+// Labs with specific names
+const labNames = ["Pascal", "Jobs", "Faraday", "Einstein", "Tesla"];
 
 export const maquinas: Maquina[] = [];
 const sos = ["Windows 11 Pro", "Windows 10 Pro", "Ubuntu 22.04 LTS"];
 const tipos: Array<"Desktop" | "Notebook"> = ["Desktop", "Notebook"];
 const statusMaq: Array<"funcionando" | "em_manutencao" | "defeituoso"> = ["funcionando", "funcionando", "funcionando", "em_manutencao", "defeituoso"];
 
-salas.forEach((sala) => {
-  const prefix = sala === "Lab 101" ? "PC-101" : sala === "Lab 202" ? "PC-202" : sala === "Lab 303" ? "PC-303" : sala === "Lab Multimídia" ? "PC-LM" : "PC-SP";
-  const count = sala === "Sala Professores" ? 4 : sala === "Lab Multimídia" ? 6 : 10;
+labNames.forEach((lab) => {
+  const count = lab === "Tesla" ? 8 : 10;
   for (let i = 1; i <= count; i++) {
     maquinas.push({
-      id: `${prefix}-${String(i).padStart(2, "0")}`,
-      tipo: sala === "Sala Professores" ? "Notebook" : tipos[Math.floor(Math.random() * 2)],
+      id: `PC-${lab}-${String(i).padStart(2, "0")}`,
+      tipo: lab === "Einstein" ? "Notebook" : tipos[Math.floor(Math.random() * 2)],
       so: sos[Math.floor(Math.random() * sos.length)],
-      sala,
+      sala: lab,
       ultimaManutencao: `2026-0${Math.floor(Math.random() * 2) + 1}-${String(Math.floor(Math.random() * 28) + 1).padStart(2, "0")}`,
       status: statusMaq[Math.floor(Math.random() * statusMaq.length)],
     });
@@ -178,7 +297,7 @@ salas.forEach((sala) => {
 
 export const labChecklists: LabChecklist[] = [
   {
-    sala: "Lab 101", nome: "Laboratório de Programação",
+    sala: "Pascal", nome: "Laboratório de Programação",
     items: [
       { id: "c1", software: "Windows 11 Pro", instalado: true, versao: "23H2", atualizadoPor: "Carlos Silva", atualizadoEm: "2026-02-01" },
       { id: "c2", software: "Microsoft Office 365", instalado: true, versao: "2024", atualizadoPor: "Carlos Silva", atualizadoEm: "2026-02-01" },
@@ -190,7 +309,7 @@ export const labChecklists: LabChecklist[] = [
     ],
   },
   {
-    sala: "Lab 202", nome: "Laboratório de Redes",
+    sala: "Jobs", nome: "Laboratório de Redes",
     items: [
       { id: "c8", software: "Windows 10 Pro", instalado: true, versao: "22H2", atualizadoPor: "Maria Santos", atualizadoEm: "2026-01-15" },
       { id: "c9", software: "Wireshark", instalado: true, versao: "4.2", atualizadoPor: "Maria Santos", atualizadoEm: "2026-01-15" },
@@ -200,7 +319,7 @@ export const labChecklists: LabChecklist[] = [
     ],
   },
   {
-    sala: "Lab 303", nome: "Laboratório de Design",
+    sala: "Faraday", nome: "Laboratório de Design",
     items: [
       { id: "c13", software: "Windows 11 Pro", instalado: true, versao: "23H2", atualizadoPor: "Carlos Silva", atualizadoEm: "2026-02-10" },
       { id: "c14", software: "AutoCAD 2024", instalado: true, versao: "2024.1", atualizadoPor: "Maria Santos", atualizadoEm: "2026-02-05" },
@@ -209,9 +328,86 @@ export const labChecklists: LabChecklist[] = [
       { id: "c17", software: "SketchUp", instalado: false, versao: "-", nota: "Solicitado pelo Prof. Roberto para março" },
     ],
   },
+  {
+    sala: "Einstein", nome: "Laboratório Multimídia",
+    items: [
+      { id: "c18", software: "Windows 11 Pro", instalado: true, versao: "23H2", atualizadoPor: "Carlos Silva", atualizadoEm: "2026-02-01" },
+      { id: "c19", software: "Adobe Premiere Pro", instalado: true, versao: "2024", atualizadoPor: "Maria Santos", atualizadoEm: "2026-01-25" },
+      { id: "c20", software: "OBS Studio", instalado: true, versao: "30.0", atualizadoPor: "Carlos Silva", atualizadoEm: "2026-02-01" },
+      { id: "c21", software: "Audacity", instalado: false, versao: "-", nota: "A instalar no próximo ciclo" },
+    ],
+  },
+  {
+    sala: "Tesla", nome: "Sala de Professores",
+    items: [
+      { id: "c22", software: "Windows 11 Pro", instalado: true, versao: "23H2", atualizadoPor: "Carlos Silva", atualizadoEm: "2026-02-01" },
+      { id: "c23", software: "Microsoft Office 365", instalado: true, versao: "2024", atualizadoPor: "Carlos Silva", atualizadoEm: "2026-02-01" },
+      { id: "c24", software: "Zoom", instalado: true, versao: "6.0", atualizadoPor: "Maria Santos", atualizadoEm: "2026-01-20" },
+      { id: "c25", software: "Google Chrome", instalado: true, versao: "122", atualizadoPor: "Carlos Silva", atualizadoEm: "2026-02-15" },
+    ],
+  },
 ];
 
 export const mockLoginUsers = [
   { email: "admin@labtech.edu.br", senha: "admin123", usuario: usuarios[0] },
   { email: "professor@labtech.edu.br", senha: "prof123", usuario: usuarios[2] },
 ];
+
+// Helper: compute efficiency metrics per month
+export interface MonthlyMetric {
+  month: string; // "2025-10", "2025-11", etc.
+  label: string; // "Out/25", "Nov/25"
+  totalResolvidos: number;
+  tempoMedioResposta: number; // hours
+  tempoMedioResolucao: number; // hours
+}
+
+const monthLabels: Record<string, string> = {
+  "01": "Jan", "02": "Fev", "03": "Mar", "04": "Abr", "05": "Mai", "06": "Jun",
+  "07": "Jul", "08": "Ago", "09": "Set", "10": "Out", "11": "Nov", "12": "Dez",
+};
+
+export function getMonthlyMetrics(): MonthlyMetric[] {
+  const grouped: Record<string, Chamado[]> = {};
+  chamados.forEach((c) => {
+    const m = c.criadoEm.substring(0, 7); // "2026-02"
+    if (!grouped[m]) grouped[m] = [];
+    grouped[m].push(c);
+  });
+
+  return Object.keys(grouped).sort().map((month) => {
+    const list = grouped[month];
+    const concluidos = list.filter((c) => c.status === "concluido");
+
+    // Average response time: creation → first assignment (2nd timeline entry)
+    let totalResp = 0, countResp = 0;
+    concluidos.forEach((c) => {
+      if (c.timeline.length >= 2) {
+        const created = new Date(c.timeline[0].data);
+        const assigned = new Date(c.timeline[1].data);
+        totalResp += (assigned.getTime() - created.getTime()) / 3600000;
+        countResp++;
+      }
+    });
+
+    // Average resolution time: creation → last timeline entry
+    let totalRes = 0, countRes = 0;
+    concluidos.forEach((c) => {
+      if (c.timeline.length >= 2) {
+        const created = new Date(c.timeline[0].data);
+        const resolved = new Date(c.timeline[c.timeline.length - 1].data);
+        totalRes += (resolved.getTime() - created.getTime()) / 3600000;
+        countRes++;
+      }
+    });
+
+    const [y, m] = month.split("-");
+    return {
+      month,
+      label: `${monthLabels[m]}/${y.substring(2)}`,
+      totalResolvidos: concluidos.length,
+      tempoMedioResposta: countResp ? Math.round((totalResp / countResp) * 10) / 10 : 0,
+      tempoMedioResolucao: countRes ? Math.round((totalRes / countRes) * 10) / 10 : 0,
+    };
+  });
+}

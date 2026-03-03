@@ -1,6 +1,14 @@
+import { useAuth } from "@/contexts/AuthContext";
+import { Navigate } from "react-router-dom";
 import { usuarios } from "@/data/mock-data";
 
 export default function Usuarios() {
+  const { isTecnico } = useAuth();
+
+  if (!isTecnico) {
+    return <Navigate to="/" replace />;
+  }
+
   return (
     <div className="space-y-4">
       <div>
