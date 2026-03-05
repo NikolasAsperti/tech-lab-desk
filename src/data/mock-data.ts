@@ -20,6 +20,14 @@ export interface Chamado {
   timeline: TimelineEntry[];
 }
 
+export interface HardwareInfo {
+  processador: string;
+  placaMae: string;
+  placaVideo: string;
+  ram: string;
+  armazenamento: string;
+}
+
 export interface Maquina {
   id: string;
   tipo: "Desktop" | "Notebook";
@@ -27,6 +35,7 @@ export interface Maquina {
   sala: string;
   ultimaManutencao: string;
   status: "funcionando" | "em_manutencao" | "defeituoso";
+  hardware: HardwareInfo;
 }
 
 export interface Usuario {
@@ -276,21 +285,58 @@ export const chamados: Chamado[] = [
 // Labs with specific names
 const labNames = ["Pascal", "Jobs", "Faraday", "Einstein", "Tesla"];
 
-export const maquinas: Maquina[] = [];
+// Hardware specs pools for realistic variety
+const processadores = [
+  "Intel Core i7-12700H", "Intel Core i5-12400", "Intel Core i5-11400", "Intel Core i3-10100",
+  "AMD Ryzen 7 5800H", "AMD Ryzen 5 5600X", "AMD Ryzen 5 3600", "Intel Core i7-10700",
+];
+const placasMae = [
+  "ASUS Prime B560M-A", "Gigabyte B550M DS3H", "MSI MAG B660M Mortar", "ASRock B450M Steel Legend",
+  "ASUS TUF Gaming B550-Plus", "Gigabyte H510M H", "MSI PRO H610M-G", "ASRock H670M-ITX",
+];
+const placasVideo = [
+  "NVIDIA GeForce GTX 1650", "NVIDIA GeForce RTX 3060", "AMD Radeon RX 6600", "Integrada (Intel UHD 730)",
+  "Integrada (Intel UHD 770)", "NVIDIA GeForce GTX 1050 Ti", "AMD Radeon RX 580", "Integrada (AMD Radeon Vega 8)",
+];
+const rams = [
+  "8GB DDR4 3200MHz", "16GB DDR4 3200MHz", "8GB DDR4 2666MHz", "16GB DDR4 2666MHz",
+  "32GB DDR4 3200MHz", "4GB DDR4 2400MHz", "16GB DDR5 4800MHz", "8GB DDR5 4800MHz",
+];
+const armazenamentos = [
+  "SSD 480GB SATA", "SSD 256GB NVMe", "SSD 512GB NVMe", "HDD 1TB 7200RPM",
+  "SSD 240GB SATA", "SSD 1TB NVMe", "HDD 500GB 5400RPM + SSD 128GB", "SSD 960GB SATA",
+];
+
+function seededRandom(seed: number) {
+  const x = Math.sin(seed) * 10000;
+  return x - Math.floor(x);
+}
+
 const sos = ["Windows 11 Pro", "Windows 10 Pro", "Ubuntu 22.04 LTS"];
 const tipos: Array<"Desktop" | "Notebook"> = ["Desktop", "Notebook"];
 const statusMaq: Array<"funcionando" | "em_manutencao" | "defeituoso"> = ["funcionando", "funcionando", "funcionando", "em_manutencao", "defeituoso"];
 
-labNames.forEach((lab) => {
+export const maquinas: Maquina[] = [];
+
+labNames.forEach((lab, labIdx) => {
   const count = lab === "Tesla" ? 8 : 10;
   for (let i = 1; i <= count; i++) {
+    const seed = labIdx * 100 + i;
+    const pick = (arr: string[]) => arr[Math.floor(seededRandom(seed + arr.length) * arr.length)];
     maquinas.push({
       id: `PC-${lab}-${String(i).padStart(2, "0")}`,
-      tipo: lab === "Einstein" ? "Notebook" : tipos[Math.floor(Math.random() * 2)],
-      so: sos[Math.floor(Math.random() * sos.length)],
+      tipo: lab === "Einstein" ? "Notebook" : tipos[Math.floor(seededRandom(seed + 1) * 2)],
+      so: pick(sos),
       sala: lab,
-      ultimaManutencao: `2026-0${Math.floor(Math.random() * 2) + 1}-${String(Math.floor(Math.random() * 28) + 1).padStart(2, "0")}`,
-      status: statusMaq[Math.floor(Math.random() * statusMaq.length)],
+      ultimaManutencao: `2026-0${Math.floor(seededRandom(seed + 2) * 2) + 1}-${String(Math.floor(seededRandom(seed + 3) * 28) + 1).padStart(2, "0")}`,
+      status: statusMaq[Math.floor(seededRandom(seed + 4) * statusMaq.length)],
+      hardware: {
+        processador: pick(processadores),
+        placaMae: pick(placasMae),
+        placaVideo: pick(placasVideo),
+        ram: pick(rams),
+        armazenamento: pick(armazenamentos),
+      },
     });
   }
 });
@@ -353,13 +399,12 @@ export const mockLoginUsers = [
   { email: "professor@labtech.edu.br", senha: "prof123", usuario: usuarios[2] },
 ];
 
-// Helper: compute efficiency metrics per month
+// Helper: compute metrics per month for dashboard charts
 export interface MonthlyMetric {
-  month: string; // "2025-10", "2025-11", etc.
-  label: string; // "Out/25", "Nov/25"
-  totalResolvidos: number;
-  tempoMedioResposta: number; // hours
-  tempoMedioResolucao: number; // hours
+  month: string;
+  label: string;
+  totalAbertos: number;
+  totalConcluidos: number;
 }
 
 const monthLabels: Record<string, string> = {
@@ -370,44 +415,20 @@ const monthLabels: Record<string, string> = {
 export function getMonthlyMetrics(): MonthlyMetric[] {
   const grouped: Record<string, Chamado[]> = {};
   chamados.forEach((c) => {
-    const m = c.criadoEm.substring(0, 7); // "2026-02"
+    const m = c.criadoEm.substring(0, 7);
     if (!grouped[m]) grouped[m] = [];
     grouped[m].push(c);
   });
 
   return Object.keys(grouped).sort().map((month) => {
     const list = grouped[month];
-    const concluidos = list.filter((c) => c.status === "concluido");
-
-    // Average response time: creation → first assignment (2nd timeline entry)
-    let totalResp = 0, countResp = 0;
-    concluidos.forEach((c) => {
-      if (c.timeline.length >= 2) {
-        const created = new Date(c.timeline[0].data);
-        const assigned = new Date(c.timeline[1].data);
-        totalResp += (assigned.getTime() - created.getTime()) / 3600000;
-        countResp++;
-      }
-    });
-
-    // Average resolution time: creation → last timeline entry
-    let totalRes = 0, countRes = 0;
-    concluidos.forEach((c) => {
-      if (c.timeline.length >= 2) {
-        const created = new Date(c.timeline[0].data);
-        const resolved = new Date(c.timeline[c.timeline.length - 1].data);
-        totalRes += (resolved.getTime() - created.getTime()) / 3600000;
-        countRes++;
-      }
-    });
-
+    const concluidos = list.filter((c) => c.status === "concluido").length;
     const [y, m] = month.split("-");
     return {
       month,
       label: `${monthLabels[m]}/${y.substring(2)}`,
-      totalResolvidos: concluidos.length,
-      tempoMedioResposta: countResp ? Math.round((totalResp / countResp) * 10) / 10 : 0,
-      tempoMedioResolucao: countRes ? Math.round((totalRes / countRes) * 10) / 10 : 0,
+      totalAbertos: list.length,
+      totalConcluidos: concluidos,
     };
   });
 }

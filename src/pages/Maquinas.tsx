@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { maquinas } from "@/data/mock-data";
-import { Monitor, Laptop } from "lucide-react";
+import { maquinas, Maquina } from "@/data/mock-data";
+import { Monitor, Laptop, Cpu, HardDrive, MemoryStick, CircuitBoard, X } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 const salas = [...new Set(maquinas.map((m) => m.sala))];
 
@@ -18,6 +19,7 @@ const statusLabels: Record<string, string> = {
 export default function Maquinas() {
   const [activeSala, setActiveSala] = useState(salas[0]);
   const [search, setSearch] = useState("");
+  const [selectedMaquina, setSelectedMaquina] = useState<Maquina | null>(null);
 
   let filtered = maquinas.filter((m) => m.sala === activeSala);
   if (search) {
@@ -61,7 +63,8 @@ export default function Maquinas() {
         {filtered.map((m, i) => (
           <div
             key={m.id}
-            className="rounded-xl border bg-card p-4 shadow-sm hover:shadow-md transition-shadow animate-fade-in"
+            onClick={() => setSelectedMaquina(m)}
+            className="rounded-xl border bg-card p-4 shadow-sm hover:shadow-md transition-shadow animate-fade-in cursor-pointer"
             style={{ animationDelay: `${i * 30}ms` }}
           >
             <div className="flex items-center justify-between mb-3">
@@ -94,6 +97,95 @@ export default function Maquinas() {
           </div>
         ))}
       </div>
+
+      {/* Hardware Detail Modal */}
+      <Dialog open={!!selectedMaquina} onOpenChange={() => setSelectedMaquina(null)}>
+        <DialogContent className="max-w-md">
+          {selectedMaquina && (
+            <>
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-2">
+                  {selectedMaquina.tipo === "Desktop" ? (
+                    <Monitor className="h-5 w-5 text-primary" />
+                  ) : (
+                    <Laptop className="h-5 w-5 text-primary" />
+                  )}
+                  <span className="font-mono">{selectedMaquina.id}</span>
+                </DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4 mt-2">
+                {/* General info */}
+                <div className="flex flex-wrap gap-2">
+                  <span className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${statusStyles[selectedMaquina.status]}`}>
+                    {statusLabels[selectedMaquina.status]}
+                  </span>
+                  <span className="inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium bg-secondary text-secondary-foreground">
+                    {selectedMaquina.tipo}
+                  </span>
+                  <span className="inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium bg-secondary text-secondary-foreground">
+                    Lab {selectedMaquina.sala}
+                  </span>
+                </div>
+
+                {/* Hardware specs */}
+                <div className="rounded-lg border bg-muted/30 p-4 space-y-3">
+                  <h3 className="text-sm font-semibold text-card-foreground flex items-center gap-2">
+                    <CircuitBoard className="h-4 w-4 text-primary" /> Especificações de Hardware
+                  </h3>
+                  <div className="space-y-2.5 text-sm">
+                    <div className="flex items-start gap-3">
+                      <Cpu className="h-4 w-4 text-muted-foreground mt-0.5 shrink-0" />
+                      <div>
+                        <span className="text-xs text-muted-foreground">Processador</span>
+                        <p className="text-card-foreground font-medium">{selectedMaquina.hardware.processador}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <CircuitBoard className="h-4 w-4 text-muted-foreground mt-0.5 shrink-0" />
+                      <div>
+                        <span className="text-xs text-muted-foreground">Placa-mãe</span>
+                        <p className="text-card-foreground font-medium">{selectedMaquina.hardware.placaMae}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <Monitor className="h-4 w-4 text-muted-foreground mt-0.5 shrink-0" />
+                      <div>
+                        <span className="text-xs text-muted-foreground">Placa de Vídeo</span>
+                        <p className="text-card-foreground font-medium">{selectedMaquina.hardware.placaVideo}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <MemoryStick className="h-4 w-4 text-muted-foreground mt-0.5 shrink-0" />
+                      <div>
+                        <span className="text-xs text-muted-foreground">Memória RAM</span>
+                        <p className="text-card-foreground font-medium">{selectedMaquina.hardware.ram}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <HardDrive className="h-4 w-4 text-muted-foreground mt-0.5 shrink-0" />
+                      <div>
+                        <span className="text-xs text-muted-foreground">Armazenamento</span>
+                        <p className="text-card-foreground font-medium">{selectedMaquina.hardware.armazenamento}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <Laptop className="h-4 w-4 text-muted-foreground mt-0.5 shrink-0" />
+                      <div>
+                        <span className="text-xs text-muted-foreground">Sistema Operacional</span>
+                        <p className="text-card-foreground font-medium">{selectedMaquina.so}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="text-xs text-muted-foreground">
+                  Última manutenção: {selectedMaquina.ultimaManutencao}
+                </div>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
