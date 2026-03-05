@@ -3,16 +3,14 @@ import { ClipboardList, Clock, CheckCircle2, Monitor, TrendingUp } from "lucide-
 import { chamados, maquinas, getMonthlyMetrics } from "@/data/mock-data";
 import { useAuth } from "@/contexts/AuthContext";
 import {
-  BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend,
+  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend,
 } from "recharts";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 
-const statusLabel: Record<string, string> = { aberto: "Aberto", em_andamento: "Em Andamento", concluido: "Concluído" };
-
 export default function Dashboard() {
-  const { user, isTecnico } = useAuth();
+  const { user } = useAuth();
 
   const abertos = chamados.filter((c) => c.status === "aberto").length;
   const emAndamento = chamados.filter((c) => c.status === "em_andamento").length;
@@ -28,14 +26,26 @@ export default function Dashboard() {
 
   const recentChamados = [...chamados].sort((a, b) => b.criadoEm.localeCompare(a.criadoEm)).slice(0, 5);
 
-  // Efficiency metrics
   const allMetrics = useMemo(() => getMonthlyMetrics(), []);
-  const [monthRange, setMonthRange] = useState("6");
+  const [periodFilter, setPeriodFilter] = useState("6");
 
   const metrics = useMemo(() => {
-    const n = parseInt(monthRange);
+    if (periodFilter === "current") {
+      const now = new Date();
+      const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+      return allMetrics.filter((m) => m.month === currentMonth);
+    }
+    const n = parseInt(periodFilter);
     return allMetrics.slice(-n);
-  }, [allMetrics, monthRange]);
+  }, [allMetrics, periodFilter]);
+
+  // Resolution rate
+  const resolutionRate = useMemo(() => {
+    const totalAbertos = metrics.reduce((acc, m) => acc + m.totalAbertos, 0);
+    const totalConcluidos = metrics.reduce((acc, m) => acc + m.totalConcluidos, 0);
+    if (totalAbertos === 0) return 0;
+    return Math.round((totalConcluidos / totalAbertos) * 100);
+  }, [metrics]);
 
   return (
     <div className="space-y-6">
@@ -68,41 +78,24 @@ export default function Dashboard() {
             <TrendingUp className="h-4 w-4 text-primary" />
             <h2 className="font-semibold text-card-foreground">Análise de Eficiência</h2>
           </div>
-          <Select value={monthRange} onValueChange={setMonthRange}>
-            <SelectTrigger className="w-[160px] h-8 text-xs">
+          <Select value={periodFilter} onValueChange={setPeriodFilter}>
+            <SelectTrigger className="w-[170px] h-8 text-xs">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
+              <SelectItem value="current">Mês Atual</SelectItem>
               <SelectItem value="3">Últimos 3 meses</SelectItem>
               <SelectItem value="6">Últimos 6 meses</SelectItem>
-              <SelectItem value="12">Últimos 12 meses</SelectItem>
+              <SelectItem value="12">1 Ano</SelectItem>
             </SelectContent>
           </Select>
         </div>
-        <div className="p-5 grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Response & Resolution time */}
-          <div>
-            <h3 className="text-sm font-medium text-muted-foreground mb-3">Tempo Médio (horas)</h3>
-            <ResponsiveContainer width="100%" height={260}>
+        <div className="p-5 grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Line chart: Abertos vs Concluídos */}
+          <div className="lg:col-span-2">
+            <h3 className="text-sm font-medium text-muted-foreground mb-3">Chamados Abertos × Concluídos</h3>
+            <ResponsiveContainer width="100%" height={280}>
               <LineChart data={metrics}>
-                <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
-                <XAxis dataKey="label" tick={{ fontSize: 12 }} className="fill-muted-foreground" />
-                <YAxis tick={{ fontSize: 12 }} className="fill-muted-foreground" />
-                <Tooltip
-                  contentStyle={{ backgroundColor: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: 8, fontSize: 12 }}
-                  labelStyle={{ color: "hsl(var(--card-foreground))" }}
-                />
-                <Legend wrapperStyle={{ fontSize: 12 }} />
-                <Line type="monotone" dataKey="tempoMedioResposta" name="Resposta" stroke="hsl(var(--status-progress))" strokeWidth={2} dot={{ r: 3 }} />
-                <Line type="monotone" dataKey="tempoMedioResolucao" name="Resolução" stroke="hsl(var(--status-done))" strokeWidth={2} dot={{ r: 3 }} />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-          {/* Resolved per month */}
-          <div>
-            <h3 className="text-sm font-medium text-muted-foreground mb-3">Chamados Resolvidos por Mês</h3>
-            <ResponsiveContainer width="100%" height={260}>
-              <BarChart data={metrics}>
                 <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
                 <XAxis dataKey="label" tick={{ fontSize: 12 }} className="fill-muted-foreground" />
                 <YAxis tick={{ fontSize: 12 }} className="fill-muted-foreground" allowDecimals={false} />
@@ -110,9 +103,20 @@ export default function Dashboard() {
                   contentStyle={{ backgroundColor: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: 8, fontSize: 12 }}
                   labelStyle={{ color: "hsl(var(--card-foreground))" }}
                 />
-                <Bar dataKey="totalResolvidos" name="Resolvidos" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
-              </BarChart>
+                <Legend wrapperStyle={{ fontSize: 12 }} />
+                <Line type="monotone" dataKey="totalAbertos" name="Abertos" stroke="hsl(var(--status-open))" strokeWidth={2} dot={{ r: 3 }} />
+                <Line type="monotone" dataKey="totalConcluidos" name="Concluídos" stroke="hsl(var(--status-done))" strokeWidth={2} dot={{ r: 3 }} />
+              </LineChart>
             </ResponsiveContainer>
+          </div>
+
+          {/* Big resolution counter */}
+          <div className="flex flex-col items-center justify-center rounded-xl border bg-muted/30 p-6">
+            <span className="text-sm font-medium text-muted-foreground mb-2">Taxa de Resolução</span>
+            <span className={`text-6xl font-bold ${resolutionRate >= 70 ? "text-status-done" : resolutionRate >= 40 ? "text-status-progress" : "text-destructive"}`}>
+              {resolutionRate}%
+            </span>
+            <span className="text-xs text-muted-foreground mt-2">dos chamados resolvidos</span>
           </div>
         </div>
       </div>
