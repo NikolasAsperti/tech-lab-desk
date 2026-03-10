@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { chamados as allChamados, Chamado, tecnicos } from "@/data/mock-data";
+import { getFormatChecklist } from "@/data/checklist-catalog";
 import { useAuth } from "@/contexts/AuthContext";
 import { StatusBadge, PrioridadeBadge } from "./Index";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Clock, MessageSquare } from "lucide-react";
+import { Clock, MessageSquare, CheckSquare, Square } from "lucide-react";
 
 type TabFilter = "todos" | "aberto" | "em_andamento" | "concluido" | "meus";
 
@@ -22,18 +23,23 @@ export default function Chamados() {
   const [searchTerm, setSearchTerm] = useState("");
   const [tecnicoFilter, setTecnicoFilter] = useState("todos");
 
-  // Modal states for "Atender Chamado"
+  // Modal states
   const [showAtenderModal, setShowAtenderModal] = useState(false);
   const [atenderComment, setAtenderComment] = useState("");
 
-  // Modal states for status update (button-based)
   const [showStatusModal, setShowStatusModal] = useState(false);
   const [pendingStatus, setPendingStatus] = useState<"em_andamento" | "concluido" | "">("");
   const [statusComment, setStatusComment] = useState("");
 
-  // Modal states for comment
   const [showCommentModal, setShowCommentModal] = useState(false);
   const [newComment, setNewComment] = useState("");
+
+  // Conclusion flow: toggle "foi formatado?" + checklist
+  const [foiFormatado, setFoiFormatado] = useState(false);
+  const [showChecklistModal, setShowChecklistModal] = useState(false);
+  const [checklistState, setChecklistState] = useState<Record<string, boolean>>({});
+  const [checklistObs, setChecklistObs] = useState<Record<string, string>>({});
+  const [checklistJustificativa, setChecklistJustificativa] = useState("");
 
   let filtered = isTecnico ? allChamados : allChamados.filter((c) => c.criadoPorId === user?.id);
 
@@ -70,6 +76,21 @@ export default function Chamados() {
 
   const handleStatusUpdate = () => {
     if (!selectedChamado || !statusComment.trim() || !pendingStatus) return;
+    
+    // If concluding and "foi formatado" is true, open checklist modal instead
+    if (pendingStatus === "concluido" && foiFormatado) {
+      const items = getFormatChecklist(selectedChamado.sala);
+      const initial: Record<string, boolean> = {};
+      items.forEach((it) => (initial[it.id] = false));
+      setChecklistState(initial);
+      setChecklistObs({});
+      setChecklistJustificativa("");
+      setShowStatusModal(false);
+      setShowChecklistModal(true);
+      return;
+    }
+
+    // Normal status update
     const now = new Date().toISOString().replace("T", " ").substring(0, 16);
     selectedChamado.status = pendingStatus;
     const statusLabel = pendingStatus === "em_andamento" ? "Em Andamento" : "Concluído";
@@ -82,6 +103,57 @@ export default function Chamados() {
     setShowStatusModal(false);
     setStatusComment("");
     setPendingStatus("");
+    setFoiFormatado(false);
+    setSelectedChamado({ ...selectedChamado });
+  };
+
+  const handleChecklistConclude = () => {
+    if (!selectedChamado) return;
+    const items = getFormatChecklist(selectedChamado.sala);
+    const allChecked = items.every((it) => checklistState[it.id]);
+    if (!allChecked && !checklistJustificativa.trim()) return;
+
+    const now = new Date().toISOString().replace("T", " ").substring(0, 16);
+    selectedChamado.status = "concluido";
+
+    // Add status comment
+    selectedChamado.timeline.push({
+      data: now,
+      descricao: `Status alterado para Concluído: ${statusComment}`,
+      autor: user?.nome || "",
+      tipo: "tecnico",
+    });
+
+    // Add formatting checklist entry
+    const checkedItems = items.filter((it) => checklistState[it.id]);
+    const uncheckedItems = items.filter((it) => !checklistState[it.id]);
+    let checklistDesc = `Checklist de Formatação — ${selectedChamado.sala}: ${checkedItems.length}/${items.length} itens concluídos.`;
+    
+    // Add observations
+    const obsEntries = Object.entries(checklistObs).filter(([, v]) => v.trim());
+    if (obsEntries.length > 0) {
+      const obsLabels = obsEntries.map(([id, obs]) => {
+        const item = items.find((it) => it.id === id);
+        return `${item?.label}: ${obs}`;
+      });
+      checklistDesc += ` Observações: ${obsLabels.join("; ")}`;
+    }
+
+    if (uncheckedItems.length > 0) {
+      checklistDesc += ` Itens pendentes: ${uncheckedItems.map((it) => it.label).join(", ")}. Justificativa: ${checklistJustificativa}`;
+    }
+
+    selectedChamado.timeline.push({
+      data: now,
+      descricao: checklistDesc,
+      autor: user?.nome || "",
+      tipo: "tecnico",
+    });
+
+    setShowChecklistModal(false);
+    setStatusComment("");
+    setPendingStatus("");
+    setFoiFormatado(false);
     setSelectedChamado({ ...selectedChamado });
   };
 
@@ -102,6 +174,7 @@ export default function Chamados() {
   const openStatusChange = (status: "em_andamento" | "concluido") => {
     setPendingStatus(status);
     setStatusComment("");
+    setFoiFormatado(false);
     setShowStatusModal(true);
   };
 
@@ -110,6 +183,11 @@ export default function Chamados() {
       ? selectedChamado.timeline
       : selectedChamado.timeline.filter((e) => e.tipo !== "tecnico")
     : [];
+
+  // Checklist helpers
+  const checklistItems = selectedChamado ? getFormatChecklist(selectedChamado.sala) : [];
+  const allChecklistChecked = checklistItems.every((it) => checklistState[it.id]);
+  const canConcludeChecklist = allChecklistChecked || checklistJustificativa.trim().length > 0;
 
   return (
     <div className="space-y-4">
@@ -211,7 +289,7 @@ export default function Chamados() {
       </div>
 
       {/* Detail Dialog */}
-      <Dialog open={!!selectedChamado && !showAtenderModal && !showStatusModal && !showCommentModal} onOpenChange={() => setSelectedChamado(null)}>
+      <Dialog open={!!selectedChamado && !showAtenderModal && !showStatusModal && !showCommentModal && !showChecklistModal} onOpenChange={() => setSelectedChamado(null)}>
         <DialogContent className="max-w-lg max-h-[85vh] overflow-y-auto">
           {selectedChamado && (
             <>
@@ -262,7 +340,6 @@ export default function Chamados() {
                 {/* Actions for technicians */}
                 {isTecnico && selectedChamado.status !== "concluido" && (
                   <div className="border-t pt-4 space-y-3">
-                    {/* Atender button (only if unassigned) */}
                     {!selectedChamado.responsavel && (
                       <button
                         onClick={() => setShowAtenderModal(true)}
@@ -272,7 +349,6 @@ export default function Chamados() {
                       </button>
                     )}
 
-                    {/* Status buttons */}
                     {selectedChamado.responsavel && (
                       <div className="flex flex-col gap-2">
                         {selectedChamado.status === "aberto" && (
@@ -294,7 +370,6 @@ export default function Chamados() {
                       </div>
                     )}
 
-                    {/* Add comment */}
                     <button
                       onClick={() => setShowCommentModal(true)}
                       className="w-full rounded-md border px-3 py-2 text-sm font-medium hover:bg-accent transition-colors flex items-center justify-center gap-2"
@@ -317,7 +392,6 @@ export default function Chamados() {
           </DialogHeader>
           {selectedChamado && (
             <div className="space-y-4 mt-2">
-              {/* Field order: Machine, Lab, Description, DateTime, Technician */}
               <div className="grid grid-cols-2 gap-3 text-sm">
                 <div>
                   <label className="text-xs text-muted-foreground">Nome da Máquina</label>
@@ -328,13 +402,10 @@ export default function Chamados() {
                   <p className="font-medium text-card-foreground">{selectedChamado.sala}</p>
                 </div>
               </div>
-
-              {/* Problem description highlighted */}
               <div className="rounded-lg border bg-muted/40 p-3">
                 <label className="text-xs font-medium text-muted-foreground">Descrição do Problema</label>
                 <p className="text-sm text-card-foreground mt-1">{selectedChamado.descricao}</p>
               </div>
-
               <div className="grid grid-cols-2 gap-3 text-sm">
                 <div>
                   <label className="text-xs text-muted-foreground">Data/Hora</label>
@@ -345,7 +416,6 @@ export default function Chamados() {
                   <p className="text-card-foreground">{user?.nome}</p>
                 </div>
               </div>
-
               <div>
                 <label className="text-xs font-medium text-muted-foreground">Comentário inicial (obrigatório)</label>
                 <textarea
@@ -370,7 +440,7 @@ export default function Chamados() {
         </DialogContent>
       </Dialog>
 
-      {/* Status Update Modal (button-triggered) */}
+      {/* Status Update Modal — now with "foi formatado?" toggle for conclusion */}
       <Dialog open={showStatusModal} onOpenChange={setShowStatusModal}>
         <DialogContent className="max-w-md">
           <DialogHeader>
@@ -388,6 +458,41 @@ export default function Chamados() {
               placeholder="Descreva o motivo da alteração..."
               className="w-full rounded-md border bg-secondary/50 px-3 py-2 text-sm outline-none placeholder:text-muted-foreground focus:ring-2 focus:ring-ring min-h-[100px] resize-none"
             />
+
+            {/* Toggle: "O computador foi formatado?" — only for conclusion */}
+            {pendingStatus === "concluido" && (
+              <div className="rounded-lg border p-4 space-y-2">
+                <p className="text-sm font-semibold text-card-foreground">O computador foi formatado?</p>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setFoiFormatado(false)}
+                    className={`flex-1 rounded-md px-4 py-3 text-sm font-semibold border-2 transition-all ${
+                      !foiFormatado
+                        ? "border-primary bg-primary/10 text-primary"
+                        : "border-border bg-card text-muted-foreground hover:border-primary/30"
+                    }`}
+                  >
+                    Não
+                  </button>
+                  <button
+                    onClick={() => setFoiFormatado(true)}
+                    className={`flex-1 rounded-md px-4 py-3 text-sm font-semibold border-2 transition-all ${
+                      foiFormatado
+                        ? "border-primary bg-primary/10 text-primary"
+                        : "border-border bg-card text-muted-foreground hover:border-primary/30"
+                    }`}
+                  >
+                    Sim
+                  </button>
+                </div>
+                {foiFormatado && (
+                  <p className="text-xs text-muted-foreground">
+                    Ao confirmar, será aberto o checklist de formatação do laboratório {selectedChamado?.sala}.
+                  </p>
+                )}
+              </div>
+            )}
+
             <div className="flex justify-end gap-2">
               <button onClick={() => setShowStatusModal(false)} className="rounded-md border px-3 py-1.5 text-sm font-medium hover:bg-accent transition-colors">Cancelar</button>
               <button
@@ -395,7 +500,101 @@ export default function Chamados() {
                 disabled={!statusComment.trim()}
                 className="rounded-md bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground hover:opacity-90 transition-opacity disabled:opacity-50"
               >
-                Confirmar
+                {foiFormatado && pendingStatus === "concluido" ? "Preencher Checklist" : "Confirmar"}
+              </button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Formatting Checklist Modal */}
+      <Dialog open={showChecklistModal} onOpenChange={setShowChecklistModal}>
+        <DialogContent className="max-w-lg max-h-[85vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Checklist de Formatação — {selectedChamado?.sala}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 mt-2">
+            <p className="text-sm text-muted-foreground">
+              Marque cada item conforme finalizar a instalação/configuração. Todos os itens devem estar concluídos ou uma justificativa deve ser fornecida.
+            </p>
+
+            <div className="divide-y rounded-lg border">
+              {checklistItems.map((item) => (
+                <div key={item.id} className="px-4 py-3 space-y-2">
+                  <button
+                    onClick={() =>
+                      setChecklistState((prev) => ({ ...prev, [item.id]: !prev[item.id] }))
+                    }
+                    className="flex items-center gap-3 w-full text-left group"
+                  >
+                    {checklistState[item.id] ? (
+                      <CheckSquare className="h-5 w-5 text-primary shrink-0" />
+                    ) : (
+                      <Square className="h-5 w-5 text-muted-foreground shrink-0 group-hover:text-primary/60 transition-colors" />
+                    )}
+                    <span className={`text-sm font-medium ${checklistState[item.id] ? "text-primary line-through" : "text-card-foreground"}`}>
+                      {item.label}
+                    </span>
+                  </button>
+                  <input
+                    type="text"
+                    placeholder="Observação (opcional)"
+                    value={checklistObs[item.id] || ""}
+                    onChange={(e) =>
+                      setChecklistObs((prev) => ({ ...prev, [item.id]: e.target.value }))
+                    }
+                    className="ml-8 w-[calc(100%-2rem)] rounded border bg-secondary/50 px-2 py-1 text-xs outline-none placeholder:text-muted-foreground focus:ring-1 focus:ring-ring"
+                  />
+                </div>
+              ))}
+            </div>
+
+            {/* Progress */}
+            <div className="flex items-center gap-2">
+              <div className="flex-1 h-2 rounded-full bg-secondary overflow-hidden">
+                <div
+                  className="h-full bg-primary transition-all rounded-full"
+                  style={{
+                    width: `${(checklistItems.filter((it) => checklistState[it.id]).length / checklistItems.length) * 100}%`,
+                  }}
+                />
+              </div>
+              <span className="text-xs font-medium text-muted-foreground">
+                {checklistItems.filter((it) => checklistState[it.id]).length}/{checklistItems.length}
+              </span>
+            </div>
+
+            {/* Justificativa if not all checked */}
+            {!allChecklistChecked && (
+              <div>
+                <label className="text-xs font-medium text-muted-foreground">
+                  Justificativa para itens pendentes (obrigatório)
+                </label>
+                <textarea
+                  value={checklistJustificativa}
+                  onChange={(e) => setChecklistJustificativa(e.target.value)}
+                  placeholder="Explique por que alguns itens não foram concluídos..."
+                  className="mt-1 w-full rounded-md border bg-secondary/50 px-3 py-2 text-sm outline-none placeholder:text-muted-foreground focus:ring-2 focus:ring-ring min-h-[60px] resize-none"
+                />
+              </div>
+            )}
+
+            <div className="flex justify-end gap-2">
+              <button
+                onClick={() => {
+                  setShowChecklistModal(false);
+                  setShowStatusModal(true);
+                }}
+                className="rounded-md border px-3 py-1.5 text-sm font-medium hover:bg-accent transition-colors"
+              >
+                Voltar
+              </button>
+              <button
+                onClick={handleChecklistConclude}
+                disabled={!canConcludeChecklist}
+                className="rounded-md bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground hover:opacity-90 transition-opacity disabled:opacity-50"
+              >
+                Concluir Chamado
               </button>
             </div>
           </div>
