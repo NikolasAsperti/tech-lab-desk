@@ -2,12 +2,6 @@ import { useState, useMemo } from "react";
 import { ClipboardList, Clock, CheckCircle2, Monitor, TrendingUp } from "lucide-react";
 import { chamados, maquinas, getMonthlyMetrics } from "@/data/mock-data";
 import { useAuth } from "@/contexts/AuthContext";
-import {
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend,
-} from "recharts";
-import {
-  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
-} from "@/components/ui/select";
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -39,13 +33,38 @@ export default function Dashboard() {
     return allMetrics.slice(-n);
   }, [allMetrics, periodFilter]);
 
-  // Resolution rate
   const resolutionRate = useMemo(() => {
     const totalAbertos = metrics.reduce((acc, m) => acc + m.totalAbertos, 0);
     const totalConcluidos = metrics.reduce((acc, m) => acc + m.totalConcluidos, 0);
     if (totalAbertos === 0) return 0;
     return Math.round((totalConcluidos / totalAbertos) * 100);
   }, [metrics]);
+
+  // Simple SVG chart
+  const maxValue = useMemo(() => {
+    let max = 1;
+    metrics.forEach((m) => {
+      if (m.totalAbertos > max) max = m.totalAbertos;
+      if (m.totalConcluidos > max) max = m.totalConcluidos;
+    });
+    return max;
+  }, [metrics]);
+
+  const chartWidth = 600;
+  const chartHeight = 240;
+  const padding = { top: 20, right: 20, bottom: 40, left: 40 };
+  const innerW = chartWidth - padding.left - padding.right;
+  const innerH = chartHeight - padding.top - padding.bottom;
+
+  const getX = (i: number) => padding.left + (metrics.length > 1 ? (i / (metrics.length - 1)) * innerW : innerW / 2);
+  const getY = (val: number) => padding.top + innerH - (val / maxValue) * innerH;
+
+  const makePath = (key: "totalAbertos" | "totalConcluidos") => {
+    if (metrics.length === 0) return "";
+    return metrics
+      .map((m, i) => `${i === 0 ? "M" : "L"} ${getX(i)} ${getY(m[key])}`)
+      .join(" ");
+  };
 
   return (
     <div className="space-y-6">
@@ -78,36 +97,62 @@ export default function Dashboard() {
             <TrendingUp className="h-4 w-4 text-primary" />
             <h2 className="font-semibold text-card-foreground">Análise de Eficiência</h2>
           </div>
-          <Select value={periodFilter} onValueChange={setPeriodFilter}>
-            <SelectTrigger className="w-[170px] h-8 text-xs">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="current">Mês Atual</SelectItem>
-              <SelectItem value="3">Últimos 3 meses</SelectItem>
-              <SelectItem value="6">Últimos 6 meses</SelectItem>
-              <SelectItem value="12">1 Ano</SelectItem>
-            </SelectContent>
-          </Select>
+          <select
+            value={periodFilter}
+            onChange={(e) => setPeriodFilter(e.target.value)}
+            className="rounded-md border bg-secondary/50 px-2 py-1 text-xs outline-none focus:ring-2 focus:ring-ring"
+          >
+            <option value="current">Mês Atual</option>
+            <option value="3">Últimos 3 meses</option>
+            <option value="6">Últimos 6 meses</option>
+            <option value="12">1 Ano</option>
+          </select>
         </div>
         <div className="p-5 grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Line chart: Abertos vs Concluídos */}
+          {/* SVG Line chart */}
           <div className="lg:col-span-2">
             <h3 className="text-sm font-medium text-muted-foreground mb-3">Chamados Abertos × Concluídos</h3>
-            <ResponsiveContainer width="100%" height={280}>
-              <LineChart data={metrics}>
-                <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
-                <XAxis dataKey="label" tick={{ fontSize: 12 }} className="fill-muted-foreground" />
-                <YAxis tick={{ fontSize: 12 }} className="fill-muted-foreground" allowDecimals={false} />
-                <Tooltip
-                  contentStyle={{ backgroundColor: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: 8, fontSize: 12 }}
-                  labelStyle={{ color: "hsl(var(--card-foreground))" }}
-                />
-                <Legend wrapperStyle={{ fontSize: 12 }} />
-                <Line type="monotone" dataKey="totalAbertos" name="Abertos" stroke="hsl(var(--status-open))" strokeWidth={2} dot={{ r: 3 }} />
-                <Line type="monotone" dataKey="totalConcluidos" name="Concluídos" stroke="hsl(var(--status-done))" strokeWidth={2} dot={{ r: 3 }} />
-              </LineChart>
-            </ResponsiveContainer>
+            <div className="w-full overflow-x-auto">
+              <svg viewBox={`0 0 ${chartWidth} ${chartHeight}`} className="w-full h-auto min-w-[400px]">
+                {/* Grid lines */}
+                {[0, 0.25, 0.5, 0.75, 1].map((t) => {
+                  const y = padding.top + innerH * (1 - t);
+                  return (
+                    <g key={t}>
+                      <line x1={padding.left} y1={y} x2={chartWidth - padding.right} y2={y} className="stroke-border" strokeDasharray="4 4" />
+                      <text x={padding.left - 8} y={y + 4} textAnchor="end" className="fill-muted-foreground text-[10px]">
+                        {Math.round(maxValue * t)}
+                      </text>
+                    </g>
+                  );
+                })}
+                {/* X labels */}
+                {metrics.map((m, i) => (
+                  <text key={i} x={getX(i)} y={chartHeight - 8} textAnchor="middle" className="fill-muted-foreground text-[10px]">
+                    {m.label}
+                  </text>
+                ))}
+                {/* Lines */}
+                <path d={makePath("totalAbertos")} fill="none" stroke="hsl(var(--status-open))" strokeWidth="2" />
+                <path d={makePath("totalConcluidos")} fill="none" stroke="hsl(var(--status-done))" strokeWidth="2" />
+                {/* Dots */}
+                {metrics.map((m, i) => (
+                  <g key={i}>
+                    <circle cx={getX(i)} cy={getY(m.totalAbertos)} r="3" fill="hsl(var(--status-open))" />
+                    <circle cx={getX(i)} cy={getY(m.totalConcluidos)} r="3" fill="hsl(var(--status-done))" />
+                  </g>
+                ))}
+              </svg>
+            </div>
+            {/* Legend */}
+            <div className="flex gap-4 mt-2 text-xs text-muted-foreground">
+              <span className="flex items-center gap-1.5">
+                <span className="h-2 w-2 rounded-full bg-status-open" /> Abertos
+              </span>
+              <span className="flex items-center gap-1.5">
+                <span className="h-2 w-2 rounded-full bg-status-done" /> Concluídos
+              </span>
+            </div>
           </div>
 
           {/* Big resolution counter */}

@@ -1,4 +1,4 @@
-import { useTheme } from "next-themes";
+import { useTheme } from "@/components/ThemeProvider";
 import { Sun, Moon, Bell, Menu, Search, ChevronDown, LogOut, Settings, User } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useState, useRef, useEffect } from "react";
@@ -32,12 +32,10 @@ export function TopBar({ onMenuClick, sidebarCollapsed }: TopBarProps) {
         sidebarCollapsed ? "md:pl-20" : "md:pl-64"
       )}
     >
-      {/* Mobile menu button */}
       <button onClick={onMenuClick} className="md:hidden text-muted-foreground hover:text-foreground transition-colors">
         <Menu className="h-5 w-5" />
       </button>
 
-      {/* Search */}
       <div className="relative flex-1 max-w-md">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <input
@@ -48,7 +46,6 @@ export function TopBar({ onMenuClick, sidebarCollapsed }: TopBarProps) {
       </div>
 
       <div className="flex items-center gap-2">
-        {/* Theme toggle */}
         <button
           onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
           className="flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
@@ -56,13 +53,11 @@ export function TopBar({ onMenuClick, sidebarCollapsed }: TopBarProps) {
           {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
         </button>
 
-        {/* Notifications */}
         <button className="relative flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors">
           <Bell className="h-4 w-4" />
           <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-destructive" />
         </button>
 
-        {/* User dropdown */}
         <div ref={dropdownRef} className="relative">
           <button
             onClick={() => setDropdownOpen(!dropdownOpen)}
