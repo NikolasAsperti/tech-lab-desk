@@ -1,16 +1,6 @@
-// Catálogo estático de softwares obrigatórios por laboratório (referência para formatação)
+import type { SoftwareCatalogItem, LabSoftwareCatalog, FormatChecklistItem } from "@/types";
 
-export interface SoftwareCatalogItem {
-  nome: string;
-  versao: string;
-  observacao: string;
-}
-
-export interface LabSoftwareCatalog {
-  lab: string;
-  descricao: string;
-  softwares: SoftwareCatalogItem[];
-}
+export type { SoftwareCatalogItem, LabSoftwareCatalog, FormatChecklistItem };
 
 export const labSoftwareCatalogs: LabSoftwareCatalog[] = [
   {
