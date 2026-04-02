@@ -1,16 +1,6 @@
-// Catálogo estático de softwares obrigatórios por laboratório (referência para formatação)
+import type { SoftwareCatalogItem, LabSoftwareCatalog, FormatChecklistItem } from "@/types";
 
-export interface SoftwareCatalogItem {
-  nome: string;
-  versao: string;
-  observacao: string;
-}
-
-export interface LabSoftwareCatalog {
-  lab: string;
-  descricao: string;
-  softwares: SoftwareCatalogItem[];
-}
+export type { SoftwareCatalogItem, LabSoftwareCatalog, FormatChecklistItem };
 
 export const labSoftwareCatalogs: LabSoftwareCatalog[] = [
   {
@@ -97,11 +87,7 @@ export const labSoftwareCatalogs: LabSoftwareCatalog[] = [
 ];
 
 // Checklist interativo para formatação (usado dentro dos chamados)
-export interface FormatChecklistItem {
-  id: string;
-  label: string;
-  obrigatorio: boolean;
-}
+// FormatChecklistItem importado de @/types
 
 export function getFormatChecklist(lab: string): FormatChecklistItem[] {
   const catalog = labSoftwareCatalogs.find((c) => c.lab === lab);

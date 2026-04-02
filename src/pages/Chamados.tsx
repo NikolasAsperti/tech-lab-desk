@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { chamados as allChamados, Chamado, tecnicos } from "@/data/mock-data";
-import { getFormatChecklist } from "@/data/checklist-catalog";
+import { useState, useEffect } from "react";
+import type { Chamado, Usuario, FormatChecklistItem } from "@/types";
+import * as api from "@/services/api";
 import { useAuth } from "@/contexts/AuthContext";
 import { StatusBadge, PrioridadeBadge } from "./Index";
 import { Modal, ModalHeader, ModalTitle } from "@/components/ui/Modal";
@@ -18,6 +18,8 @@ const tabs: { key: TabFilter; label: string; tecnicoOnly?: boolean }[] = [
 
 export default function Chamados() {
   const { user, isTecnico } = useAuth();
+  const [allChamados, setAllChamados] = useState<Chamado[]>([]);
+  const [tecnicos, setTecnicos] = useState<Usuario[]>([]);
   const [activeTab, setActiveTab] = useState<TabFilter>("todos");
   const [selectedChamado, setSelectedChamado] = useState<Chamado | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
@@ -35,9 +37,15 @@ export default function Chamados() {
 
   const [foiFormatado, setFoiFormatado] = useState(false);
   const [showChecklistModal, setShowChecklistModal] = useState(false);
+  const [checklistItems, setChecklistItems] = useState<FormatChecklistItem[]>([]);
   const [checklistState, setChecklistState] = useState<Record<string, boolean>>({});
   const [checklistObs, setChecklistObs] = useState<Record<string, string>>({});
   const [checklistJustificativa, setChecklistJustificativa] = useState("");
+
+  useEffect(() => {
+    api.getChamados().then(setAllChamados);
+    api.getTecnicos().then(setTecnicos);
+  }, []);
 
   let filtered = isTecnico ? allChamados : allChamados.filter((c) => c.criadoPorId === user?.id);
 
@@ -58,26 +66,24 @@ export default function Chamados() {
     );
   }
 
-  const handleAtender = () => {
+  const handleAtender = async () => {
     if (!selectedChamado || !atenderComment.trim()) return;
-    const now = new Date().toISOString().replace("T", " ").substring(0, 16);
-    selectedChamado.responsavel = user?.nome;
-    selectedChamado.status = "em_andamento";
-    selectedChamado.timeline.push(
-      { data: now, descricao: `Chamado atribuído a ${user?.nome}`, autor: "Sistema", tipo: "sistema" },
-      { data: now, descricao: atenderComment, autor: user?.nome || "", tipo: "tecnico" }
-    );
-    setShowAtenderModal(false);
-    setAtenderComment("");
-    setSelectedChamado({ ...selectedChamado });
+    const updated = await api.atribuirChamado(selectedChamado.id, user?.nome || "", atenderComment);
+    if (updated) {
+      setShowAtenderModal(false);
+      setAtenderComment("");
+      setSelectedChamado(updated);
+      api.getChamados().then(setAllChamados);
+    }
   };
 
-  const handleStatusUpdate = () => {
+  const handleStatusUpdate = async () => {
     if (!selectedChamado || !statusComment.trim() || !pendingStatus) return;
     if (pendingStatus === "concluido" && foiFormatado) {
-      const items = getFormatChecklist(selectedChamado.sala);
+      const items = await api.getFormatChecklist(selectedChamado.sala);
       const initial: Record<string, boolean> = {};
       items.forEach((it) => (initial[it.id] = false));
+      setChecklistItems(items);
       setChecklistState(initial);
       setChecklistObs({});
       setChecklistJustificativa("");
@@ -85,42 +91,29 @@ export default function Chamados() {
       setShowChecklistModal(true);
       return;
     }
-    const now = new Date().toISOString().replace("T", " ").substring(0, 16);
-    selectedChamado.status = pendingStatus;
-    const statusLabel = pendingStatus === "em_andamento" ? "Em Andamento" : "Concluído";
-    selectedChamado.timeline.push({
-      data: now,
-      descricao: `Status alterado para ${statusLabel}: ${statusComment}`,
-      autor: user?.nome || "",
-      tipo: "tecnico",
-    });
-    setShowStatusModal(false);
-    setStatusComment("");
-    setPendingStatus("");
-    setFoiFormatado(false);
-    setSelectedChamado({ ...selectedChamado });
+    const updated = await api.updateChamadoStatus(selectedChamado.id, pendingStatus, statusComment, user?.nome || "");
+    if (updated) {
+      setShowStatusModal(false);
+      setStatusComment("");
+      setPendingStatus("");
+      setFoiFormatado(false);
+      setSelectedChamado(updated);
+      api.getChamados().then(setAllChamados);
+    }
   };
 
-  const handleChecklistConclude = () => {
+  const handleChecklistConclude = async () => {
     if (!selectedChamado) return;
-    const items = getFormatChecklist(selectedChamado.sala);
-    const allChecked = items.every((it) => checklistState[it.id]);
+    const allChecked = checklistItems.every((it) => checklistState[it.id]);
     if (!allChecked && !checklistJustificativa.trim()) return;
-    const now = new Date().toISOString().replace("T", " ").substring(0, 16);
-    selectedChamado.status = "concluido";
-    selectedChamado.timeline.push({
-      data: now,
-      descricao: `Status alterado para Concluído: ${statusComment}`,
-      autor: user?.nome || "",
-      tipo: "tecnico",
-    });
-    const checkedItems = items.filter((it) => checklistState[it.id]);
-    const uncheckedItems = items.filter((it) => !checklistState[it.id]);
-    let checklistDesc = `Checklist de Formatação — ${selectedChamado.sala}: ${checkedItems.length}/${items.length} itens concluídos.`;
+
+    const checkedItems = checklistItems.filter((it) => checklistState[it.id]);
+    const uncheckedItems = checklistItems.filter((it) => !checklistState[it.id]);
+    let checklistDesc = `Checklist de Formatação — ${selectedChamado.sala}: ${checkedItems.length}/${checklistItems.length} itens concluídos.`;
     const obsEntries = Object.entries(checklistObs).filter(([, v]) => v.trim());
     if (obsEntries.length > 0) {
       const obsLabels = obsEntries.map(([id, obs]) => {
-        const item = items.find((it) => it.id === id);
+        const item = checklistItems.find((it) => it.id === id);
         return `${item?.label}: ${obs}`;
       });
       checklistDesc += ` Observações: ${obsLabels.join("; ")}`;
@@ -128,31 +121,26 @@ export default function Chamados() {
     if (uncheckedItems.length > 0) {
       checklistDesc += ` Itens pendentes: ${uncheckedItems.map((it) => it.label).join(", ")}. Justificativa: ${checklistJustificativa}`;
     }
-    selectedChamado.timeline.push({
-      data: now,
-      descricao: checklistDesc,
-      autor: user?.nome || "",
-      tipo: "tecnico",
-    });
-    setShowChecklistModal(false);
-    setStatusComment("");
-    setPendingStatus("");
-    setFoiFormatado(false);
-    setSelectedChamado({ ...selectedChamado });
+
+    const updated = await api.addChecklistToChamado(selectedChamado.id, checklistDesc, user?.nome || "");
+    if (updated) {
+      setShowChecklistModal(false);
+      setStatusComment("");
+      setPendingStatus("");
+      setFoiFormatado(false);
+      setSelectedChamado(updated);
+      api.getChamados().then(setAllChamados);
+    }
   };
 
-  const handleAddComment = () => {
+  const handleAddComment = async () => {
     if (!selectedChamado || !newComment.trim()) return;
-    const now = new Date().toISOString().replace("T", " ").substring(0, 16);
-    selectedChamado.timeline.push({
-      data: now,
-      descricao: newComment,
-      autor: user?.nome || "",
-      tipo: "tecnico",
-    });
-    setShowCommentModal(false);
-    setNewComment("");
-    setSelectedChamado({ ...selectedChamado });
+    const updated = await api.addChamadoComment(selectedChamado.id, newComment, user?.nome || "");
+    if (updated) {
+      setShowCommentModal(false);
+      setNewComment("");
+      setSelectedChamado(updated);
+    }
   };
 
   const openStatusChange = (status: "em_andamento" | "concluido") => {
@@ -168,7 +156,6 @@ export default function Chamados() {
       : selectedChamado.timeline.filter((e) => e.tipo !== "tecnico")
     : [];
 
-  const checklistItems = selectedChamado ? getFormatChecklist(selectedChamado.sala) : [];
   const allChecklistChecked = checklistItems.every((it) => checklistState[it.id]);
   const canConcludeChecklist = allChecklistChecked || checklistJustificativa.trim().length > 0;
 
@@ -501,7 +488,7 @@ export default function Chamados() {
             <div className="flex-1 h-2 rounded-full bg-secondary overflow-hidden">
               <div
                 className="h-full bg-primary transition-all rounded-full"
-                style={{ width: `${(checklistItems.filter((it) => checklistState[it.id]).length / checklistItems.length) * 100}%` }}
+                style={{ width: `${checklistItems.length > 0 ? (checklistItems.filter((it) => checklistState[it.id]).length / checklistItems.length) * 100 : 0}%` }}
               />
             </div>
             <span className="text-xs font-medium text-muted-foreground">

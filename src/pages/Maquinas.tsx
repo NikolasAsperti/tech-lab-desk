@@ -1,9 +1,8 @@
-import { useState } from "react";
-import { maquinas, Maquina } from "@/data/mock-data";
+import { useState, useEffect } from "react";
+import type { Maquina } from "@/types";
+import { getMaquinas, getLabNames } from "@/services/api";
 import { Monitor, Laptop, Cpu, HardDrive, MemoryStick, CircuitBoard } from "lucide-react";
 import { Modal, ModalHeader, ModalTitle } from "@/components/ui/Modal";
-
-const salas = [...new Set(maquinas.map((m) => m.sala))];
 
 const statusStyles: Record<string, string> = {
   funcionando: "bg-status-done-bg text-status-done-foreground",
@@ -17,11 +16,21 @@ const statusLabels: Record<string, string> = {
 };
 
 export default function Maquinas() {
-  const [activeSala, setActiveSala] = useState(salas[0]);
+  const [allMaquinas, setAllMaquinas] = useState<Maquina[]>([]);
+  const [salas, setSalas] = useState<string[]>([]);
+  const [activeSala, setActiveSala] = useState("");
   const [search, setSearch] = useState("");
   const [selectedMaquina, setSelectedMaquina] = useState<Maquina | null>(null);
 
-  let filtered = maquinas.filter((m) => m.sala === activeSala);
+  useEffect(() => {
+    getMaquinas().then(setAllMaquinas);
+    getLabNames().then((names) => {
+      setSalas(names);
+      if (names.length > 0) setActiveSala(names[0]);
+    });
+  }, []);
+
+  let filtered = allMaquinas.filter((m) => m.sala === activeSala);
   if (search) {
     const term = search.toLowerCase();
     filtered = filtered.filter((m) => m.id.toLowerCase().includes(term) || m.so.toLowerCase().includes(term));
@@ -92,7 +101,6 @@ export default function Maquinas() {
         ))}
       </div>
 
-      {/* Hardware Detail Modal */}
       <Modal open={!!selectedMaquina} onClose={() => setSelectedMaquina(null)} className="max-w-md">
         {selectedMaquina && (
           <>

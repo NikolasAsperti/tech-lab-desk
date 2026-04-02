@@ -1,10 +1,17 @@
-import { useState } from "react";
-import { labSoftwareCatalogs } from "@/data/checklist-catalog";
+import { useState, useEffect } from "react";
+import type { LabSoftwareCatalog } from "@/types";
+import { getSoftwareCatalogs } from "@/services/api";
 import { BookOpen, Monitor, Info } from "lucide-react";
 
 export default function Checklists() {
+  const [catalogs, setCatalogs] = useState<LabSoftwareCatalog[]>([]);
   const [activeLab, setActiveLab] = useState(0);
-  const catalog = labSoftwareCatalogs[activeLab];
+
+  useEffect(() => {
+    getSoftwareCatalogs().then(setCatalogs);
+  }, []);
+
+  const catalog = catalogs[activeLab];
 
   return (
     <div className="space-y-4">
@@ -15,7 +22,6 @@ export default function Checklists() {
         </p>
       </div>
 
-      {/* Info banner */}
       <div className="flex items-start gap-3 rounded-lg border border-primary/20 bg-primary/5 p-3">
         <Info className="h-4 w-4 text-primary mt-0.5 shrink-0" />
         <p className="text-xs text-muted-foreground">
@@ -24,9 +30,8 @@ export default function Checklists() {
         </p>
       </div>
 
-      {/* Lab tabs */}
       <div className="flex gap-1 border-b overflow-x-auto">
-        {labSoftwareCatalogs.map((l, i) => (
+        {catalogs.map((l, i) => (
           <button
             key={l.lab}
             onClick={() => setActiveLab(i)}
@@ -41,7 +46,6 @@ export default function Checklists() {
         ))}
       </div>
 
-      {/* Catalog content */}
       {catalog && (
         <div className="rounded-xl border bg-card shadow-sm">
           <div className="border-b px-5 py-3 flex items-center gap-2">
@@ -56,7 +60,6 @@ export default function Checklists() {
             </span>
           </div>
 
-          {/* Table */}
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
@@ -86,7 +89,6 @@ export default function Checklists() {
             </table>
           </div>
 
-          {/* Mobile: show version + obs inline */}
           <div className="sm:hidden divide-y">
             {catalog.softwares.map((s, i) => (
               <div key={`mobile-${i}`} className="px-5 py-2">

@@ -1,9 +1,16 @@
+import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Navigate } from "react-router-dom";
-import { usuarios } from "@/data/mock-data";
+import type { Usuario } from "@/types";
+import { getUsuarios } from "@/services/api";
 
 export default function Usuarios() {
   const { isTecnico } = useAuth();
+  const [usuarios, setUsuarios] = useState<Usuario[]>([]);
+
+  useEffect(() => {
+    getUsuarios().then(setUsuarios);
+  }, []);
 
   if (!isTecnico) {
     return <Navigate to="/" replace />;
