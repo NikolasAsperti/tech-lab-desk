@@ -1,5 +1,6 @@
-import { useState } from "react";
-import { labSoftwareCatalogs } from "@/data/checklist-catalog";
+import { useState, useEffect } from "react";
+import type { LabSoftwareCatalog } from "@/types";
+import { getSoftwareCatalogs } from "@/services/api";
 import { BookOpen, Monitor, Info } from "lucide-react";
 
 export default function Checklists() {

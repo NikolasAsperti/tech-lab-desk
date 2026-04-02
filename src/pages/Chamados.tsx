@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { chamados as allChamados, Chamado, tecnicos } from "@/data/mock-data";
-import { getFormatChecklist } from "@/data/checklist-catalog";
+import { useState, useEffect } from "react";
+import type { Chamado, Usuario } from "@/types";
+import * as api from "@/services/api";
 import { useAuth } from "@/contexts/AuthContext";
 import { StatusBadge, PrioridadeBadge } from "./Index";
 import { Modal, ModalHeader, ModalTitle } from "@/components/ui/Modal";

@@ -1,6 +1,8 @@
+import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Navigate } from "react-router-dom";
-import { usuarios } from "@/data/mock-data";
+import type { Usuario } from "@/types";
+import { getUsuarios } from "@/services/api";
 
 export default function Usuarios() {
   const { isTecnico } = useAuth();

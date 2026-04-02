@@ -1,5 +1,6 @@
-import { useState } from "react";
-import { maquinas, Maquina } from "@/data/mock-data";
+import { useState, useEffect } from "react";
+import type { Maquina } from "@/types";
+import { getMaquinas, getLabNames } from "@/services/api";
 import { Monitor, Laptop, Cpu, HardDrive, MemoryStick, CircuitBoard } from "lucide-react";
 import { Modal, ModalHeader, ModalTitle } from "@/components/ui/Modal";
 

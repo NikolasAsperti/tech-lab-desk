@@ -11,19 +11,22 @@ export default function Login() {
   const [erro, setErro] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setErro("");
-    setTimeout(() => {
-      const ok = login(email, senha);
+    try {
+      const ok = await login(email, senha);
       if (ok) {
         navigate("/");
       } else {
         setErro("Email ou senha inválidos.");
       }
+    } catch {
+      setErro("Erro ao conectar. Tente novamente.");
+    } finally {
       setLoading(false);
-    }, 500);
+    }
   };
 
   return (

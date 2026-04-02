@@ -1,6 +1,7 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { ClipboardList, Clock, CheckCircle2, Monitor, TrendingUp } from "lucide-react";
-import { chamados, maquinas, getMonthlyMetrics } from "@/data/mock-data";
+import type { Chamado, Maquina, MonthlyMetric } from "@/types";
+import { getChamados, getMaquinas, getMonthlyMetrics } from "@/services/api";
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function Dashboard() {
