@@ -1,9 +1,6 @@
-export interface TimelineEntry {
-  data: string;
-  descricao: string;
-  autor: string;
-  tipo?: "sistema" | "tecnico" | "usuario";
-}
+import type { Chamado, Maquina, Usuario, ChecklistItem, LabChecklist, MonthlyMetric, TimelineEntry } from "@/types";
+
+export type { Chamado, Maquina, Usuario, ChecklistItem, LabChecklist, MonthlyMetric, TimelineEntry };
 
 export interface Chamado {
   id: string;
