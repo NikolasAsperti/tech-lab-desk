@@ -6,11 +6,20 @@ import { useAuth } from "@/contexts/AuthContext";
 
 export default function Dashboard() {
   const { user } = useAuth();
+  const [chamados, setChamados] = useState<Chamado[]>([]);
+  const [totalMaquinas, setTotalMaquinas] = useState(0);
+  const [allMetrics, setAllMetrics] = useState<MonthlyMetric[]>([]);
+  const [periodFilter, setPeriodFilter] = useState("6");
+
+  useEffect(() => {
+    getChamados().then(setChamados);
+    getMaquinas().then((m) => setTotalMaquinas(m.length));
+    getMonthlyMetrics().then(setAllMetrics);
+  }, []);
 
   const abertos = chamados.filter((c) => c.status === "aberto").length;
   const emAndamento = chamados.filter((c) => c.status === "em_andamento").length;
   const concluidos = chamados.filter((c) => c.status === "concluido").length;
-  const totalMaquinas = maquinas.length;
 
   const cards = [
     { label: "Chamados Abertos", value: abertos, icon: ClipboardList, accent: "text-status-open" },
@@ -20,9 +29,6 @@ export default function Dashboard() {
   ];
 
   const recentChamados = [...chamados].sort((a, b) => b.criadoEm.localeCompare(a.criadoEm)).slice(0, 5);
-
-  const allMetrics = useMemo(() => getMonthlyMetrics(), []);
-  const [periodFilter, setPeriodFilter] = useState("6");
 
   const metrics = useMemo(() => {
     if (periodFilter === "current") {
@@ -41,7 +47,6 @@ export default function Dashboard() {
     return Math.round((totalConcluidos / totalAbertos) * 100);
   }, [metrics]);
 
-  // Simple SVG chart
   const maxValue = useMemo(() => {
     let max = 1;
     metrics.forEach((m) => {
@@ -110,12 +115,10 @@ export default function Dashboard() {
           </select>
         </div>
         <div className="p-5 grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* SVG Line chart */}
           <div className="lg:col-span-2">
             <h3 className="text-sm font-medium text-muted-foreground mb-3">Chamados Abertos × Concluídos</h3>
             <div className="w-full overflow-x-auto">
               <svg viewBox={`0 0 ${chartWidth} ${chartHeight}`} className="w-full h-auto min-w-[400px]">
-                {/* Grid lines */}
                 {[0, 0.25, 0.5, 0.75, 1].map((t) => {
                   const y = padding.top + innerH * (1 - t);
                   return (
@@ -127,16 +130,13 @@ export default function Dashboard() {
                     </g>
                   );
                 })}
-                {/* X labels */}
                 {metrics.map((m, i) => (
                   <text key={i} x={getX(i)} y={chartHeight - 8} textAnchor="middle" className="fill-muted-foreground text-[10px]">
                     {m.label}
                   </text>
                 ))}
-                {/* Lines */}
                 <path d={makePath("totalAbertos")} fill="none" stroke="hsl(var(--status-open))" strokeWidth="2" />
                 <path d={makePath("totalConcluidos")} fill="none" stroke="hsl(var(--status-done))" strokeWidth="2" />
-                {/* Dots */}
                 {metrics.map((m, i) => (
                   <g key={i}>
                     <circle cx={getX(i)} cy={getY(m.totalAbertos)} r="3" fill="hsl(var(--status-open))" />
@@ -145,7 +145,6 @@ export default function Dashboard() {
                 ))}
               </svg>
             </div>
-            {/* Legend */}
             <div className="flex gap-4 mt-2 text-xs text-muted-foreground">
               <span className="flex items-center gap-1.5">
                 <span className="h-2 w-2 rounded-full bg-status-open" /> Abertos
@@ -156,7 +155,6 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* Big resolution counter */}
           <div className="flex flex-col items-center justify-center rounded-xl border bg-muted/30 p-6">
             <span className="text-sm font-medium text-muted-foreground mb-2">Taxa de Resolução</span>
             <span className={`text-6xl font-bold ${resolutionRate >= 70 ? "text-status-done" : resolutionRate >= 40 ? "text-status-progress" : "text-destructive"}`}>

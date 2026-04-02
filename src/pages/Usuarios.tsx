@@ -6,6 +6,11 @@ import { getUsuarios } from "@/services/api";
 
 export default function Usuarios() {
   const { isTecnico } = useAuth();
+  const [usuarios, setUsuarios] = useState<Usuario[]>([]);
+
+  useEffect(() => {
+    getUsuarios().then(setUsuarios);
+  }, []);
 
   if (!isTecnico) {
     return <Navigate to="/" replace />;
