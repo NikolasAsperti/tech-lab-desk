@@ -2,64 +2,7 @@ import type { Chamado, Maquina, Usuario, ChecklistItem, LabChecklist, MonthlyMet
 
 export type { Chamado, Maquina, Usuario, ChecklistItem, LabChecklist, MonthlyMetric, TimelineEntry };
 
-export interface Chamado {
-  id: string;
-  titulo: string;
-  descricao: string;
-  sala: string;
-  maquinaId: string;
-  status: "aberto" | "em_andamento" | "concluido";
-  prioridade: "baixa" | "media" | "alta";
-  criadoEm: string;
-  criadoPor: string;
-  criadoPorId: string;
-  responsavel?: string;
-  timeline: TimelineEntry[];
-}
 
-export interface HardwareInfo {
-  processador: string;
-  placaMae: string;
-  placaVideo: string;
-  ram: string;
-  armazenamento: string;
-}
-
-export interface Maquina {
-  id: string;
-  tipo: "Desktop" | "Notebook";
-  so: string;
-  sala: string;
-  ultimaManutencao: string;
-  status: "funcionando" | "em_manutencao" | "defeituoso";
-  hardware: HardwareInfo;
-}
-
-export interface Usuario {
-  id: string;
-  nome: string;
-  email: string;
-  papel: "tecnico" | "usuario";
-  sala?: string;
-  criadoEm: string;
-  ativo: boolean;
-}
-
-export interface ChecklistItem {
-  id: string;
-  software: string;
-  instalado: boolean;
-  versao: string;
-  nota?: string;
-  atualizadoPor?: string;
-  atualizadoEm?: string;
-}
-
-export interface LabChecklist {
-  sala: string;
-  nome: string;
-  items: ChecklistItem[];
-}
 
 export const usuarios: Usuario[] = [
   { id: "u1", nome: "Carlos Silva", email: "carlos.silva@uni.edu.br", papel: "tecnico", criadoEm: "2024-01-15", ativo: true },
