@@ -1,9 +1,10 @@
 import React, { createContext, useContext, useState, useCallback } from "react";
-import { Usuario, mockLoginUsers } from "@/data/mock-data";
+import type { Usuario } from "@/types";
+import { login as apiLogin } from "@/services/api";
 
 interface AuthContextType {
   user: Usuario | null;
-  login: (email: string, senha: string) => boolean;
+  login: (email: string, senha: string) => Promise<boolean>;
   logout: () => void;
   isTecnico: boolean;
 }
