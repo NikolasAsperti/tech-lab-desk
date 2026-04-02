@@ -400,12 +400,7 @@ export const mockLoginUsers = [
 ];
 
 // Helper: compute metrics per month for dashboard charts
-export interface MonthlyMetric {
-  month: string;
-  label: string;
-  totalAbertos: number;
-  totalConcluidos: number;
-}
+// MonthlyMetric importado de @/types
 
 const monthLabels: Record<string, string> = {
   "01": "Jan", "02": "Fev", "03": "Mar", "04": "Abr", "05": "Mai", "06": "Jun",
