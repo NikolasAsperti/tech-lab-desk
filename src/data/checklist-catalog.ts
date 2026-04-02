@@ -87,11 +87,7 @@ export const labSoftwareCatalogs: LabSoftwareCatalog[] = [
 ];
 
 // Checklist interativo para formatação (usado dentro dos chamados)
-export interface FormatChecklistItem {
-  id: string;
-  label: string;
-  obrigatorio: boolean;
-}
+// FormatChecklistItem importado de @/types
 
 export function getFormatChecklist(lab: string): FormatChecklistItem[] {
   const catalog = labSoftwareCatalogs.find((c) => c.lab === lab);

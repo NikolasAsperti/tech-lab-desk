@@ -14,12 +14,10 @@ const AuthContext = createContext<AuthContextType | null>(null);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<Usuario | null>(null);
 
-  const login = useCallback((email: string, senha: string): boolean => {
-    const found = mockLoginUsers.find(
-      (u) => u.email === email && u.senha === senha
-    );
-    if (found) {
-      setUser(found.usuario);
+  const login = useCallback(async (email: string, senha: string): Promise<boolean> => {
+    const result = await apiLogin(email, senha);
+    if (result.success && result.usuario) {
+      setUser(result.usuario);
       return true;
     }
     return false;
