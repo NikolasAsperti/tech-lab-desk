@@ -1,7 +1,7 @@
 import { NavLink, useLocation } from "react-router-dom";
 import { Home, ClipboardList, Monitor, Users, ListChecks, LogOut, ChevronLeft, ChevronRight } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/cn";
 
 const navItems = [
   { to: "/", label: "Início", icon: Home },
