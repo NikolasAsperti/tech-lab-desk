@@ -4,7 +4,6 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { cn } from "@/utils/cn";
-import { cn } from "@/utils/cn";
 
 interface TopBarProps {
   onMenuClick: () => void;
