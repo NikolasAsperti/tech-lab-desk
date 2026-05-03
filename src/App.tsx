@@ -9,6 +9,9 @@ import Chamados from "./pages/Chamados";
 import Maquinas from "./pages/Maquinas";
 import Usuarios from "./pages/Usuarios";
 import Checklists from "./pages/Checklists";
+import Perfil from "./pages/Perfil";
+import Cadastro from "./pages/Cadastro";
+import EsqueciSenha from "./pages/EsqueciSenha";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -24,11 +27,14 @@ function AppRoutes() {
   return (
     <Routes>
       <Route path="/login" element={user ? <Navigate to="/" replace /> : <Login />} />
+      <Route path="/cadastro" element={user ? <Navigate to="/" replace /> : <Cadastro />} />
+      <Route path="/esqueci-senha" element={user ? <Navigate to="/" replace /> : <EsqueciSenha />} />
       <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
       <Route path="/chamados" element={<ProtectedRoute><Chamados /></ProtectedRoute>} />
       <Route path="/maquinas" element={<ProtectedRoute><Maquinas /></ProtectedRoute>} />
       <Route path="/usuarios" element={<ProtectedRoute><Usuarios /></ProtectedRoute>} />
       <Route path="/checklists" element={<ProtectedRoute><Checklists /></ProtectedRoute>} />
+      <Route path="/perfil" element={<ProtectedRoute><Perfil /></ProtectedRoute>} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
