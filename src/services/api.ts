@@ -26,6 +26,7 @@ import {
   tecnicos,
   getMonthlyMetrics as mockGetMonthlyMetrics,
   mockLoginUsers,
+  addMockUser,
 } from "@/data/mock-data";
 
 import {
