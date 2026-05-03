@@ -1,15 +1,25 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { Monitor } from "lucide-react";
 
 export default function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
+  const location = useLocation();
+  const state = location.state as { registeredEmail?: string; message?: string } | null;
+  const [email, setEmail] = useState(state?.registeredEmail || "");
   const [senha, setSenha] = useState("");
   const [erro, setErro] = useState("");
   const [loading, setLoading] = useState(false);
+  const [successMsg, setSuccessMsg] = useState(state?.message || "");
+
+  useEffect(() => {
+    if (state?.message) {
+      const t = setTimeout(() => setSuccessMsg(""), 5000);
+      return () => clearTimeout(t);
+    }
+  }, [state?.message]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,6 +51,12 @@ export default function Login() {
             <h1 className="text-xl font-bold text-card-foreground">LabTech</h1>
             <p className="text-sm text-muted-foreground">Gestão de Chamados — Laboratórios</p>
           </div>
+
+          {successMsg && (
+            <p className="mb-4 rounded-md bg-green-100 dark:bg-green-900/30 p-2.5 text-sm text-green-700 dark:text-green-400 text-center animate-fade-in">
+              {successMsg}
+            </p>
+          )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
@@ -78,6 +94,11 @@ export default function Login() {
               {loading ? "Entrando..." : "Entrar"}
             </button>
           </form>
+
+          <div className="mt-4 flex items-center justify-between text-sm">
+            <Link to="/esqueci-senha" className="text-primary hover:underline">Esqueci minha senha</Link>
+            <Link to="/cadastro" className="text-primary hover:underline">Criar conta</Link>
+          </div>
 
           <div className="mt-6 rounded-md bg-muted p-3 text-xs text-muted-foreground space-y-1">
             <p className="font-medium">Contas de demonstração:</p>

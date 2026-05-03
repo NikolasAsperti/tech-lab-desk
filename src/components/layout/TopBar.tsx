@@ -1,7 +1,8 @@
 import { useTheme } from "@/components/ThemeProvider";
-import { Sun, Moon, Bell, Menu, Search, ChevronDown, LogOut, Settings, User } from "lucide-react";
+import { Sun, Moon, Bell, Menu, Search, ChevronDown, LogOut, Settings, User, Edit } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { cn } from "@/utils/cn";
 
 interface TopBarProps {
@@ -10,6 +11,7 @@ interface TopBarProps {
 }
 
 export function TopBar({ onMenuClick, sidebarCollapsed }: TopBarProps) {
+  const navigate = useNavigate();
   const { theme, setTheme } = useTheme();
   const { user, logout } = useAuth();
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -76,8 +78,8 @@ export function TopBar({ onMenuClick, sidebarCollapsed }: TopBarProps) {
                 <p className="text-sm font-medium">{user?.nome}</p>
                 <p className="text-xs text-muted-foreground">{user?.email}</p>
               </div>
-              <button className="flex w-full items-center gap-2 rounded-sm px-3 py-1.5 text-sm hover:bg-accent transition-colors">
-                <User className="h-3.5 w-3.5" /> Perfil
+              <button onClick={() => { setDropdownOpen(false); navigate("/perfil"); }} className="flex w-full items-center gap-2 rounded-sm px-3 py-1.5 text-sm hover:bg-accent transition-colors">
+                <Edit className="h-3.5 w-3.5" /> Editar Perfil
               </button>
               <button className="flex w-full items-center gap-2 rounded-sm px-3 py-1.5 text-sm hover:bg-accent transition-colors">
                 <Settings className="h-3.5 w-3.5" /> Configurações

@@ -334,10 +334,26 @@ export const labChecklists: LabChecklist[] = [
   },
 ];
 
-export const mockLoginUsers = [
+export const mockLoginUsers: { email: string; senha: string; usuario: Usuario }[] = [
   { email: "admin@labtech.edu.br", senha: "admin123", usuario: usuarios[0] },
   { email: "professor@labtech.edu.br", senha: "prof123", usuario: usuarios[2] },
 ];
+
+export function addMockUser(nome: string, email: string, senha: string, papel: "tecnico" | "usuario", sala?: string) {
+  if (mockLoginUsers.some(u => u.email === email)) return false;
+  const newUser: Usuario = {
+    id: `u${Date.now()}`,
+    nome,
+    email,
+    papel,
+    sala,
+    criadoEm: new Date().toISOString().substring(0, 10),
+    ativo: true,
+  };
+  usuarios.push(newUser);
+  mockLoginUsers.push({ email, senha, usuario: newUser });
+  return true;
+}
 
 // Helper: compute metrics per month for dashboard charts
 // MonthlyMetric importado de @/types

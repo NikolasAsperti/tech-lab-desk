@@ -6,6 +6,7 @@ interface AuthContextType {
   user: Usuario | null;
   login: (email: string, senha: string) => Promise<boolean>;
   logout: () => void;
+  updateProfile: (data: Partial<Pick<Usuario, "nome" | "sala">>) => void;
   isTecnico: boolean;
 }
 
@@ -25,10 +26,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = useCallback(() => setUser(null), []);
 
+  const updateProfile = useCallback((data: Partial<Pick<Usuario, "nome" | "sala">>) => {
+    setUser(prev => prev ? { ...prev, ...data } : prev);
+  }, []);
+
   const isTecnico = user?.papel === "tecnico";
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, isTecnico }}>
+    <AuthContext.Provider value={{ user, login, logout, updateProfile, isTecnico }}>
       {children}
     </AuthContext.Provider>
   );

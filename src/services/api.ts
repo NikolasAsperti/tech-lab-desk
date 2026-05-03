@@ -26,6 +26,7 @@ import {
   tecnicos,
   getMonthlyMetrics as mockGetMonthlyMetrics,
   mockLoginUsers,
+  addMockUser,
 } from "@/data/mock-data";
 
 import {
@@ -49,6 +50,14 @@ export async function login(email: string, senha: string): Promise<LoginResponse
     return { success: true, usuario: found.usuario };
   }
   return { success: false };
+}
+
+export async function register(
+  nome: string, email: string, senha: string, papel: "tecnico" | "usuario", sala?: string
+): Promise<{ success: boolean; error?: string }> {
+  const ok = addMockUser(nome, email, senha, papel, sala);
+  if (!ok) return { success: false, error: "Este email já está cadastrado." };
+  return { success: true };
 }
 
 // -------------------------------------------------------------------
