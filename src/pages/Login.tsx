@@ -52,6 +52,12 @@ export default function Login() {
             <p className="text-sm text-muted-foreground">Gestão de Chamados — Laboratórios</p>
           </div>
 
+          {successMsg && (
+            <p className="mb-4 rounded-md bg-green-100 dark:bg-green-900/30 p-2.5 text-sm text-green-700 dark:text-green-400 text-center animate-fade-in">
+              {successMsg}
+            </p>
+          )}
+
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="mb-1.5 block text-sm font-medium text-card-foreground">Email</label>
@@ -88,6 +94,11 @@ export default function Login() {
               {loading ? "Entrando..." : "Entrar"}
             </button>
           </form>
+
+          <div className="mt-4 flex items-center justify-between text-sm">
+            <Link to="/esqueci-senha" className="text-primary hover:underline">Esqueci minha senha</Link>
+            <Link to="/cadastro" className="text-primary hover:underline">Criar conta</Link>
+          </div>
 
           <div className="mt-6 rounded-md bg-muted p-3 text-xs text-muted-foreground space-y-1">
             <p className="font-medium">Contas de demonstração:</p>
