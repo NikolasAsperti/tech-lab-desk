@@ -11,6 +11,7 @@ interface TopBarProps {
 }
 
 export function TopBar({ onMenuClick, sidebarCollapsed }: TopBarProps) {
+  const navigate = useNavigate();
   const { theme, setTheme } = useTheme();
   const { user, logout } = useAuth();
   const [dropdownOpen, setDropdownOpen] = useState(false);
