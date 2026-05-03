@@ -1,7 +1,9 @@
 import { useTheme } from "@/components/ThemeProvider";
-import { Sun, Moon, Bell, Menu, Search, ChevronDown, LogOut, Settings, User } from "lucide-react";
+import { Sun, Moon, Bell, Menu, Search, ChevronDown, LogOut, Settings, User, Edit } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { cn } from "@/utils/cn";
 import { cn } from "@/utils/cn";
 
 interface TopBarProps {
