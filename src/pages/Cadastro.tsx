@@ -73,7 +73,7 @@ export default function Cadastro() {
               </select>
             </div>
 
-            <InputField label="Laboratório (opcional)" value={lab} onChange={setLab} placeholder="Ex: Pascal" />
+            <InputField label="Laboratório (opcional)" value={lab} onChange={setLab} placeholder="Ex: Jobs" />
 
             {erro && <p className="text-sm text-destructive">{erro}</p>}
 

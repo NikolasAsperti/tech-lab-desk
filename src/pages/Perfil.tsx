@@ -72,7 +72,7 @@ export default function Perfil() {
               <option>Aluno</option>
             </select>
           </div>
-          <Field label="Laboratório associado (opcional)" value={lab} onChange={setLab} placeholder="Ex: Pascal" />
+          <Field label="Laboratório associado (opcional)" value={lab} onChange={setLab} placeholder="Ex: Jobs" />
           <Field label="Telefone (opcional)" value={telefone} onChange={setTelefone} placeholder="(00) 00000-0000" />
         </div>
 
