@@ -220,7 +220,13 @@ export default function Chamados() {
   const detailOpen = !!selectedChamado && !showAtenderModal && !showStatusModal && !showCommentModal && !showChecklistModal;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 relative">
+      {successMsg && (
+        <div className="fixed top-20 right-6 z-[60] flex items-center gap-2 rounded-lg border bg-card px-4 py-3 shadow-lg animate-fade-in">
+          <CheckCircle2 className="h-5 w-5 text-green-500" />
+          <span className="text-sm font-medium text-card-foreground">{successMsg}</span>
+        </div>
+      )}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold">Chamados</h1>
