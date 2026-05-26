@@ -50,10 +50,24 @@ export default function Chamados() {
   const [checklistObs, setChecklistObs] = useState<Record<string, string>>({});
   const [checklistJustificativa, setChecklistJustificativa] = useState("");
 
+  // Novo Chamado
+  const [showNovoModal, setShowNovoModal] = useState(false);
+  const [allMaquinas, setAllMaquinas] = useState<Maquina[]>([]);
+  const [novoTitulo, setNovoTitulo] = useState("");
+  const [novoDescricao, setNovoDescricao] = useState("");
+  const [novoSala, setNovoSala] = useState("");
+  const [novoMaquinaId, setNovoMaquinaId] = useState("");
+  const [novoPrioridade, setNovoPrioridade] = useState<"baixa" | "media" | "alta">("media");
+  const [novoAnexo, setNovoAnexo] = useState<string | null>(null);
+  const [novoError, setNovoError] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
+
   useEffect(() => {
     api.getChamados().then(setAllChamados);
     api.getTecnicos().then(setTecnicos);
+    api.getMaquinas().then(setAllMaquinas);
   }, []);
+
 
   let filtered = isTecnico ? allChamados : allChamados.filter((c) => c.criadoPorId === user?.id);
 
