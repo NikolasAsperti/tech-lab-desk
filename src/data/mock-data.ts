@@ -222,114 +222,152 @@ export const chamados: Chamado[] = [
   },
 ];
 
-// Labs with specific names
-const labNames = ["Pascal", "Jobs", "Faraday", "Einstein", "Tesla"];
+// Laboratórios reais com especificações fixas por lab
+const labNames = ["Jobs", "Eniac", "Boole", "Fortran", "Ada"];
 
-// Hardware specs pools for realistic variety
-const processadores = [
-  "Intel Core i7-12700H", "Intel Core i5-12400", "Intel Core i5-11400", "Intel Core i3-10100",
-  "AMD Ryzen 7 5800H", "AMD Ryzen 5 5600X", "AMD Ryzen 5 3600", "Intel Core i7-10700",
-];
-const placasMae = [
-  "ASUS Prime B560M-A", "Gigabyte B550M DS3H", "MSI MAG B660M Mortar", "ASRock B450M Steel Legend",
-  "ASUS TUF Gaming B550-Plus", "Gigabyte H510M H", "MSI PRO H610M-G", "ASRock H670M-ITX",
-];
-const placasVideo = [
-  "NVIDIA GeForce GTX 1650", "NVIDIA GeForce RTX 3060", "AMD Radeon RX 6600", "Integrada (Intel UHD 730)",
-  "Integrada (Intel UHD 770)", "NVIDIA GeForce GTX 1050 Ti", "AMD Radeon RX 580", "Integrada (AMD Radeon Vega 8)",
-];
-const rams = [
-  "8GB DDR4 3200MHz", "16GB DDR4 3200MHz", "8GB DDR4 2666MHz", "16GB DDR4 2666MHz",
-  "32GB DDR4 3200MHz", "4GB DDR4 2400MHz", "16GB DDR5 4800MHz", "8GB DDR5 4800MHz",
-];
-const armazenamentos = [
-  "SSD 480GB SATA", "SSD 256GB NVMe", "SSD 512GB NVMe", "HDD 1TB 7200RPM",
-  "SSD 240GB SATA", "SSD 1TB NVMe", "HDD 500GB 5400RPM + SSD 128GB", "SSD 960GB SATA",
-];
+interface LabSpec {
+  nome: string;
+  descricao: string;
+  qtd: number;
+  tipo: "Desktop" | "Notebook";
+  so: string;
+  hardware: {
+    processador: string;
+    placaMae: string;
+    placaVideo: string;
+    ram: string;
+    armazenamento: string;
+  };
+}
+
+const labSpecs: Record<string, LabSpec> = {
+  Jobs: {
+    nome: "Jobs", descricao: "Laboratório de Programação Básica",
+    qtd: 60, tipo: "Desktop", so: "Windows 10 Pro",
+    hardware: {
+      processador: "Intel Core i5-4570 (4ª Geração)",
+      placaMae: "ASUS H81M-A",
+      placaVideo: "Integrada (Intel HD Graphics 4600)",
+      ram: "8GB DDR3 1600MHz",
+      armazenamento: "4x HDD 500GB 7200RPM",
+    },
+  },
+  Eniac: {
+    nome: "Eniac", descricao: "Laboratório Móvel (Notebooks)",
+    qtd: 15, tipo: "Notebook", so: "Windows 11 Pro",
+    hardware: {
+      processador: "Intel Core i5-1135G7 (11ª Geração)",
+      placaMae: "Integrada (Notebook Dell Latitude 3420)",
+      placaVideo: "Intel Iris Xe Graphics",
+      ram: "8GB DDR4 3200MHz",
+      armazenamento: "SSD 256GB NVMe",
+    },
+  },
+  Boole: {
+    nome: "Boole", descricao: "Laboratório de Lógica e Algoritmos",
+    qtd: 24, tipo: "Desktop", so: "Windows 10 Pro",
+    hardware: {
+      processador: "Intel Core i3-4150 (4ª Geração)",
+      placaMae: "Gigabyte H81M-S2PH",
+      placaVideo: "Integrada (Intel HD Graphics 4400)",
+      ram: "8GB DDR3 1600MHz",
+      armazenamento: "2x HDD 500GB 7200RPM",
+    },
+  },
+  Fortran: {
+    nome: "Fortran", descricao: "Laboratório de Computação Científica",
+    qtd: 32, tipo: "Desktop", so: "Windows 11 Pro",
+    hardware: {
+      processador: "Intel Core i5-12400 (12ª Geração)",
+      placaMae: "ASUS Prime H610M-E D4",
+      placaVideo: "Integrada (Intel UHD Graphics 770)",
+      ram: "16GB DDR4 3200MHz",
+      armazenamento: "SSD 512GB NVMe",
+    },
+  },
+  Ada: {
+    nome: "Ada", descricao: "Laboratório de IA e Computação Gráfica",
+    qtd: 20, tipo: "Desktop", so: "Windows 11 Pro",
+    hardware: {
+      processador: "Intel Core i7-10700 (10ª Geração)",
+      placaMae: "ASUS Prime B460M-A",
+      placaVideo: "NVIDIA GeForce RTX 3050 8GB",
+      ram: "16GB DDR4 2933MHz",
+      armazenamento: "SSD 512GB NVMe",
+    },
+  },
+};
 
 function seededRandom(seed: number) {
   const x = Math.sin(seed) * 10000;
   return x - Math.floor(x);
 }
 
-const sos = ["Windows 11 Pro", "Windows 10 Pro", "Ubuntu 22.04 LTS"];
-const tipos: Array<"Desktop" | "Notebook"> = ["Desktop", "Notebook"];
-const statusMaq: Array<"funcionando" | "em_manutencao" | "defeituoso"> = ["funcionando", "funcionando", "funcionando", "em_manutencao", "defeituoso"];
+const statusMaq: Array<"funcionando" | "em_manutencao" | "defeituoso"> =
+  ["funcionando", "funcionando", "funcionando", "funcionando", "funcionando", "em_manutencao", "defeituoso"];
 
 export const maquinas: Maquina[] = [];
 
 labNames.forEach((lab, labIdx) => {
-  const count = lab === "Tesla" ? 8 : 10;
-  for (let i = 1; i <= count; i++) {
-    const seed = labIdx * 100 + i;
-    const pick = (arr: string[]) => arr[Math.floor(seededRandom(seed + arr.length) * arr.length)];
+  const spec = labSpecs[lab];
+  for (let i = 1; i <= spec.qtd; i++) {
+    const seed = labIdx * 1000 + i;
     maquinas.push({
       id: `PC-${lab}-${String(i).padStart(2, "0")}`,
-      tipo: lab === "Einstein" ? "Notebook" : tipos[Math.floor(seededRandom(seed + 1) * 2)],
-      so: pick(sos),
+      tipo: spec.tipo,
+      so: spec.so,
       sala: lab,
       ultimaManutencao: `2026-0${Math.floor(seededRandom(seed + 2) * 2) + 1}-${String(Math.floor(seededRandom(seed + 3) * 28) + 1).padStart(2, "0")}`,
       status: statusMaq[Math.floor(seededRandom(seed + 4) * statusMaq.length)],
-      hardware: {
-        processador: pick(processadores),
-        placaMae: pick(placasMae),
-        placaVideo: pick(placasVideo),
-        ram: pick(rams),
-        armazenamento: pick(armazenamentos),
-      },
+      hardware: { ...spec.hardware },
     });
   }
 });
 
 export const labChecklists: LabChecklist[] = [
   {
-    sala: "Pascal", nome: "Laboratório de Programação",
+    sala: "Jobs", nome: "Laboratório de Programação Básica",
     items: [
-      { id: "c1", software: "Windows 11 Pro", instalado: true, versao: "23H2", atualizadoPor: "Carlos Silva", atualizadoEm: "2026-02-01" },
-      { id: "c2", software: "Microsoft Office 365", instalado: true, versao: "2024", atualizadoPor: "Carlos Silva", atualizadoEm: "2026-02-01" },
-      { id: "c3", software: "Python 3.12", instalado: true, versao: "3.12.1", atualizadoPor: "Maria Santos", atualizadoEm: "2026-01-20" },
-      { id: "c4", software: "VS Code", instalado: true, versao: "1.96", atualizadoPor: "Maria Santos", atualizadoEm: "2026-01-20" },
-      { id: "c5", software: "Git", instalado: true, versao: "2.43", atualizadoPor: "Carlos Silva", atualizadoEm: "2026-02-01" },
-      { id: "c6", software: "Node.js LTS", instalado: false, versao: "-", nota: "Pendente instalação para semestre 2026.1" },
-      { id: "c7", software: "Adobe Acrobat Reader", instalado: true, versao: "24.0", atualizadoPor: "Carlos Silva", atualizadoEm: "2026-02-01" },
+      { id: "c1", software: "Windows 10 Pro", instalado: true, versao: "22H2", atualizadoPor: "Carlos Silva", atualizadoEm: "2026-02-01" },
+      { id: "c2", software: "Python 3.11", instalado: true, versao: "3.11.8", atualizadoPor: "Carlos Silva", atualizadoEm: "2026-02-01" },
+      { id: "c3", software: "Visual Studio Code", instalado: true, versao: "1.96", atualizadoPor: "Maria Santos", atualizadoEm: "2026-01-20" },
+      { id: "c4", software: "Git", instalado: true, versao: "2.43", atualizadoPor: "Carlos Silva", atualizadoEm: "2026-02-01" },
     ],
   },
   {
-    sala: "Jobs", nome: "Laboratório de Redes",
+    sala: "Eniac", nome: "Laboratório Móvel (Notebooks)",
     items: [
-      { id: "c8", software: "Windows 10 Pro", instalado: true, versao: "22H2", atualizadoPor: "Maria Santos", atualizadoEm: "2026-01-15" },
-      { id: "c9", software: "Wireshark", instalado: true, versao: "4.2", atualizadoPor: "Maria Santos", atualizadoEm: "2026-01-15" },
-      { id: "c10", software: "Cisco Packet Tracer", instalado: true, versao: "8.2.2", atualizadoPor: "Carlos Silva", atualizadoEm: "2026-01-28" },
-      { id: "c11", software: "PuTTY", instalado: true, versao: "0.80", atualizadoPor: "Carlos Silva", atualizadoEm: "2026-01-28" },
-      { id: "c12", software: "VirtualBox", instalado: false, versao: "-", nota: "Licença expirada, aguardando renovação" },
+      { id: "c5", software: "Windows 11 Pro", instalado: true, versao: "23H2", atualizadoPor: "Maria Santos", atualizadoEm: "2026-01-15" },
+      { id: "c6", software: "Microsoft Office 365", instalado: true, versao: "2024", atualizadoPor: "Maria Santos", atualizadoEm: "2026-01-15" },
+      { id: "c7", software: "Google Chrome", instalado: true, versao: "122", atualizadoPor: "Carlos Silva", atualizadoEm: "2026-02-10" },
+      { id: "c8", software: "Visual Studio Code", instalado: false, versao: "-", nota: "Sob demanda para aulas específicas" },
     ],
   },
   {
-    sala: "Faraday", nome: "Laboratório de Design",
+    sala: "Boole", nome: "Laboratório de Lógica e Algoritmos",
     items: [
-      { id: "c13", software: "Windows 11 Pro", instalado: true, versao: "23H2", atualizadoPor: "Carlos Silva", atualizadoEm: "2026-02-10" },
-      { id: "c14", software: "AutoCAD 2024", instalado: true, versao: "2024.1", atualizadoPor: "Maria Santos", atualizadoEm: "2026-02-05" },
-      { id: "c15", software: "Adobe Creative Suite", instalado: true, versao: "2024", atualizadoPor: "Maria Santos", atualizadoEm: "2026-02-05" },
-      { id: "c16", software: "Blender", instalado: true, versao: "4.0", atualizadoPor: "Carlos Silva", atualizadoEm: "2026-02-10" },
-      { id: "c17", software: "SketchUp", instalado: false, versao: "-", nota: "Solicitado pelo Prof. Roberto para março" },
+      { id: "c9", software: "Windows 10 Pro", instalado: true, versao: "22H2", atualizadoPor: "Carlos Silva", atualizadoEm: "2026-02-10" },
+      { id: "c10", software: "Python 3.11", instalado: true, versao: "3.11.8", atualizadoPor: "Maria Santos", atualizadoEm: "2026-02-05" },
+      { id: "c11", software: "Logisim Evolution", instalado: true, versao: "3.8", atualizadoPor: "Maria Santos", atualizadoEm: "2026-02-05" },
+      { id: "c12", software: "Visual Studio Code", instalado: false, versao: "-", nota: "A instalar no próximo ciclo" },
     ],
   },
   {
-    sala: "Einstein", nome: "Laboratório Multimídia",
+    sala: "Fortran", nome: "Laboratório de Computação Científica",
     items: [
-      { id: "c18", software: "Windows 11 Pro", instalado: true, versao: "23H2", atualizadoPor: "Carlos Silva", atualizadoEm: "2026-02-01" },
-      { id: "c19", software: "Adobe Premiere Pro", instalado: true, versao: "2024", atualizadoPor: "Maria Santos", atualizadoEm: "2026-01-25" },
-      { id: "c20", software: "OBS Studio", instalado: true, versao: "30.0", atualizadoPor: "Carlos Silva", atualizadoEm: "2026-02-01" },
-      { id: "c21", software: "Audacity", instalado: false, versao: "-", nota: "A instalar no próximo ciclo" },
+      { id: "c13", software: "Windows 11 Pro", instalado: true, versao: "23H2", atualizadoPor: "Carlos Silva", atualizadoEm: "2026-02-01" },
+      { id: "c14", software: "MATLAB", instalado: true, versao: "R2024a", atualizadoPor: "Maria Santos", atualizadoEm: "2026-01-25" },
+      { id: "c15", software: "GNU Fortran (gfortran)", instalado: true, versao: "13.2", atualizadoPor: "Carlos Silva", atualizadoEm: "2026-02-01" },
+      { id: "c16", software: "Anaconda (Python científico)", instalado: false, versao: "-", nota: "A instalar no próximo ciclo" },
     ],
   },
   {
-    sala: "Tesla", nome: "Sala de Professores",
+    sala: "Ada", nome: "Laboratório de IA e Computação Gráfica",
     items: [
-      { id: "c22", software: "Windows 11 Pro", instalado: true, versao: "23H2", atualizadoPor: "Carlos Silva", atualizadoEm: "2026-02-01" },
-      { id: "c23", software: "Microsoft Office 365", instalado: true, versao: "2024", atualizadoPor: "Carlos Silva", atualizadoEm: "2026-02-01" },
-      { id: "c24", software: "Zoom", instalado: true, versao: "6.0", atualizadoPor: "Maria Santos", atualizadoEm: "2026-01-20" },
-      { id: "c25", software: "Google Chrome", instalado: true, versao: "122", atualizadoPor: "Carlos Silva", atualizadoEm: "2026-02-15" },
+      { id: "c17", software: "Windows 11 Pro", instalado: true, versao: "23H2", atualizadoPor: "Carlos Silva", atualizadoEm: "2026-02-01" },
+      { id: "c18", software: "NVIDIA CUDA Toolkit", instalado: true, versao: "12.4", atualizadoPor: "Maria Santos", atualizadoEm: "2026-01-20" },
+      { id: "c19", software: "Anaconda + PyTorch", instalado: true, versao: "2.2", atualizadoPor: "Carlos Silva", atualizadoEm: "2026-02-15" },
+      { id: "c20", software: "Blender", instalado: false, versao: "-", nota: "Solicitado para próxima atualização" },
     ],
   },
 ];
