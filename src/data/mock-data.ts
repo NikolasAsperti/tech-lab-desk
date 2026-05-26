@@ -7,11 +7,11 @@ export type { Chamado, Maquina, Usuario, ChecklistItem, LabChecklist, MonthlyMet
 export const usuarios: Usuario[] = [
   { id: "u1", nome: "Carlos Silva", email: "carlos.silva@uni.edu.br", papel: "tecnico", criadoEm: "2024-01-15", ativo: true },
   { id: "u2", nome: "Maria Santos", email: "maria.santos@uni.edu.br", papel: "tecnico", criadoEm: "2024-02-20", ativo: true },
-  { id: "u3", nome: "João Oliveira", email: "joao.oliveira@uni.edu.br", papel: "usuario", sala: "Pascal", criadoEm: "2024-03-10", ativo: true },
+  { id: "u3", nome: "João Oliveira", email: "joao.oliveira@uni.edu.br", papel: "usuario", sala: "Boole", criadoEm: "2024-03-10", ativo: true },
   { id: "u4", nome: "Ana Costa", email: "ana.costa@uni.edu.br", papel: "usuario", sala: "Jobs", criadoEm: "2024-04-05", ativo: true },
   { id: "u5", nome: "Pedro Ferreira", email: "pedro.ferreira@uni.edu.br", papel: "usuario", criadoEm: "2024-05-12", ativo: true },
   { id: "u6", nome: "Lucia Mendes", email: "lucia.mendes@uni.edu.br", papel: "tecnico", criadoEm: "2024-06-01", ativo: false },
-  { id: "u7", nome: "Roberto Lima", email: "roberto.lima@uni.edu.br", papel: "usuario", sala: "Faraday", criadoEm: "2024-07-18", ativo: true },
+  { id: "u7", nome: "Roberto Lima", email: "roberto.lima@uni.edu.br", papel: "usuario", sala: "Fortran", criadoEm: "2024-07-18", ativo: true },
 ];
 
 export const tecnicos = usuarios.filter((u) => u.papel === "tecnico" && u.ativo);
@@ -19,8 +19,8 @@ export const tecnicos = usuarios.filter((u) => u.papel === "tecnico" && u.ativo)
 export const chamados: Chamado[] = [
   // --- 2025-10 ---
   {
-    id: "CH-001", titulo: "Monitor piscando intermitentemente", descricao: "Monitor Dell da máquina PC-Pascal-03 pisca a cada 10 segundos.",
-    sala: "Pascal", maquinaId: "PC-Pascal-03", status: "concluido", prioridade: "media",
+    id: "CH-001", titulo: "Monitor piscando intermitentemente", descricao: "Monitor Dell da máquina PC-Boole-03 pisca a cada 10 segundos.",
+    sala: "Boole", maquinaId: "PC-Boole-03", status: "concluido", prioridade: "media",
     criadoEm: "2025-10-05", criadoPor: "João Oliveira", criadoPorId: "u3", responsavel: "Carlos Silva",
     timeline: [
       { data: "2025-10-05 08:00", descricao: "Chamado criado", autor: "João Oliveira", tipo: "usuario" },
@@ -54,7 +54,7 @@ export const chamados: Chamado[] = [
   // --- 2025-11 ---
   {
     id: "CH-004", titulo: "Windows não inicializa (BSOD)", descricao: "Erro IRQL_NOT_LESS_OR_EQUAL ao iniciar.",
-    sala: "Pascal", maquinaId: "PC-Pascal-08", status: "concluido", prioridade: "alta",
+    sala: "Boole", maquinaId: "PC-Boole-08", status: "concluido", prioridade: "alta",
     criadoEm: "2025-11-03", criadoPor: "João Oliveira", criadoPorId: "u3", responsavel: "Maria Santos",
     timeline: [
       { data: "2025-11-03 10:15", descricao: "Chamado criado", autor: "João Oliveira", tipo: "usuario" },
@@ -65,7 +65,7 @@ export const chamados: Chamado[] = [
   },
   {
     id: "CH-005", titulo: "Mouse óptico com defeito", descricao: "Cursor pula aleatoriamente na tela.",
-    sala: "Faraday", maquinaId: "PC-Faraday-02", status: "concluido", prioridade: "baixa",
+    sala: "Fortran", maquinaId: "PC-Fortran-02", status: "concluido", prioridade: "baixa",
     criadoEm: "2025-11-10", criadoPor: "Roberto Lima", criadoPorId: "u7", responsavel: "Carlos Silva",
     timeline: [
       { data: "2025-11-10 08:45", descricao: "Chamado criado", autor: "Roberto Lima", tipo: "usuario" },
@@ -76,7 +76,7 @@ export const chamados: Chamado[] = [
   },
   {
     id: "CH-006", titulo: "Impressora não reconhecida", descricao: "HP LaserJet não aparece nos dispositivos.",
-    sala: "Einstein", maquinaId: "PC-Einstein-01", status: "concluido", prioridade: "media",
+    sala: "Eniac", maquinaId: "PC-Eniac-01", status: "concluido", prioridade: "media",
     criadoEm: "2025-11-20", criadoPor: "Pedro Ferreira", criadoPorId: "u5", responsavel: "Maria Santos",
     timeline: [
       { data: "2025-11-20 11:00", descricao: "Chamado criado", autor: "Pedro Ferreira", tipo: "usuario" },
@@ -88,7 +88,7 @@ export const chamados: Chamado[] = [
   // --- 2025-12 ---
   {
     id: "CH-007", titulo: "HD fazendo barulho estranho", descricao: "HD emite cliques rítmicos. Possível falha iminente.",
-    sala: "Pascal", maquinaId: "PC-Pascal-10", status: "concluido", prioridade: "alta",
+    sala: "Boole", maquinaId: "PC-Boole-10", status: "concluido", prioridade: "alta",
     criadoEm: "2025-12-02", criadoPor: "João Oliveira", criadoPorId: "u3", responsavel: "Carlos Silva",
     timeline: [
       { data: "2025-12-02 09:00", descricao: "Chamado criado", autor: "João Oliveira", tipo: "usuario" },
@@ -99,7 +99,7 @@ export const chamados: Chamado[] = [
   },
   {
     id: "CH-008", titulo: "AutoCAD travando", descricao: "AutoCAD 2024 fecha após 5 minutos de uso.",
-    sala: "Faraday", maquinaId: "PC-Faraday-05", status: "concluido", prioridade: "media",
+    sala: "Fortran", maquinaId: "PC-Fortran-05", status: "concluido", prioridade: "media",
     criadoEm: "2025-12-10", criadoPor: "Roberto Lima", criadoPorId: "u7", responsavel: "Maria Santos",
     timeline: [
       { data: "2025-12-10 13:00", descricao: "Chamado criado", autor: "Roberto Lima", tipo: "usuario" },
@@ -133,7 +133,7 @@ export const chamados: Chamado[] = [
   },
   {
     id: "CH-011", titulo: "Projetor sem sinal HDMI", descricao: "Projetor não detecta sinal HDMI da máquina principal.",
-    sala: "Tesla", maquinaId: "PC-Tesla-01", status: "concluido", prioridade: "media",
+    sala: "Ada", maquinaId: "PC-Ada-01", status: "concluido", prioridade: "media",
     criadoEm: "2026-01-15", criadoPor: "Pedro Ferreira", criadoPorId: "u5", responsavel: "Carlos Silva",
     timeline: [
       { data: "2026-01-15 08:15", descricao: "Chamado criado", autor: "Pedro Ferreira", tipo: "usuario" },
@@ -144,7 +144,7 @@ export const chamados: Chamado[] = [
   },
   {
     id: "CH-012", titulo: "Tela azul ao abrir VS Code", descricao: "BSOD ocorre ao iniciar VS Code com extensões pesadas.",
-    sala: "Pascal", maquinaId: "PC-Pascal-06", status: "concluido", prioridade: "alta",
+    sala: "Boole", maquinaId: "PC-Boole-06", status: "concluido", prioridade: "alta",
     criadoEm: "2026-01-22", criadoPor: "João Oliveira", criadoPorId: "u3", responsavel: "Maria Santos",
     timeline: [
       { data: "2026-01-22 10:00", descricao: "Chamado criado", autor: "João Oliveira", tipo: "usuario" },
@@ -155,8 +155,8 @@ export const chamados: Chamado[] = [
   },
   // --- 2026-02 ---
   {
-    id: "CH-013", titulo: "Monitor não liga", descricao: "Monitor da máquina PC-Pascal-03 não liga ao pressionar o botão power.",
-    sala: "Pascal", maquinaId: "PC-Pascal-03", status: "aberto", prioridade: "alta",
+    id: "CH-013", titulo: "Monitor não liga", descricao: "Monitor da máquina PC-Boole-03 não liga ao pressionar o botão power.",
+    sala: "Boole", maquinaId: "PC-Boole-03", status: "aberto", prioridade: "alta",
     criadoEm: "2026-02-25", criadoPor: "João Oliveira", criadoPorId: "u3",
     timeline: [{ data: "2026-02-25 09:30", descricao: "Chamado criado", autor: "João Oliveira", tipo: "usuario" }],
   },
@@ -171,14 +171,14 @@ export const chamados: Chamado[] = [
     ],
   },
   {
-    id: "CH-015", titulo: "Sem conexão WiFi", descricao: "Notebook PC-Einstein-03 não encontra redes WiFi.",
-    sala: "Einstein", maquinaId: "PC-Einstein-03", status: "aberto", prioridade: "alta",
+    id: "CH-015", titulo: "Sem conexão WiFi", descricao: "Notebook PC-Eniac-03 não encontra redes WiFi.",
+    sala: "Eniac", maquinaId: "PC-Eniac-03", status: "aberto", prioridade: "alta",
     criadoEm: "2026-02-26", criadoPor: "Pedro Ferreira", criadoPorId: "u5",
     timeline: [{ data: "2026-02-26 07:30", descricao: "Chamado criado", autor: "Pedro Ferreira", tipo: "usuario" }],
   },
   {
     id: "CH-016", titulo: "AutoCAD licença expirada", descricao: "Licença do AutoCAD expirou em todas as máquinas do lab.",
-    sala: "Faraday", maquinaId: "PC-Faraday-01", status: "em_andamento", prioridade: "alta",
+    sala: "Fortran", maquinaId: "PC-Fortran-01", status: "em_andamento", prioridade: "alta",
     criadoEm: "2026-02-22", criadoPor: "Roberto Lima", criadoPorId: "u7", responsavel: "Maria Santos",
     timeline: [
       { data: "2026-02-22 13:00", descricao: "Chamado criado", autor: "Roberto Lima", tipo: "usuario" },
@@ -188,13 +188,13 @@ export const chamados: Chamado[] = [
   },
   {
     id: "CH-017", titulo: "Ventilador barulhento", descricao: "Fan cooler da CPU extremamente barulhento durante uso.",
-    sala: "Tesla", maquinaId: "PC-Tesla-06", status: "aberto", prioridade: "media",
+    sala: "Ada", maquinaId: "PC-Ada-06", status: "aberto", prioridade: "media",
     criadoEm: "2026-02-27", criadoPor: "Pedro Ferreira", criadoPorId: "u5",
     timeline: [{ data: "2026-02-27 08:15", descricao: "Chamado criado", autor: "Pedro Ferreira", tipo: "usuario" }],
   },
   {
     id: "CH-018", titulo: "PC reiniciando sozinho", descricao: "Máquina reinicia aleatoriamente durante uso normal.",
-    sala: "Pascal", maquinaId: "PC-Pascal-01", status: "concluido", prioridade: "alta",
+    sala: "Boole", maquinaId: "PC-Boole-01", status: "concluido", prioridade: "alta",
     criadoEm: "2026-02-10", criadoPor: "João Oliveira", criadoPorId: "u3", responsavel: "Carlos Silva",
     timeline: [
       { data: "2026-02-10 09:00", descricao: "Chamado criado", autor: "João Oliveira", tipo: "usuario" },
@@ -206,13 +206,13 @@ export const chamados: Chamado[] = [
   // --- 2026-03 ---
   {
     id: "CH-019", titulo: "Teclado não funciona", descricao: "Teclado USB não é reconhecido pelo sistema.",
-    sala: "Einstein", maquinaId: "PC-Einstein-05", status: "aberto", prioridade: "media",
+    sala: "Eniac", maquinaId: "PC-Eniac-05", status: "aberto", prioridade: "media",
     criadoEm: "2026-03-01", criadoPor: "Pedro Ferreira", criadoPorId: "u5",
     timeline: [{ data: "2026-03-01 08:00", descricao: "Chamado criado", autor: "Pedro Ferreira", tipo: "usuario" }],
   },
   {
     id: "CH-020", titulo: "Máquina extremamente lenta", descricao: "PC demora mais de 10 min para iniciar o Windows.",
-    sala: "Faraday", maquinaId: "PC-Faraday-08", status: "em_andamento", prioridade: "alta",
+    sala: "Fortran", maquinaId: "PC-Fortran-08", status: "em_andamento", prioridade: "alta",
     criadoEm: "2026-03-02", criadoPor: "Roberto Lima", criadoPorId: "u7", responsavel: "Maria Santos",
     timeline: [
       { data: "2026-03-02 09:00", descricao: "Chamado criado", autor: "Roberto Lima", tipo: "usuario" },
