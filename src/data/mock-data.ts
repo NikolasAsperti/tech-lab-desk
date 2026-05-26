@@ -355,6 +355,39 @@ export function addMockUser(nome: string, email: string, senha: string, papel: "
   return true;
 }
 
+export function addChamado(data: {
+  titulo: string;
+  descricao: string;
+  sala: string;
+  maquinaId: string;
+  prioridade: "baixa" | "media" | "alta";
+  criadoPor: string;
+  criadoPorId: string;
+}): Chamado {
+  const nextNum = chamados.length + 1;
+  const id = `CH-${String(nextNum).padStart(3, "0")}`;
+  const now = new Date();
+  const data_str = now.toISOString().substring(0, 10);
+  const datetime = now.toISOString().replace("T", " ").substring(0, 16);
+  const novo: Chamado = {
+    id,
+    titulo: data.titulo,
+    descricao: data.descricao,
+    sala: data.sala,
+    maquinaId: data.maquinaId,
+    status: "aberto",
+    prioridade: data.prioridade,
+    criadoEm: data_str,
+    criadoPor: data.criadoPor,
+    criadoPorId: data.criadoPorId,
+    timeline: [
+      { data: datetime, descricao: `Chamado criado por ${data.criadoPor}`, autor: data.criadoPor, tipo: "usuario" },
+    ],
+  };
+  chamados.unshift(novo);
+  return novo;
+}
+
 // Helper: compute metrics per month for dashboard charts
 // MonthlyMetric importado de @/types
 
