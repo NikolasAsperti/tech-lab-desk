@@ -8,9 +8,9 @@ import { Clock, MessageSquare, CheckSquare, Square, Plus, X, CheckCircle2 } from
 
 const LAB_OPTIONS = ["Pascal", "Jobs", "Faraday", "Einstein", "Tesla"];
 const PRIORIDADE_OPTIONS: { value: "baixa" | "media" | "alta"; label: string; dot: string }[] = [
-  { value: "baixa", label: "Baixa", dot: "bg-status-done" },
-  { value: "media", label: "Média", dot: "bg-status-warning" },
-  { value: "alta", label: "Alta", dot: "bg-destructive" },
+  { value: "baixa", label: "Baixa", dot: "bg-green-500" },
+  { value: "media", label: "Média", dot: "bg-yellow-500" },
+  { value: "alta", label: "Alta", dot: "bg-red-500" },
 ];
 
 
