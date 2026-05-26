@@ -27,7 +27,9 @@ import {
   getMonthlyMetrics as mockGetMonthlyMetrics,
   mockLoginUsers,
   addMockUser,
+  addChamado as mockAddChamado,
 } from "@/data/mock-data";
+
 
 import {
   labSoftwareCatalogs,
@@ -65,6 +67,18 @@ export async function register(
 // -------------------------------------------------------------------
 export async function getChamados(): Promise<Chamado[]> {
   return [...chamados];
+}
+
+export async function createChamado(data: {
+  titulo: string;
+  descricao: string;
+  sala: string;
+  maquinaId: string;
+  prioridade: "baixa" | "media" | "alta";
+  criadoPor: string;
+  criadoPorId: string;
+}): Promise<Chamado> {
+  return mockAddChamado(data);
 }
 
 export async function getChamadoById(id: string): Promise<Chamado | undefined> {
