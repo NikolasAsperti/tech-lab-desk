@@ -610,6 +610,139 @@ export default function Chamados() {
           </div>
         </div>
       </Modal>
+
+      {/* FAB Novo Chamado — apenas usuários comuns */}
+      {!isTecnico && (
+        <button
+          onClick={() => setShowNovoModal(true)}
+          className="fixed bottom-6 right-6 z-40 flex items-center gap-2 rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground shadow-lg hover:opacity-90 hover:scale-105 transition-all"
+        >
+          <Plus className="h-5 w-5" /> Novo Chamado
+        </button>
+      )}
+
+      {/* Novo Chamado Modal */}
+      <Modal open={showNovoModal} onClose={() => { setShowNovoModal(false); resetNovoForm(); }} className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <ModalHeader><ModalTitle>Novo Chamado</ModalTitle></ModalHeader>
+        <div className="space-y-4">
+          <div>
+            <label className="text-xs font-medium text-muted-foreground">Título do Chamado <span className="text-red-500">*</span></label>
+            <input
+              type="text"
+              value={novoTitulo}
+              onChange={(e) => setNovoTitulo(e.target.value)}
+              placeholder="Ex: Monitor não liga"
+              maxLength={120}
+              className="mt-1 w-full rounded-md border bg-secondary/50 px-3 py-2 text-sm outline-none placeholder:text-muted-foreground focus:ring-2 focus:ring-ring"
+            />
+          </div>
+
+          <div>
+            <label className="text-xs font-medium text-muted-foreground">Descrição do Problema <span className="text-red-500">*</span></label>
+            <textarea
+              value={novoDescricao}
+              onChange={(e) => setNovoDescricao(e.target.value)}
+              placeholder="Descreva detalhadamente o problema, sintomas, quando começou, mensagens de erro etc."
+              maxLength={2000}
+              className="mt-1 w-full rounded-md border bg-secondary/50 px-3 py-2 text-sm outline-none placeholder:text-muted-foreground focus:ring-2 focus:ring-ring min-h-[140px] resize-y"
+            />
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label className="text-xs font-medium text-muted-foreground">Laboratório <span className="text-red-500">*</span></label>
+              <select
+                value={novoSala}
+                onChange={(e) => { setNovoSala(e.target.value); setNovoMaquinaId(""); }}
+                className="mt-1 w-full rounded-md border bg-secondary/50 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring"
+              >
+                <option value="">Selecione...</option>
+                {LAB_OPTIONS.map((l) => <option key={l} value={l}>{l}</option>)}
+              </select>
+            </div>
+            <div>
+              <label className="text-xs font-medium text-muted-foreground">Máquina <span className="text-red-500">*</span></label>
+              <select
+                value={novoMaquinaId}
+                onChange={(e) => setNovoMaquinaId(e.target.value)}
+                disabled={!novoSala}
+                className="mt-1 w-full rounded-md border bg-secondary/50 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring disabled:opacity-50"
+              >
+                <option value="">{novoSala ? "Selecione a máquina..." : "Escolha o laboratório primeiro"}</option>
+                {maquinasDoLab.map((m) => <option key={m.id} value={m.id}>{m.id}</option>)}
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label className="text-xs font-medium text-muted-foreground">Prioridade <span className="text-red-500">*</span></label>
+            <div className="mt-1 flex gap-2">
+              {PRIORIDADE_OPTIONS.map((p) => (
+                <button
+                  key={p.value}
+                  type="button"
+                  onClick={() => setNovoPrioridade(p.value)}
+                  className={`flex-1 flex items-center justify-center gap-2 rounded-md border-2 px-3 py-2 text-sm font-medium transition-all ${
+                    novoPrioridade === p.value
+                      ? "border-primary bg-primary/10 text-primary"
+                      : "border-border bg-card text-muted-foreground hover:border-primary/40"
+                  }`}
+                >
+                  <span className={`h-2.5 w-2.5 rounded-full ${p.dot}`} />
+                  {p.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <label className="text-xs font-medium text-muted-foreground">Anexo (opcional)</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleAnexoChange}
+              className="mt-1 w-full text-sm text-muted-foreground file:mr-3 file:rounded-md file:border-0 file:bg-secondary file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-foreground hover:file:bg-accent file:cursor-pointer"
+            />
+            {novoAnexo && (
+              <div className="mt-2 relative inline-block">
+                <img src={novoAnexo} alt="Pré-visualização" className="max-h-32 rounded-md border" />
+                <button
+                  onClick={() => setNovoAnexo(null)}
+                  className="absolute -top-2 -right-2 rounded-full bg-card border p-1 shadow hover:bg-accent"
+                  aria-label="Remover anexo"
+                >
+                  <X className="h-3 w-3" />
+                </button>
+              </div>
+            )}
+          </div>
+
+          <div className="text-xs text-muted-foreground">
+            Aberto por <span className="font-medium text-card-foreground">{user?.nome}</span> em <span className="font-medium text-card-foreground">{new Date().toLocaleString("pt-BR")}</span>
+          </div>
+
+          {novoError && (
+            <div className="rounded-md border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-400">
+              {novoError}
+            </div>
+          )}
+
+          <div className="flex justify-end gap-2 border-t pt-4">
+            <button
+              onClick={() => { setShowNovoModal(false); resetNovoForm(); }}
+              className="rounded-md border px-4 py-2 text-sm font-medium hover:bg-accent transition-colors"
+            >
+              Cancelar
+            </button>
+            <button
+              onClick={handleCreateChamado}
+              className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90 transition-opacity"
+            >
+              Enviar Chamado
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }
