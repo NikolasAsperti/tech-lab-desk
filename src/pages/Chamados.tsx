@@ -172,6 +172,42 @@ export default function Chamados() {
     setShowStatusModal(true);
   };
 
+  const resetNovoForm = () => {
+    setNovoTitulo(""); setNovoDescricao(""); setNovoSala(""); setNovoMaquinaId("");
+    setNovoPrioridade("media"); setNovoAnexo(null); setNovoError("");
+  };
+
+  const handleCreateChamado = async () => {
+    if (!novoTitulo.trim() || !novoDescricao.trim() || !novoSala || !novoMaquinaId) {
+      setNovoError("Preencha todos os campos obrigatórios.");
+      return;
+    }
+    const novo = await api.createChamado({
+      titulo: novoTitulo.trim(),
+      descricao: novoDescricao.trim(),
+      sala: novoSala,
+      maquinaId: novoMaquinaId,
+      prioridade: novoPrioridade,
+      criadoPor: user?.nome || "Usuário",
+      criadoPorId: user?.id || "",
+    });
+    setShowNovoModal(false);
+    resetNovoForm();
+    setSuccessMsg(`Chamado criado com sucesso! ID ${novo.id}`);
+    setTimeout(() => setSuccessMsg(""), 4000);
+    api.getChamados().then(setAllChamados);
+  };
+
+  const handleAnexoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => setNovoAnexo(reader.result as string);
+    reader.readAsDataURL(file);
+  };
+
+  const maquinasDoLab = allMaquinas.filter((m) => m.sala === novoSala);
+
   const visibleTimeline = selectedChamado
     ? isTecnico
       ? selectedChamado.timeline
