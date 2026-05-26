@@ -6,7 +6,7 @@ import { StatusBadge, PrioridadeBadge } from "./Index";
 import { Modal, ModalHeader, ModalTitle } from "@/components/ui/Modal";
 import { Clock, MessageSquare, CheckSquare, Square, Plus, X, CheckCircle2 } from "lucide-react";
 
-const LAB_OPTIONS = ["Pascal", "Jobs", "Faraday", "Einstein", "Tesla"];
+const LAB_OPTIONS = ["Jobs", "Eniac", "Boole", "Fortran", "Ada"];
 const PRIORIDADE_OPTIONS: { value: "baixa" | "media" | "alta"; label: string; dot: string }[] = [
   { value: "baixa", label: "Baixa", dot: "bg-green-500" },
   { value: "media", label: "Média", dot: "bg-yellow-500" },

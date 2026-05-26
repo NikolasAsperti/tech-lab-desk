@@ -7,11 +7,11 @@ export type { Chamado, Maquina, Usuario, ChecklistItem, LabChecklist, MonthlyMet
 export const usuarios: Usuario[] = [
   { id: "u1", nome: "Carlos Silva", email: "carlos.silva@uni.edu.br", papel: "tecnico", criadoEm: "2024-01-15", ativo: true },
   { id: "u2", nome: "Maria Santos", email: "maria.santos@uni.edu.br", papel: "tecnico", criadoEm: "2024-02-20", ativo: true },
-  { id: "u3", nome: "João Oliveira", email: "joao.oliveira@uni.edu.br", papel: "usuario", sala: "Pascal", criadoEm: "2024-03-10", ativo: true },
+  { id: "u3", nome: "João Oliveira", email: "joao.oliveira@uni.edu.br", papel: "usuario", sala: "Boole", criadoEm: "2024-03-10", ativo: true },
   { id: "u4", nome: "Ana Costa", email: "ana.costa@uni.edu.br", papel: "usuario", sala: "Jobs", criadoEm: "2024-04-05", ativo: true },
   { id: "u5", nome: "Pedro Ferreira", email: "pedro.ferreira@uni.edu.br", papel: "usuario", criadoEm: "2024-05-12", ativo: true },
   { id: "u6", nome: "Lucia Mendes", email: "lucia.mendes@uni.edu.br", papel: "tecnico", criadoEm: "2024-06-01", ativo: false },
-  { id: "u7", nome: "Roberto Lima", email: "roberto.lima@uni.edu.br", papel: "usuario", sala: "Faraday", criadoEm: "2024-07-18", ativo: true },
+  { id: "u7", nome: "Roberto Lima", email: "roberto.lima@uni.edu.br", papel: "usuario", sala: "Fortran", criadoEm: "2024-07-18", ativo: true },
 ];
 
 export const tecnicos = usuarios.filter((u) => u.papel === "tecnico" && u.ativo);
@@ -19,8 +19,8 @@ export const tecnicos = usuarios.filter((u) => u.papel === "tecnico" && u.ativo)
 export const chamados: Chamado[] = [
   // --- 2025-10 ---
   {
-    id: "CH-001", titulo: "Monitor piscando intermitentemente", descricao: "Monitor Dell da máquina PC-Pascal-03 pisca a cada 10 segundos.",
-    sala: "Pascal", maquinaId: "PC-Pascal-03", status: "concluido", prioridade: "media",
+    id: "CH-001", titulo: "Monitor piscando intermitentemente", descricao: "Monitor Dell da máquina PC-Boole-03 pisca a cada 10 segundos.",
+    sala: "Boole", maquinaId: "PC-Boole-03", status: "concluido", prioridade: "media",
     criadoEm: "2025-10-05", criadoPor: "João Oliveira", criadoPorId: "u3", responsavel: "Carlos Silva",
     timeline: [
       { data: "2025-10-05 08:00", descricao: "Chamado criado", autor: "João Oliveira", tipo: "usuario" },
@@ -54,7 +54,7 @@ export const chamados: Chamado[] = [
   // --- 2025-11 ---
   {
     id: "CH-004", titulo: "Windows não inicializa (BSOD)", descricao: "Erro IRQL_NOT_LESS_OR_EQUAL ao iniciar.",
-    sala: "Pascal", maquinaId: "PC-Pascal-08", status: "concluido", prioridade: "alta",
+    sala: "Boole", maquinaId: "PC-Boole-08", status: "concluido", prioridade: "alta",
     criadoEm: "2025-11-03", criadoPor: "João Oliveira", criadoPorId: "u3", responsavel: "Maria Santos",
     timeline: [
       { data: "2025-11-03 10:15", descricao: "Chamado criado", autor: "João Oliveira", tipo: "usuario" },
@@ -65,7 +65,7 @@ export const chamados: Chamado[] = [
   },
   {
     id: "CH-005", titulo: "Mouse óptico com defeito", descricao: "Cursor pula aleatoriamente na tela.",
-    sala: "Faraday", maquinaId: "PC-Faraday-02", status: "concluido", prioridade: "baixa",
+    sala: "Fortran", maquinaId: "PC-Fortran-02", status: "concluido", prioridade: "baixa",
     criadoEm: "2025-11-10", criadoPor: "Roberto Lima", criadoPorId: "u7", responsavel: "Carlos Silva",
     timeline: [
       { data: "2025-11-10 08:45", descricao: "Chamado criado", autor: "Roberto Lima", tipo: "usuario" },
@@ -76,7 +76,7 @@ export const chamados: Chamado[] = [
   },
   {
     id: "CH-006", titulo: "Impressora não reconhecida", descricao: "HP LaserJet não aparece nos dispositivos.",
-    sala: "Einstein", maquinaId: "PC-Einstein-01", status: "concluido", prioridade: "media",
+    sala: "Eniac", maquinaId: "PC-Eniac-01", status: "concluido", prioridade: "media",
     criadoEm: "2025-11-20", criadoPor: "Pedro Ferreira", criadoPorId: "u5", responsavel: "Maria Santos",
     timeline: [
       { data: "2025-11-20 11:00", descricao: "Chamado criado", autor: "Pedro Ferreira", tipo: "usuario" },
@@ -88,7 +88,7 @@ export const chamados: Chamado[] = [
   // --- 2025-12 ---
   {
     id: "CH-007", titulo: "HD fazendo barulho estranho", descricao: "HD emite cliques rítmicos. Possível falha iminente.",
-    sala: "Pascal", maquinaId: "PC-Pascal-10", status: "concluido", prioridade: "alta",
+    sala: "Boole", maquinaId: "PC-Boole-10", status: "concluido", prioridade: "alta",
     criadoEm: "2025-12-02", criadoPor: "João Oliveira", criadoPorId: "u3", responsavel: "Carlos Silva",
     timeline: [
       { data: "2025-12-02 09:00", descricao: "Chamado criado", autor: "João Oliveira", tipo: "usuario" },
@@ -99,7 +99,7 @@ export const chamados: Chamado[] = [
   },
   {
     id: "CH-008", titulo: "AutoCAD travando", descricao: "AutoCAD 2024 fecha após 5 minutos de uso.",
-    sala: "Faraday", maquinaId: "PC-Faraday-05", status: "concluido", prioridade: "media",
+    sala: "Fortran", maquinaId: "PC-Fortran-05", status: "concluido", prioridade: "media",
     criadoEm: "2025-12-10", criadoPor: "Roberto Lima", criadoPorId: "u7", responsavel: "Maria Santos",
     timeline: [
       { data: "2025-12-10 13:00", descricao: "Chamado criado", autor: "Roberto Lima", tipo: "usuario" },
@@ -133,7 +133,7 @@ export const chamados: Chamado[] = [
   },
   {
     id: "CH-011", titulo: "Projetor sem sinal HDMI", descricao: "Projetor não detecta sinal HDMI da máquina principal.",
-    sala: "Tesla", maquinaId: "PC-Tesla-01", status: "concluido", prioridade: "media",
+    sala: "Ada", maquinaId: "PC-Ada-01", status: "concluido", prioridade: "media",
     criadoEm: "2026-01-15", criadoPor: "Pedro Ferreira", criadoPorId: "u5", responsavel: "Carlos Silva",
     timeline: [
       { data: "2026-01-15 08:15", descricao: "Chamado criado", autor: "Pedro Ferreira", tipo: "usuario" },
@@ -144,7 +144,7 @@ export const chamados: Chamado[] = [
   },
   {
     id: "CH-012", titulo: "Tela azul ao abrir VS Code", descricao: "BSOD ocorre ao iniciar VS Code com extensões pesadas.",
-    sala: "Pascal", maquinaId: "PC-Pascal-06", status: "concluido", prioridade: "alta",
+    sala: "Boole", maquinaId: "PC-Boole-06", status: "concluido", prioridade: "alta",
     criadoEm: "2026-01-22", criadoPor: "João Oliveira", criadoPorId: "u3", responsavel: "Maria Santos",
     timeline: [
       { data: "2026-01-22 10:00", descricao: "Chamado criado", autor: "João Oliveira", tipo: "usuario" },
@@ -155,8 +155,8 @@ export const chamados: Chamado[] = [
   },
   // --- 2026-02 ---
   {
-    id: "CH-013", titulo: "Monitor não liga", descricao: "Monitor da máquina PC-Pascal-03 não liga ao pressionar o botão power.",
-    sala: "Pascal", maquinaId: "PC-Pascal-03", status: "aberto", prioridade: "alta",
+    id: "CH-013", titulo: "Monitor não liga", descricao: "Monitor da máquina PC-Boole-03 não liga ao pressionar o botão power.",
+    sala: "Boole", maquinaId: "PC-Boole-03", status: "aberto", prioridade: "alta",
     criadoEm: "2026-02-25", criadoPor: "João Oliveira", criadoPorId: "u3",
     timeline: [{ data: "2026-02-25 09:30", descricao: "Chamado criado", autor: "João Oliveira", tipo: "usuario" }],
   },
@@ -171,14 +171,14 @@ export const chamados: Chamado[] = [
     ],
   },
   {
-    id: "CH-015", titulo: "Sem conexão WiFi", descricao: "Notebook PC-Einstein-03 não encontra redes WiFi.",
-    sala: "Einstein", maquinaId: "PC-Einstein-03", status: "aberto", prioridade: "alta",
+    id: "CH-015", titulo: "Sem conexão WiFi", descricao: "Notebook PC-Eniac-03 não encontra redes WiFi.",
+    sala: "Eniac", maquinaId: "PC-Eniac-03", status: "aberto", prioridade: "alta",
     criadoEm: "2026-02-26", criadoPor: "Pedro Ferreira", criadoPorId: "u5",
     timeline: [{ data: "2026-02-26 07:30", descricao: "Chamado criado", autor: "Pedro Ferreira", tipo: "usuario" }],
   },
   {
     id: "CH-016", titulo: "AutoCAD licença expirada", descricao: "Licença do AutoCAD expirou em todas as máquinas do lab.",
-    sala: "Faraday", maquinaId: "PC-Faraday-01", status: "em_andamento", prioridade: "alta",
+    sala: "Fortran", maquinaId: "PC-Fortran-01", status: "em_andamento", prioridade: "alta",
     criadoEm: "2026-02-22", criadoPor: "Roberto Lima", criadoPorId: "u7", responsavel: "Maria Santos",
     timeline: [
       { data: "2026-02-22 13:00", descricao: "Chamado criado", autor: "Roberto Lima", tipo: "usuario" },
@@ -188,13 +188,13 @@ export const chamados: Chamado[] = [
   },
   {
     id: "CH-017", titulo: "Ventilador barulhento", descricao: "Fan cooler da CPU extremamente barulhento durante uso.",
-    sala: "Tesla", maquinaId: "PC-Tesla-06", status: "aberto", prioridade: "media",
+    sala: "Ada", maquinaId: "PC-Ada-06", status: "aberto", prioridade: "media",
     criadoEm: "2026-02-27", criadoPor: "Pedro Ferreira", criadoPorId: "u5",
     timeline: [{ data: "2026-02-27 08:15", descricao: "Chamado criado", autor: "Pedro Ferreira", tipo: "usuario" }],
   },
   {
     id: "CH-018", titulo: "PC reiniciando sozinho", descricao: "Máquina reinicia aleatoriamente durante uso normal.",
-    sala: "Pascal", maquinaId: "PC-Pascal-01", status: "concluido", prioridade: "alta",
+    sala: "Boole", maquinaId: "PC-Boole-01", status: "concluido", prioridade: "alta",
     criadoEm: "2026-02-10", criadoPor: "João Oliveira", criadoPorId: "u3", responsavel: "Carlos Silva",
     timeline: [
       { data: "2026-02-10 09:00", descricao: "Chamado criado", autor: "João Oliveira", tipo: "usuario" },
@@ -206,13 +206,13 @@ export const chamados: Chamado[] = [
   // --- 2026-03 ---
   {
     id: "CH-019", titulo: "Teclado não funciona", descricao: "Teclado USB não é reconhecido pelo sistema.",
-    sala: "Einstein", maquinaId: "PC-Einstein-05", status: "aberto", prioridade: "media",
+    sala: "Eniac", maquinaId: "PC-Eniac-05", status: "aberto", prioridade: "media",
     criadoEm: "2026-03-01", criadoPor: "Pedro Ferreira", criadoPorId: "u5",
     timeline: [{ data: "2026-03-01 08:00", descricao: "Chamado criado", autor: "Pedro Ferreira", tipo: "usuario" }],
   },
   {
     id: "CH-020", titulo: "Máquina extremamente lenta", descricao: "PC demora mais de 10 min para iniciar o Windows.",
-    sala: "Faraday", maquinaId: "PC-Faraday-08", status: "em_andamento", prioridade: "alta",
+    sala: "Fortran", maquinaId: "PC-Fortran-08", status: "em_andamento", prioridade: "alta",
     criadoEm: "2026-03-02", criadoPor: "Roberto Lima", criadoPorId: "u7", responsavel: "Maria Santos",
     timeline: [
       { data: "2026-03-02 09:00", descricao: "Chamado criado", autor: "Roberto Lima", tipo: "usuario" },
@@ -222,114 +222,152 @@ export const chamados: Chamado[] = [
   },
 ];
 
-// Labs with specific names
-const labNames = ["Pascal", "Jobs", "Faraday", "Einstein", "Tesla"];
+// Laboratórios reais com especificações fixas por lab
+const labNames = ["Jobs", "Eniac", "Boole", "Fortran", "Ada"];
 
-// Hardware specs pools for realistic variety
-const processadores = [
-  "Intel Core i7-12700H", "Intel Core i5-12400", "Intel Core i5-11400", "Intel Core i3-10100",
-  "AMD Ryzen 7 5800H", "AMD Ryzen 5 5600X", "AMD Ryzen 5 3600", "Intel Core i7-10700",
-];
-const placasMae = [
-  "ASUS Prime B560M-A", "Gigabyte B550M DS3H", "MSI MAG B660M Mortar", "ASRock B450M Steel Legend",
-  "ASUS TUF Gaming B550-Plus", "Gigabyte H510M H", "MSI PRO H610M-G", "ASRock H670M-ITX",
-];
-const placasVideo = [
-  "NVIDIA GeForce GTX 1650", "NVIDIA GeForce RTX 3060", "AMD Radeon RX 6600", "Integrada (Intel UHD 730)",
-  "Integrada (Intel UHD 770)", "NVIDIA GeForce GTX 1050 Ti", "AMD Radeon RX 580", "Integrada (AMD Radeon Vega 8)",
-];
-const rams = [
-  "8GB DDR4 3200MHz", "16GB DDR4 3200MHz", "8GB DDR4 2666MHz", "16GB DDR4 2666MHz",
-  "32GB DDR4 3200MHz", "4GB DDR4 2400MHz", "16GB DDR5 4800MHz", "8GB DDR5 4800MHz",
-];
-const armazenamentos = [
-  "SSD 480GB SATA", "SSD 256GB NVMe", "SSD 512GB NVMe", "HDD 1TB 7200RPM",
-  "SSD 240GB SATA", "SSD 1TB NVMe", "HDD 500GB 5400RPM + SSD 128GB", "SSD 960GB SATA",
-];
+interface LabSpec {
+  nome: string;
+  descricao: string;
+  qtd: number;
+  tipo: "Desktop" | "Notebook";
+  so: string;
+  hardware: {
+    processador: string;
+    placaMae: string;
+    placaVideo: string;
+    ram: string;
+    armazenamento: string;
+  };
+}
+
+const labSpecs: Record<string, LabSpec> = {
+  Jobs: {
+    nome: "Jobs", descricao: "Laboratório de Programação Básica",
+    qtd: 60, tipo: "Desktop", so: "Windows 10 Pro",
+    hardware: {
+      processador: "Intel Core i5-4570 (4ª Geração)",
+      placaMae: "ASUS H81M-A",
+      placaVideo: "Integrada (Intel HD Graphics 4600)",
+      ram: "8GB DDR3 1600MHz",
+      armazenamento: "4x HDD 500GB 7200RPM",
+    },
+  },
+  Eniac: {
+    nome: "Eniac", descricao: "Laboratório Móvel (Notebooks)",
+    qtd: 15, tipo: "Notebook", so: "Windows 11 Pro",
+    hardware: {
+      processador: "Intel Core i5-1135G7 (11ª Geração)",
+      placaMae: "Integrada (Notebook Dell Latitude 3420)",
+      placaVideo: "Intel Iris Xe Graphics",
+      ram: "8GB DDR4 3200MHz",
+      armazenamento: "SSD 256GB NVMe",
+    },
+  },
+  Boole: {
+    nome: "Boole", descricao: "Laboratório de Lógica e Algoritmos",
+    qtd: 24, tipo: "Desktop", so: "Windows 10 Pro",
+    hardware: {
+      processador: "Intel Core i3-4150 (4ª Geração)",
+      placaMae: "Gigabyte H81M-S2PH",
+      placaVideo: "Integrada (Intel HD Graphics 4400)",
+      ram: "8GB DDR3 1600MHz",
+      armazenamento: "2x HDD 500GB 7200RPM",
+    },
+  },
+  Fortran: {
+    nome: "Fortran", descricao: "Laboratório de Computação Científica",
+    qtd: 32, tipo: "Desktop", so: "Windows 11 Pro",
+    hardware: {
+      processador: "Intel Core i5-12400 (12ª Geração)",
+      placaMae: "ASUS Prime H610M-E D4",
+      placaVideo: "Integrada (Intel UHD Graphics 770)",
+      ram: "16GB DDR4 3200MHz",
+      armazenamento: "SSD 512GB NVMe",
+    },
+  },
+  Ada: {
+    nome: "Ada", descricao: "Laboratório de IA e Computação Gráfica",
+    qtd: 20, tipo: "Desktop", so: "Windows 11 Pro",
+    hardware: {
+      processador: "Intel Core i7-10700 (10ª Geração)",
+      placaMae: "ASUS Prime B460M-A",
+      placaVideo: "NVIDIA GeForce RTX 3050 8GB",
+      ram: "16GB DDR4 2933MHz",
+      armazenamento: "SSD 512GB NVMe",
+    },
+  },
+};
 
 function seededRandom(seed: number) {
   const x = Math.sin(seed) * 10000;
   return x - Math.floor(x);
 }
 
-const sos = ["Windows 11 Pro", "Windows 10 Pro", "Ubuntu 22.04 LTS"];
-const tipos: Array<"Desktop" | "Notebook"> = ["Desktop", "Notebook"];
-const statusMaq: Array<"funcionando" | "em_manutencao" | "defeituoso"> = ["funcionando", "funcionando", "funcionando", "em_manutencao", "defeituoso"];
+const statusMaq: Array<"funcionando" | "em_manutencao" | "defeituoso"> =
+  ["funcionando", "funcionando", "funcionando", "funcionando", "funcionando", "em_manutencao", "defeituoso"];
 
 export const maquinas: Maquina[] = [];
 
 labNames.forEach((lab, labIdx) => {
-  const count = lab === "Tesla" ? 8 : 10;
-  for (let i = 1; i <= count; i++) {
-    const seed = labIdx * 100 + i;
-    const pick = (arr: string[]) => arr[Math.floor(seededRandom(seed + arr.length) * arr.length)];
+  const spec = labSpecs[lab];
+  for (let i = 1; i <= spec.qtd; i++) {
+    const seed = labIdx * 1000 + i;
     maquinas.push({
       id: `PC-${lab}-${String(i).padStart(2, "0")}`,
-      tipo: lab === "Einstein" ? "Notebook" : tipos[Math.floor(seededRandom(seed + 1) * 2)],
-      so: pick(sos),
+      tipo: spec.tipo,
+      so: spec.so,
       sala: lab,
       ultimaManutencao: `2026-0${Math.floor(seededRandom(seed + 2) * 2) + 1}-${String(Math.floor(seededRandom(seed + 3) * 28) + 1).padStart(2, "0")}`,
       status: statusMaq[Math.floor(seededRandom(seed + 4) * statusMaq.length)],
-      hardware: {
-        processador: pick(processadores),
-        placaMae: pick(placasMae),
-        placaVideo: pick(placasVideo),
-        ram: pick(rams),
-        armazenamento: pick(armazenamentos),
-      },
+      hardware: { ...spec.hardware },
     });
   }
 });
 
 export const labChecklists: LabChecklist[] = [
   {
-    sala: "Pascal", nome: "Laboratório de Programação",
+    sala: "Jobs", nome: "Laboratório de Programação Básica",
     items: [
-      { id: "c1", software: "Windows 11 Pro", instalado: true, versao: "23H2", atualizadoPor: "Carlos Silva", atualizadoEm: "2026-02-01" },
-      { id: "c2", software: "Microsoft Office 365", instalado: true, versao: "2024", atualizadoPor: "Carlos Silva", atualizadoEm: "2026-02-01" },
-      { id: "c3", software: "Python 3.12", instalado: true, versao: "3.12.1", atualizadoPor: "Maria Santos", atualizadoEm: "2026-01-20" },
-      { id: "c4", software: "VS Code", instalado: true, versao: "1.96", atualizadoPor: "Maria Santos", atualizadoEm: "2026-01-20" },
-      { id: "c5", software: "Git", instalado: true, versao: "2.43", atualizadoPor: "Carlos Silva", atualizadoEm: "2026-02-01" },
-      { id: "c6", software: "Node.js LTS", instalado: false, versao: "-", nota: "Pendente instalação para semestre 2026.1" },
-      { id: "c7", software: "Adobe Acrobat Reader", instalado: true, versao: "24.0", atualizadoPor: "Carlos Silva", atualizadoEm: "2026-02-01" },
+      { id: "c1", software: "Windows 10 Pro", instalado: true, versao: "22H2", atualizadoPor: "Carlos Silva", atualizadoEm: "2026-02-01" },
+      { id: "c2", software: "Python 3.11", instalado: true, versao: "3.11.8", atualizadoPor: "Carlos Silva", atualizadoEm: "2026-02-01" },
+      { id: "c3", software: "Visual Studio Code", instalado: true, versao: "1.96", atualizadoPor: "Maria Santos", atualizadoEm: "2026-01-20" },
+      { id: "c4", software: "Git", instalado: true, versao: "2.43", atualizadoPor: "Carlos Silva", atualizadoEm: "2026-02-01" },
     ],
   },
   {
-    sala: "Jobs", nome: "Laboratório de Redes",
+    sala: "Eniac", nome: "Laboratório Móvel (Notebooks)",
     items: [
-      { id: "c8", software: "Windows 10 Pro", instalado: true, versao: "22H2", atualizadoPor: "Maria Santos", atualizadoEm: "2026-01-15" },
-      { id: "c9", software: "Wireshark", instalado: true, versao: "4.2", atualizadoPor: "Maria Santos", atualizadoEm: "2026-01-15" },
-      { id: "c10", software: "Cisco Packet Tracer", instalado: true, versao: "8.2.2", atualizadoPor: "Carlos Silva", atualizadoEm: "2026-01-28" },
-      { id: "c11", software: "PuTTY", instalado: true, versao: "0.80", atualizadoPor: "Carlos Silva", atualizadoEm: "2026-01-28" },
-      { id: "c12", software: "VirtualBox", instalado: false, versao: "-", nota: "Licença expirada, aguardando renovação" },
+      { id: "c5", software: "Windows 11 Pro", instalado: true, versao: "23H2", atualizadoPor: "Maria Santos", atualizadoEm: "2026-01-15" },
+      { id: "c6", software: "Microsoft Office 365", instalado: true, versao: "2024", atualizadoPor: "Maria Santos", atualizadoEm: "2026-01-15" },
+      { id: "c7", software: "Google Chrome", instalado: true, versao: "122", atualizadoPor: "Carlos Silva", atualizadoEm: "2026-02-10" },
+      { id: "c8", software: "Visual Studio Code", instalado: false, versao: "-", nota: "Sob demanda para aulas específicas" },
     ],
   },
   {
-    sala: "Faraday", nome: "Laboratório de Design",
+    sala: "Boole", nome: "Laboratório de Lógica e Algoritmos",
     items: [
-      { id: "c13", software: "Windows 11 Pro", instalado: true, versao: "23H2", atualizadoPor: "Carlos Silva", atualizadoEm: "2026-02-10" },
-      { id: "c14", software: "AutoCAD 2024", instalado: true, versao: "2024.1", atualizadoPor: "Maria Santos", atualizadoEm: "2026-02-05" },
-      { id: "c15", software: "Adobe Creative Suite", instalado: true, versao: "2024", atualizadoPor: "Maria Santos", atualizadoEm: "2026-02-05" },
-      { id: "c16", software: "Blender", instalado: true, versao: "4.0", atualizadoPor: "Carlos Silva", atualizadoEm: "2026-02-10" },
-      { id: "c17", software: "SketchUp", instalado: false, versao: "-", nota: "Solicitado pelo Prof. Roberto para março" },
+      { id: "c9", software: "Windows 10 Pro", instalado: true, versao: "22H2", atualizadoPor: "Carlos Silva", atualizadoEm: "2026-02-10" },
+      { id: "c10", software: "Python 3.11", instalado: true, versao: "3.11.8", atualizadoPor: "Maria Santos", atualizadoEm: "2026-02-05" },
+      { id: "c11", software: "Logisim Evolution", instalado: true, versao: "3.8", atualizadoPor: "Maria Santos", atualizadoEm: "2026-02-05" },
+      { id: "c12", software: "Visual Studio Code", instalado: false, versao: "-", nota: "A instalar no próximo ciclo" },
     ],
   },
   {
-    sala: "Einstein", nome: "Laboratório Multimídia",
+    sala: "Fortran", nome: "Laboratório de Computação Científica",
     items: [
-      { id: "c18", software: "Windows 11 Pro", instalado: true, versao: "23H2", atualizadoPor: "Carlos Silva", atualizadoEm: "2026-02-01" },
-      { id: "c19", software: "Adobe Premiere Pro", instalado: true, versao: "2024", atualizadoPor: "Maria Santos", atualizadoEm: "2026-01-25" },
-      { id: "c20", software: "OBS Studio", instalado: true, versao: "30.0", atualizadoPor: "Carlos Silva", atualizadoEm: "2026-02-01" },
-      { id: "c21", software: "Audacity", instalado: false, versao: "-", nota: "A instalar no próximo ciclo" },
+      { id: "c13", software: "Windows 11 Pro", instalado: true, versao: "23H2", atualizadoPor: "Carlos Silva", atualizadoEm: "2026-02-01" },
+      { id: "c14", software: "MATLAB", instalado: true, versao: "R2024a", atualizadoPor: "Maria Santos", atualizadoEm: "2026-01-25" },
+      { id: "c15", software: "GNU Fortran (gfortran)", instalado: true, versao: "13.2", atualizadoPor: "Carlos Silva", atualizadoEm: "2026-02-01" },
+      { id: "c16", software: "Anaconda (Python científico)", instalado: false, versao: "-", nota: "A instalar no próximo ciclo" },
     ],
   },
   {
-    sala: "Tesla", nome: "Sala de Professores",
+    sala: "Ada", nome: "Laboratório de IA e Computação Gráfica",
     items: [
-      { id: "c22", software: "Windows 11 Pro", instalado: true, versao: "23H2", atualizadoPor: "Carlos Silva", atualizadoEm: "2026-02-01" },
-      { id: "c23", software: "Microsoft Office 365", instalado: true, versao: "2024", atualizadoPor: "Carlos Silva", atualizadoEm: "2026-02-01" },
-      { id: "c24", software: "Zoom", instalado: true, versao: "6.0", atualizadoPor: "Maria Santos", atualizadoEm: "2026-01-20" },
-      { id: "c25", software: "Google Chrome", instalado: true, versao: "122", atualizadoPor: "Carlos Silva", atualizadoEm: "2026-02-15" },
+      { id: "c17", software: "Windows 11 Pro", instalado: true, versao: "23H2", atualizadoPor: "Carlos Silva", atualizadoEm: "2026-02-01" },
+      { id: "c18", software: "NVIDIA CUDA Toolkit", instalado: true, versao: "12.4", atualizadoPor: "Maria Santos", atualizadoEm: "2026-01-20" },
+      { id: "c19", software: "Anaconda + PyTorch", instalado: true, versao: "2.2", atualizadoPor: "Carlos Silva", atualizadoEm: "2026-02-15" },
+      { id: "c20", software: "Blender", instalado: false, versao: "-", nota: "Solicitado para próxima atualização" },
     ],
   },
 ];
