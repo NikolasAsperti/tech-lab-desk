@@ -5,14 +5,14 @@ import type { Usuario } from "@/types";
 import { getUsuarios } from "@/services/api";
 
 export default function Usuarios() {
-  const { isTecnico } = useAuth();
+  const { isAdmin } = useAuth();
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
 
   useEffect(() => {
     getUsuarios().then(setUsuarios);
   }, []);
 
-  if (!isTecnico) {
+  if (!isAdmin) {
     return <Navigate to="/" replace />;
   }
 
