@@ -7,7 +7,6 @@ export default function Perfil() {
   const fileRef = useRef<HTMLInputElement>(null);
   const [nome, setNome] = useState(user?.nome || "");
   const [email] = useState(user?.email || "");
-  const [cargo, setCargo] = useState(user?.papel === "admin" ? "Admin" : user?.papel === "tecnico" ? "Técnico" : "Professor");
   const [lab, setLab] = useState(user?.sala || "");
   const [telefone, setTelefone] = useState("");
   const [avatar, setAvatar] = useState<string | null>(null);
@@ -60,19 +59,6 @@ export default function Perfil() {
         <div className="space-y-4">
           <Field label="Nome completo" value={nome} onChange={setNome} />
           <Field label="Email" value={email} disabled />
-          <div>
-            <label className="mb-1.5 block text-sm font-medium text-card-foreground">Cargo / Função</label>
-            <select
-              value={cargo}
-              onChange={e => setCargo(e.target.value)}
-              className="w-full rounded-md border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring transition-shadow"
-            >
-              <option>Admin</option>
-              <option>Técnico</option>
-              <option>Professor</option>
-              <option>Aluno</option>
-            </select>
-          </div>
           <Field label="Laboratório associado (opcional)" value={lab} onChange={setLab} placeholder="Ex: Jobs" />
           <Field label="Telefone (opcional)" value={telefone} onChange={setTelefone} placeholder="(00) 00000-0000" />
         </div>

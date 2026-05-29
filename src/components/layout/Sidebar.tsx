@@ -8,7 +8,7 @@ const navItems = [
   { to: "/chamados", label: "Chamados", icon: ClipboardList },
   { to: "/maquinas", label: "Máquinas / Labs", icon: Monitor, staffOnly: true },
   { to: "/usuarios", label: "Usuários", icon: Users, adminOnly: true },
-  { to: "/checklists", label: "Checklists", icon: ListChecks, staffOnly: true },
+  { to: "/checklists", label: "Checklists", icon: ListChecks },
 ];
 
 interface SidebarProps {
