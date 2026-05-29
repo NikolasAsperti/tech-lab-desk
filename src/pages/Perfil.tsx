@@ -7,7 +7,7 @@ export default function Perfil() {
   const fileRef = useRef<HTMLInputElement>(null);
   const [nome, setNome] = useState(user?.nome || "");
   const [email] = useState(user?.email || "");
-  const [cargo, setCargo] = useState(user?.papel === "tecnico" ? "Técnico" : "Professor");
+  const [cargo, setCargo] = useState(user?.papel === "admin" ? "Admin" : user?.papel === "tecnico" ? "Técnico" : "Professor");
   const [lab, setLab] = useState(user?.sala || "");
   const [telefone, setTelefone] = useState("");
   const [avatar, setAvatar] = useState<string | null>(null);
