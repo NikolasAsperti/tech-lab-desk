@@ -6,9 +6,9 @@ import { cn } from "@/utils/cn";
 const navItems = [
   { to: "/", label: "Início", icon: Home },
   { to: "/chamados", label: "Chamados", icon: ClipboardList },
-  { to: "/maquinas", label: "Máquinas / Labs", icon: Monitor },
-  { to: "/usuarios", label: "Usuários", icon: Users, tecnicoOnly: true },
-  { to: "/checklists", label: "Checklists", icon: ListChecks },
+  { to: "/maquinas", label: "Máquinas / Labs", icon: Monitor, staffOnly: true },
+  { to: "/usuarios", label: "Usuários", icon: Users, adminOnly: true },
+  { to: "/checklists", label: "Checklists", icon: ListChecks, staffOnly: true },
 ];
 
 interface SidebarProps {
@@ -19,7 +19,7 @@ interface SidebarProps {
 }
 
 export function Sidebar({ collapsed, onToggle, mobileOpen, onMobileClose }: SidebarProps) {
-  const { logout, isTecnico } = useAuth();
+  const { logout, isAdmin, isStaff } = useAuth();
   const location = useLocation();
 
   return (
@@ -44,7 +44,8 @@ export function Sidebar({ collapsed, onToggle, mobileOpen, onMobileClose }: Side
 
         <nav className="flex-1 space-y-1 p-2 overflow-y-auto">
           {navItems.map((item) => {
-            if (item.tecnicoOnly && !isTecnico) return null;
+            if (item.adminOnly && !isAdmin) return null;
+            if (item.staffOnly && !isStaff) return null;
             const active = location.pathname === item.to || (item.to !== "/" && location.pathname.startsWith(item.to));
             return (
               <NavLink

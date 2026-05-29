@@ -5,14 +5,14 @@ import type { Usuario } from "@/types";
 import { getUsuarios } from "@/services/api";
 
 export default function Usuarios() {
-  const { isTecnico } = useAuth();
+  const { isAdmin } = useAuth();
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
 
   useEffect(() => {
     getUsuarios().then(setUsuarios);
   }, []);
 
-  if (!isTecnico) {
+  if (!isAdmin) {
     return <Navigate to="/" replace />;
   }
 
@@ -42,9 +42,13 @@ export default function Usuarios() {
                 <td className="px-4 py-3 text-muted-foreground">{u.email}</td>
                 <td className="px-4 py-3">
                   <span className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                    u.papel === "tecnico" ? "bg-status-progress-bg text-status-progress-foreground" : "bg-muted text-muted-foreground"
+                    u.papel === "admin"
+                      ? "bg-primary/15 text-primary"
+                      : u.papel === "tecnico"
+                        ? "bg-status-progress-bg text-status-progress-foreground"
+                        : "bg-muted text-muted-foreground"
                   }`}>
-                    {u.papel === "tecnico" ? "Técnico" : "Usuário"}
+                    {u.papel === "admin" ? "Admin" : u.papel === "tecnico" ? "Técnico" : "Usuário"}
                   </span>
                 </td>
                 <td className="px-4 py-3 text-muted-foreground hidden sm:table-cell">{u.sala || "—"}</td>

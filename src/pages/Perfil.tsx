@@ -7,7 +7,7 @@ export default function Perfil() {
   const fileRef = useRef<HTMLInputElement>(null);
   const [nome, setNome] = useState(user?.nome || "");
   const [email] = useState(user?.email || "");
-  const [cargo, setCargo] = useState(user?.papel === "tecnico" ? "Técnico" : "Professor");
+  const [cargo, setCargo] = useState(user?.papel === "admin" ? "Admin" : user?.papel === "tecnico" ? "Técnico" : "Professor");
   const [lab, setLab] = useState(user?.sala || "");
   const [telefone, setTelefone] = useState("");
   const [avatar, setAvatar] = useState<string | null>(null);
@@ -67,6 +67,7 @@ export default function Perfil() {
               onChange={e => setCargo(e.target.value)}
               className="w-full rounded-md border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring transition-shadow"
             >
+              <option>Admin</option>
               <option>Técnico</option>
               <option>Professor</option>
               <option>Aluno</option>

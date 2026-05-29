@@ -8,6 +8,9 @@ interface AuthContextType {
   logout: () => void;
   updateProfile: (data: Partial<Pick<Usuario, "nome" | "sala">>) => void;
   isTecnico: boolean;
+  isAdmin: boolean;
+  /** Staff = admin ou técnico (vê todos os chamados, pode agir) */
+  isStaff: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -31,9 +34,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const isTecnico = user?.papel === "tecnico";
+  const isAdmin = user?.papel === "admin";
+  const isStaff = isTecnico || isAdmin;
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, updateProfile, isTecnico }}>
+    <AuthContext.Provider value={{ user, login, logout, updateProfile, isTecnico, isAdmin, isStaff }}>
       {children}
     </AuthContext.Provider>
   );

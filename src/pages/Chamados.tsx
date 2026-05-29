@@ -16,16 +16,16 @@ const PRIORIDADE_OPTIONS: { value: "baixa" | "media" | "alta"; label: string; do
 
 type TabFilter = "todos" | "aberto" | "em_andamento" | "concluido" | "meus";
 
-const tabs: { key: TabFilter; label: string; tecnicoOnly?: boolean }[] = [
+const tabs: { key: TabFilter; label: string; staffOnly?: boolean }[] = [
   { key: "todos", label: "Todos" },
   { key: "aberto", label: "Pendentes" },
   { key: "em_andamento", label: "Em Andamento" },
   { key: "concluido", label: "Concluídos" },
-  { key: "meus", label: "Meus Atribuídos", tecnicoOnly: true },
+  { key: "meus", label: "Meus Atribuídos", staffOnly: true },
 ];
 
 export default function Chamados() {
-  const { user, isTecnico } = useAuth();
+  const { user, isStaff } = useAuth();
   const [allChamados, setAllChamados] = useState<Chamado[]>([]);
   const [tecnicos, setTecnicos] = useState<Usuario[]>([]);
   const [activeTab, setActiveTab] = useState<TabFilter>("todos");
@@ -69,7 +69,7 @@ export default function Chamados() {
   }, []);
 
 
-  let filtered = isTecnico ? allChamados : allChamados.filter((c) => c.criadoPorId === user?.id);
+  let filtered = isStaff ? allChamados : allChamados.filter((c) => c.criadoPorId === user?.id);
 
   if (activeTab === "meus") {
     filtered = allChamados.filter((c) => c.responsavel === user?.nome);
@@ -77,7 +77,7 @@ export default function Chamados() {
     filtered = filtered.filter((c) => c.status === activeTab);
   }
 
-  if (isTecnico && tecnicoFilter !== "todos") {
+  if (isStaff && tecnicoFilter !== "todos") {
     filtered = filtered.filter((c) => c.responsavel === tecnicoFilter);
   }
 
@@ -209,7 +209,7 @@ export default function Chamados() {
   const maquinasDoLab = allMaquinas.filter((m) => m.sala === novoSala);
 
   const visibleTimeline = selectedChamado
-    ? isTecnico
+    ? isStaff
       ? selectedChamado.timeline
       : selectedChamado.timeline.filter((e) => e.tipo !== "tecnico")
     : [];
@@ -230,7 +230,7 @@ export default function Chamados() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold">Chamados</h1>
-          <p className="text-sm text-muted-foreground">{isTecnico ? "Todos os chamados do sistema" : "Seus chamados abertos"}</p>
+          <p className="text-sm text-muted-foreground">{isStaff ? "Todos os chamados do sistema" : "Seus chamados abertos"}</p>
         </div>
         <input
           type="text"
@@ -241,7 +241,7 @@ export default function Chamados() {
         />
       </div>
 
-      {isTecnico && (
+      {isStaff && (
         <div className="flex items-center gap-2 flex-wrap">
           <span className="text-xs font-medium text-muted-foreground">Filtrar por técnico:</span>
           {[{ value: "todos", label: "Todos" }, ...tecnicos.map((t) => ({ value: t.nome, label: t.nome }))].map((opt) => (
@@ -262,7 +262,7 @@ export default function Chamados() {
 
       <div className="flex gap-1 border-b overflow-x-auto">
         {tabs.map((tab) => {
-          if (tab.tecnicoOnly && !isTecnico) return null;
+          if (tab.staffOnly && !isStaff) return null;
           return (
             <button
               key={tab.key}
@@ -366,7 +366,7 @@ export default function Chamados() {
                 </div>
               </div>
 
-              {isTecnico && selectedChamado.status !== "concluido" && (
+              {isStaff && selectedChamado.status !== "concluido" && (
                 <div className="border-t pt-4 space-y-3">
                   {!selectedChamado.responsavel && (
                     <button
@@ -612,7 +612,7 @@ export default function Chamados() {
       </Modal>
 
       {/* FAB Novo Chamado — apenas usuários comuns */}
-      {!isTecnico && (
+      {!isStaff && (
         <button
           onClick={() => setShowNovoModal(true)}
           className="fixed bottom-6 right-6 z-40 flex items-center gap-2 rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground shadow-lg hover:opacity-90 hover:scale-105 transition-all"
