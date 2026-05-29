@@ -102,8 +102,9 @@ export default function Login() {
 
           <div className="mt-6 rounded-md bg-muted p-3 text-xs text-muted-foreground space-y-1">
             <p className="font-medium">Contas de demonstração:</p>
-            <p>Técnico: <span className="font-mono">admin@labtech.edu.br</span> / admin123</p>
-            <p>Usuário: <span className="font-mono">professor@labtech.edu.br</span> / prof123</p>
+            <p>Admin: <span className="font-mono">admin@labtech.com</span> / admin123</p>
+            <p>Técnico: <span className="font-mono">tecnico@labtech.com</span> / tecnico123</p>
+            <p>Usuário: <span className="font-mono">usuario@labtech.com</span> / usuario123</p>
           </div>
         </div>
       </div>
