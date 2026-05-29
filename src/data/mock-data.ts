@@ -5,13 +5,14 @@ export type { Chamado, Maquina, Usuario, ChecklistItem, LabChecklist, MonthlyMet
 
 
 export const usuarios: Usuario[] = [
-  { id: "u1", nome: "Carlos Silva", email: "carlos.silva@uni.edu.br", papel: "tecnico", criadoEm: "2024-01-15", ativo: true },
-  { id: "u2", nome: "Maria Santos", email: "maria.santos@uni.edu.br", papel: "tecnico", criadoEm: "2024-02-20", ativo: true },
-  { id: "u3", nome: "João Oliveira", email: "joao.oliveira@uni.edu.br", papel: "usuario", sala: "Boole", criadoEm: "2024-03-10", ativo: true },
-  { id: "u4", nome: "Ana Costa", email: "ana.costa@uni.edu.br", papel: "usuario", sala: "Jobs", criadoEm: "2024-04-05", ativo: true },
-  { id: "u5", nome: "Pedro Ferreira", email: "pedro.ferreira@uni.edu.br", papel: "usuario", criadoEm: "2024-05-12", ativo: true },
-  { id: "u6", nome: "Lucia Mendes", email: "lucia.mendes@uni.edu.br", papel: "tecnico", criadoEm: "2024-06-01", ativo: false },
-  { id: "u7", nome: "Roberto Lima", email: "roberto.lima@uni.edu.br", papel: "usuario", sala: "Fortran", criadoEm: "2024-07-18", ativo: true },
+  { id: "u0", nome: "Administrador", email: "admin@labtech.com", papel: "admin", criadoEm: "2024-01-01", ativo: true },
+  { id: "u1", nome: "Carlos Silva", email: "tecnico@labtech.com", papel: "tecnico", criadoEm: "2024-01-15", ativo: true },
+  { id: "u2", nome: "Maria Santos", email: "maria.santos@labtech.com", papel: "tecnico", criadoEm: "2024-02-20", ativo: true },
+  { id: "u3", nome: "Usuário Demo", email: "usuario@labtech.com", papel: "usuario", sala: "Boole", criadoEm: "2024-03-10", ativo: true },
+  { id: "u4", nome: "Ana Costa", email: "ana.costa@labtech.com", papel: "usuario", sala: "Jobs", criadoEm: "2024-04-05", ativo: true },
+  { id: "u5", nome: "Pedro Ferreira", email: "pedro.ferreira@labtech.com", papel: "usuario", criadoEm: "2024-05-12", ativo: true },
+  { id: "u6", nome: "Lucia Mendes", email: "lucia.mendes@labtech.com", papel: "tecnico", criadoEm: "2024-06-01", ativo: false },
+  { id: "u7", nome: "Roberto Lima", email: "roberto.lima@labtech.com", papel: "usuario", sala: "Fortran", criadoEm: "2024-07-18", ativo: true },
 ];
 
 export const tecnicos = usuarios.filter((u) => u.papel === "tecnico" && u.ativo);
@@ -373,8 +374,9 @@ export const labChecklists: LabChecklist[] = [
 ];
 
 export const mockLoginUsers: { email: string; senha: string; usuario: Usuario }[] = [
-  { email: "admin@labtech.edu.br", senha: "admin123", usuario: usuarios[0] },
-  { email: "professor@labtech.edu.br", senha: "prof123", usuario: usuarios[2] },
+  { email: "admin@labtech.com", senha: "admin123", usuario: usuarios[0] },
+  { email: "tecnico@labtech.com", senha: "tecnico123", usuario: usuarios[1] },
+  { email: "usuario@labtech.com", senha: "usuario123", usuario: usuarios[3] },
 ];
 
 export function addMockUser(nome: string, email: string, senha: string, papel: "tecnico" | "usuario", sala?: string) {

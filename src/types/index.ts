@@ -42,11 +42,13 @@ export interface Maquina {
   hardware: HardwareInfo;
 }
 
+export type UserRole = "admin" | "tecnico" | "usuario";
+
 export interface Usuario {
   id: string;
   nome: string;
   email: string;
-  papel: "tecnico" | "usuario";
+  papel: UserRole;
   sala?: string;
   criadoEm: string;
   ativo: boolean;
