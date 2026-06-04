@@ -379,13 +379,21 @@ export const mockLoginUsers: { email: string; senha: string; usuario: Usuario }[
   { email: "usuario@labtech.com", senha: "usuario123", usuario: usuarios[3] },
 ];
 
-export function addMockUser(nome: string, email: string, senha: string, papel: "tecnico" | "usuario", sala?: string) {
+export function addMockUser(
+  nome: string,
+  email: string,
+  senha: string,
+  papel: "tecnico" | "usuario",
+  sala?: string,
+  subtipo?: "aluno" | "professor",
+) {
   if (mockLoginUsers.some(u => u.email === email)) return false;
   const newUser: Usuario = {
     id: `u${Date.now()}`,
     nome,
     email,
     papel,
+    subtipo: papel === "usuario" ? subtipo : undefined,
     sala,
     criadoEm: new Date().toISOString().substring(0, 10),
     ativo: true,
