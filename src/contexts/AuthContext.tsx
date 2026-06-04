@@ -46,7 +46,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = useCallback(() => setUser(null), []);
 
-  const updateProfile = useCallback((data: Partial<Pick<Usuario, "nome" | "sala">>) => {
+  const updateProfile = useCallback((data: Partial<Pick<Usuario, "nome" | "sala" | "telefone">>) => {
     setUser(prev => prev ? { ...prev, ...data } : prev);
   }, []);
 
