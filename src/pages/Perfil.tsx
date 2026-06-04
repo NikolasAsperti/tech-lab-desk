@@ -22,10 +22,28 @@ export default function Perfil() {
   };
 
   const handleSave = () => {
-    updateProfile({ nome, sala: lab || undefined });
+    updateProfile({ nome, sala: lab || undefined, telefone: telefone || undefined });
     setSalvo(true);
     setTimeout(() => setSalvo(false), 2500);
   };
+
+  const papelLabel =
+    user?.papel === "admin"
+      ? "Administrador"
+      : user?.papel === "tecnico"
+        ? "Técnico"
+        : user?.subtipo === "professor"
+          ? "Professor"
+          : user?.subtipo === "aluno"
+            ? "Aluno"
+            : "Usuário";
+
+  const papelBadgeClass =
+    user?.papel === "admin"
+      ? "bg-primary/15 text-primary"
+      : user?.papel === "tecnico"
+        ? "bg-status-progress-bg text-status-progress-foreground"
+        : "bg-muted text-muted-foreground";
 
   const initials = nome.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase();
 
