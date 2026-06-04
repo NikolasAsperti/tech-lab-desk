@@ -65,13 +65,13 @@ export default function Cadastro() {
             <div>
               <label className="mb-1.5 block text-sm font-medium text-card-foreground">Tipo de usuário</label>
               <select
-                value={tipo}
-                onChange={e => setTipo(e.target.value as "tecnico" | "usuario")}
+                value={tipoConta}
+                onChange={e => setTipoConta(e.target.value as "aluno" | "professor" | "tecnico")}
                 className="w-full rounded-md border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring transition-shadow"
               >
+                <option value="aluno">Aluno</option>
+                <option value="professor">Professor</option>
                 <option value="tecnico">Técnico</option>
-                <option value="usuario">Professor</option>
-                <option value="usuario">Aluno</option>
               </select>
             </div>
 
