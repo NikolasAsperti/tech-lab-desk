@@ -29,7 +29,9 @@ export default function Cadastro() {
 
     setLoading(true);
     try {
-      const res = await register(nome, email, senha, tipo, lab || undefined);
+      const papel = tipoConta === "tecnico" ? "tecnico" : "usuario";
+      const subtipo = tipoConta === "tecnico" ? undefined : tipoConta;
+      const res = await register(nome, email, senha, papel, lab || undefined, subtipo);
       if (res.success) {
         navigate("/login", { state: { registeredEmail: email, message: "Conta criada com sucesso! Faça login." } });
       } else {
