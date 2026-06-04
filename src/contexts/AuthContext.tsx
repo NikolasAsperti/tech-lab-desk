@@ -6,7 +6,7 @@ interface AuthContextType {
   user: Usuario | null;
   login: (email: string, senha: string) => Promise<boolean>;
   logout: () => void;
-  updateProfile: (data: Partial<Pick<Usuario, "nome" | "sala">>) => void;
+  updateProfile: (data: Partial<Pick<Usuario, "nome" | "sala" | "telefone">>) => void;
   isTecnico: boolean;
   isAdmin: boolean;
   /** Staff = admin ou técnico (vê todos os chamados, pode agir) */
