@@ -8,7 +8,7 @@ export default function Perfil() {
   const [nome, setNome] = useState(user?.nome || "");
   const [email] = useState(user?.email || "");
   const [lab, setLab] = useState(user?.sala || "");
-  const [telefone, setTelefone] = useState("");
+  const [telefone, setTelefone] = useState(user?.telefone || "");
   const [avatar, setAvatar] = useState<string | null>(null);
   const [salvo, setSalvo] = useState(false);
 
