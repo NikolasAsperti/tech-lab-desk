@@ -44,12 +44,17 @@ export interface Maquina {
 
 export type UserRole = "admin" | "tecnico" | "usuario";
 
+export type UserSubtipo = "aluno" | "professor";
+
 export interface Usuario {
   id: string;
   nome: string;
   email: string;
   papel: UserRole;
+  /** Subtipo do papel "usuario": aluno ou professor. Não se aplica a tecnico/admin. */
+  subtipo?: UserSubtipo;
   sala?: string;
+  telefone?: string;
   criadoEm: string;
   ativo: boolean;
 }

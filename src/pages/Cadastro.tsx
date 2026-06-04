@@ -9,7 +9,7 @@ export default function Cadastro() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [confirmar, setConfirmar] = useState("");
-  const [tipo, setTipo] = useState<"tecnico" | "usuario">("usuario");
+  const [tipoConta, setTipoConta] = useState<"aluno" | "professor" | "tecnico">("aluno");
   const [lab, setLab] = useState("");
   const [erro, setErro] = useState("");
   const [loading, setLoading] = useState(false);
@@ -29,7 +29,9 @@ export default function Cadastro() {
 
     setLoading(true);
     try {
-      const res = await register(nome, email, senha, tipo, lab || undefined);
+      const papel = tipoConta === "tecnico" ? "tecnico" : "usuario";
+      const subtipo = tipoConta === "tecnico" ? undefined : tipoConta;
+      const res = await register(nome, email, senha, papel, lab || undefined, subtipo);
       if (res.success) {
         navigate("/login", { state: { registeredEmail: email, message: "Conta criada com sucesso! Faça login." } });
       } else {
@@ -63,13 +65,13 @@ export default function Cadastro() {
             <div>
               <label className="mb-1.5 block text-sm font-medium text-card-foreground">Tipo de usuário</label>
               <select
-                value={tipo}
-                onChange={e => setTipo(e.target.value as "tecnico" | "usuario")}
+                value={tipoConta}
+                onChange={e => setTipoConta(e.target.value as "aluno" | "professor" | "tecnico")}
                 className="w-full rounded-md border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring transition-shadow"
               >
+                <option value="aluno">Aluno</option>
+                <option value="professor">Professor</option>
                 <option value="tecnico">Técnico</option>
-                <option value="usuario">Professor</option>
-                <option value="usuario">Aluno</option>
               </select>
             </div>
 

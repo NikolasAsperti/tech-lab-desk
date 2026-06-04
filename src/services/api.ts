@@ -55,9 +55,14 @@ export async function login(email: string, senha: string): Promise<LoginResponse
 }
 
 export async function register(
-  nome: string, email: string, senha: string, papel: "tecnico" | "usuario", sala?: string
+  nome: string,
+  email: string,
+  senha: string,
+  papel: "tecnico" | "usuario",
+  sala?: string,
+  subtipo?: "aluno" | "professor",
 ): Promise<{ success: boolean; error?: string }> {
-  const ok = addMockUser(nome, email, senha, papel, sala);
+  const ok = addMockUser(nome, email, senha, papel, sala, subtipo);
   if (!ok) return { success: false, error: "Este email já está cadastrado." };
   return { success: true };
 }

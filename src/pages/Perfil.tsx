@@ -8,7 +8,7 @@ export default function Perfil() {
   const [nome, setNome] = useState(user?.nome || "");
   const [email] = useState(user?.email || "");
   const [lab, setLab] = useState(user?.sala || "");
-  const [telefone, setTelefone] = useState("");
+  const [telefone, setTelefone] = useState(user?.telefone || "");
   const [avatar, setAvatar] = useState<string | null>(null);
   const [salvo, setSalvo] = useState(false);
 
@@ -22,10 +22,28 @@ export default function Perfil() {
   };
 
   const handleSave = () => {
-    updateProfile({ nome, sala: lab || undefined });
+    updateProfile({ nome, sala: lab || undefined, telefone: telefone || undefined });
     setSalvo(true);
     setTimeout(() => setSalvo(false), 2500);
   };
+
+  const papelLabel =
+    user?.papel === "admin"
+      ? "Administrador"
+      : user?.papel === "tecnico"
+        ? "Técnico"
+        : user?.subtipo === "professor"
+          ? "Professor"
+          : user?.subtipo === "aluno"
+            ? "Aluno"
+            : "Usuário";
+
+  const papelBadgeClass =
+    user?.papel === "admin"
+      ? "bg-primary/15 text-primary"
+      : user?.papel === "tecnico"
+        ? "bg-status-progress-bg text-status-progress-foreground"
+        : "bg-muted text-muted-foreground";
 
   const initials = nome.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase();
 
@@ -53,6 +71,9 @@ export default function Perfil() {
           <button onClick={() => fileRef.current?.click()} className="text-sm text-primary hover:underline">
             Alterar foto
           </button>
+          <span className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${papelBadgeClass}`}>
+            {papelLabel}
+          </span>
         </div>
 
         {/* Fields */}

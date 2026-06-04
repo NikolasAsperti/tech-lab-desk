@@ -6,7 +6,7 @@ interface AuthContextType {
   user: Usuario | null;
   login: (email: string, senha: string) => Promise<boolean>;
   logout: () => void;
-  updateProfile: (data: Partial<Pick<Usuario, "nome" | "sala">>) => void;
+  updateProfile: (data: Partial<Pick<Usuario, "nome" | "sala" | "telefone">>) => void;
   isTecnico: boolean;
   isAdmin: boolean;
   /** Staff = admin ou técnico (vê todos os chamados, pode agir) */
@@ -46,7 +46,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = useCallback(() => setUser(null), []);
 
-  const updateProfile = useCallback((data: Partial<Pick<Usuario, "nome" | "sala">>) => {
+  const updateProfile = useCallback((data: Partial<Pick<Usuario, "nome" | "sala" | "telefone">>) => {
     setUser(prev => prev ? { ...prev, ...data } : prev);
   }, []);
 
