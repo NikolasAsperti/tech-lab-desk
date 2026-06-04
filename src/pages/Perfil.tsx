@@ -71,6 +71,9 @@ export default function Perfil() {
           <button onClick={() => fileRef.current?.click()} className="text-sm text-primary hover:underline">
             Alterar foto
           </button>
+          <span className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${papelBadgeClass}`}>
+            {papelLabel}
+          </span>
         </div>
 
         {/* Fields */}
