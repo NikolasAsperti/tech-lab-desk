@@ -9,7 +9,7 @@ export default function Cadastro() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [confirmar, setConfirmar] = useState("");
-  const [tipo, setTipo] = useState<"tecnico" | "usuario">("usuario");
+  const [tipoConta, setTipoConta] = useState<"aluno" | "professor" | "tecnico">("aluno");
   const [lab, setLab] = useState("");
   const [erro, setErro] = useState("");
   const [loading, setLoading] = useState(false);
