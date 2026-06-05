@@ -116,3 +116,32 @@ function InputField({ label, value, onChange, type = "text", placeholder, requir
     </div>
   );
 }
+
+function PasswordField({ label, value, onChange, placeholder, required }: {
+  label: string; value: string; onChange: (v: string) => void; placeholder?: string; required?: boolean;
+}) {
+  const [show, setShow] = useState(false);
+  return (
+    <div>
+      <label className="mb-1.5 block text-sm font-medium text-card-foreground">{label}</label>
+      <div className="relative">
+        <input
+          type={show ? "text" : "password"}
+          value={value}
+          onChange={e => onChange(e.target.value)}
+          placeholder={placeholder}
+          required={required}
+          className="w-full rounded-md border bg-background px-3 py-2 pr-10 text-sm outline-none placeholder:text-muted-foreground focus:ring-2 focus:ring-ring transition-shadow"
+        />
+        <button
+          type="button"
+          onClick={() => setShow(s => !s)}
+          className="absolute right-2 top-1/2 -translate-y-1/2 flex h-7 w-7 items-center justify-center rounded text-muted-foreground hover:text-foreground transition-colors"
+          aria-label={show ? "Ocultar senha" : "Mostrar senha"}
+        >
+          {show ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+        </button>
+      </div>
+    </div>
+  );
+}
