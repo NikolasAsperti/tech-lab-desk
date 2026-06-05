@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate, useLocation, Link } from "react-router-dom";
-import { Monitor } from "lucide-react";
+import { Monitor, Eye, EyeOff } from "lucide-react";
 
 export default function Login() {
   const { login } = useAuth();
