@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { Monitor, ArrowLeft } from "lucide-react";
+import { Monitor, ArrowLeft, Eye, EyeOff } from "lucide-react";
 import { register } from "@/services/api";
 
 export default function Cadastro() {
