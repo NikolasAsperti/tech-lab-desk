@@ -38,14 +38,9 @@ export function TopBar({ onMenuClick, sidebarCollapsed }: TopBarProps) {
         <Menu className="h-5 w-5" />
       </button>
 
-      <div className="relative flex-1 max-w-md">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-        <input
-          type="text"
-          placeholder="Buscar chamados, máquinas..."
-          className="w-full rounded-md border bg-secondary/50 py-1.5 pl-9 pr-3 text-sm outline-none placeholder:text-muted-foreground focus:ring-2 focus:ring-ring transition-shadow"
-        />
-      </div>
+      <div className="flex-1" />
+
+
 
       <div className="flex items-center gap-2">
         <button
