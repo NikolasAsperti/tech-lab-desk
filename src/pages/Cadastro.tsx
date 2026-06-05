@@ -59,8 +59,8 @@ export default function Cadastro() {
           <form onSubmit={handleSubmit} className="space-y-4">
             <InputField label="Nome completo" value={nome} onChange={setNome} placeholder="Seu nome completo" required />
             <InputField label="Email institucional" type="email" value={email} onChange={setEmail} placeholder="seu.email@labtech.edu.br" required />
-            <InputField label="Senha" type="password" value={senha} onChange={setSenha} placeholder="Mínimo 6 caracteres" required />
-            <InputField label="Confirmar senha" type="password" value={confirmar} onChange={setConfirmar} placeholder="Repita a senha" required />
+            <PasswordField label="Senha" value={senha} onChange={setSenha} placeholder="Mínimo 6 caracteres" required />
+            <PasswordField label="Confirmar senha" value={confirmar} onChange={setConfirmar} placeholder="Repita a senha" required />
 
             <div>
               <label className="mb-1.5 block text-sm font-medium text-card-foreground">Tipo de usuário</label>
