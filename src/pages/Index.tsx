@@ -17,9 +17,10 @@ export default function Dashboard() {
     getMonthlyMetrics().then(setAllMetrics);
   }, []);
 
-  const abertos = chamados.filter((c) => c.status === "aberto").length;
-  const emAndamento = chamados.filter((c) => c.status === "em_andamento").length;
-  const concluidos = chamados.filter((c) => c.status === "concluido").length;
+  const meusChamados = chamados.filter((c) => c.criadoPorId === user?.id);
+  const abertos = meusChamados.filter((c) => c.status === "aberto").length;
+  const emAndamento = meusChamados.filter((c) => c.status === "em_andamento").length;
+  const concluidos = meusChamados.filter((c) => c.status === "concluido").length;
 
   const cards = [
     { label: "Chamados Abertos", value: abertos, icon: ClipboardList, accent: "text-status-open" },
