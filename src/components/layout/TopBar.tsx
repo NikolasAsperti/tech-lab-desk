@@ -76,9 +76,7 @@ export function TopBar({ onMenuClick, sidebarCollapsed }: TopBarProps) {
               <button onClick={() => { setDropdownOpen(false); navigate("/perfil"); }} className="flex w-full items-center gap-2 rounded-sm px-3 py-1.5 text-sm hover:bg-accent transition-colors">
                 <Edit className="h-3.5 w-3.5" /> Editar Perfil
               </button>
-              <button className="flex w-full items-center gap-2 rounded-sm px-3 py-1.5 text-sm hover:bg-accent transition-colors">
-                <Settings className="h-3.5 w-3.5" /> Configurações
-              </button>
+
               <div className="border-t mt-1 pt-1">
                 <button onClick={logout} className="flex w-full items-center gap-2 rounded-sm px-3 py-1.5 text-sm text-destructive hover:bg-accent transition-colors">
                   <LogOut className="h-3.5 w-3.5" /> Sair
