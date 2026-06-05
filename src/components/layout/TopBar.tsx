@@ -1,5 +1,5 @@
 import { useTheme } from "@/components/ThemeProvider";
-import { Sun, Moon, Bell, Menu, Search, ChevronDown, LogOut, Settings, User, Edit } from "lucide-react";
+import { Sun, Moon, Bell, Menu, ChevronDown, LogOut, Edit } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
