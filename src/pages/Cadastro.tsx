@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { Monitor, ArrowLeft } from "lucide-react";
+import { Monitor, ArrowLeft, Eye, EyeOff } from "lucide-react";
 import { register } from "@/services/api";
 
 export default function Cadastro() {
@@ -59,8 +59,8 @@ export default function Cadastro() {
           <form onSubmit={handleSubmit} className="space-y-4">
             <InputField label="Nome completo" value={nome} onChange={setNome} placeholder="Seu nome completo" required />
             <InputField label="Email institucional" type="email" value={email} onChange={setEmail} placeholder="seu.email@labtech.edu.br" required />
-            <InputField label="Senha" type="password" value={senha} onChange={setSenha} placeholder="Mínimo 6 caracteres" required />
-            <InputField label="Confirmar senha" type="password" value={confirmar} onChange={setConfirmar} placeholder="Repita a senha" required />
+            <PasswordField label="Senha" value={senha} onChange={setSenha} placeholder="Mínimo 6 caracteres" required />
+            <PasswordField label="Confirmar senha" value={confirmar} onChange={setConfirmar} placeholder="Repita a senha" required />
 
             <div>
               <label className="mb-1.5 block text-sm font-medium text-card-foreground">Tipo de usuário</label>
@@ -113,6 +113,35 @@ function InputField({ label, value, onChange, type = "text", placeholder, requir
         required={required}
         className="w-full rounded-md border bg-background px-3 py-2 text-sm outline-none placeholder:text-muted-foreground focus:ring-2 focus:ring-ring transition-shadow"
       />
+    </div>
+  );
+}
+
+function PasswordField({ label, value, onChange, placeholder, required }: {
+  label: string; value: string; onChange: (v: string) => void; placeholder?: string; required?: boolean;
+}) {
+  const [show, setShow] = useState(false);
+  return (
+    <div>
+      <label className="mb-1.5 block text-sm font-medium text-card-foreground">{label}</label>
+      <div className="relative">
+        <input
+          type={show ? "text" : "password"}
+          value={value}
+          onChange={e => onChange(e.target.value)}
+          placeholder={placeholder}
+          required={required}
+          className="w-full rounded-md border bg-background px-3 py-2 pr-10 text-sm outline-none placeholder:text-muted-foreground focus:ring-2 focus:ring-ring transition-shadow"
+        />
+        <button
+          type="button"
+          onClick={() => setShow(s => !s)}
+          className="absolute right-2 top-1/2 -translate-y-1/2 flex h-7 w-7 items-center justify-center rounded text-muted-foreground hover:text-foreground transition-colors"
+          aria-label={show ? "Ocultar senha" : "Mostrar senha"}
+        >
+          {show ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+        </button>
+      </div>
     </div>
   );
 }

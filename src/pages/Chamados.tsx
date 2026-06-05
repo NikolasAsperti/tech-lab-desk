@@ -25,7 +25,7 @@ const tabs: { key: TabFilter; label: string; staffOnly?: boolean }[] = [
 ];
 
 export default function Chamados() {
-  const { user, isStaff } = useAuth();
+  const { user, isStaff, isAdmin } = useAuth();
   const [allChamados, setAllChamados] = useState<Chamado[]>([]);
   const [tecnicos, setTecnicos] = useState<Usuario[]>([]);
   const [activeTab, setActiveTab] = useState<TabFilter>("todos");
@@ -77,7 +77,7 @@ export default function Chamados() {
     filtered = filtered.filter((c) => c.status === activeTab);
   }
 
-  if (isStaff && tecnicoFilter !== "todos") {
+  if (isAdmin && tecnicoFilter !== "todos") {
     filtered = filtered.filter((c) => c.responsavel === tecnicoFilter);
   }
 
@@ -241,7 +241,7 @@ export default function Chamados() {
         />
       </div>
 
-      {isStaff && (
+      {isAdmin && (
         <div className="flex items-center gap-2 flex-wrap">
           <span className="text-xs font-medium text-muted-foreground">Filtrar por técnico:</span>
           {[{ value: "todos", label: "Todos" }, ...tecnicos.map((t) => ({ value: t.nome, label: t.nome }))].map((opt) => (

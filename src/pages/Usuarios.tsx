@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Navigate } from "react-router-dom";
 import type { Usuario } from "@/types";
-import { getUsuarios } from "@/services/api";
+import { getUsuarios, setUsuarioAtivo } from "@/services/api";
+import { Power } from "lucide-react";
 
 export default function Usuarios() {
   const { isAdmin } = useAuth();
@@ -15,6 +16,13 @@ export default function Usuarios() {
   if (!isAdmin) {
     return <Navigate to="/" replace />;
   }
+
+  const handleToggleAtivo = async (u: Usuario) => {
+    const updated = await setUsuarioAtivo(u.id, !u.ativo);
+    if (updated) {
+      setUsuarios((prev) => prev.map((x) => (x.id === u.id ? updated : x)));
+    }
+  };
 
   return (
     <div className="space-y-4">
@@ -33,6 +41,7 @@ export default function Usuarios() {
               <th className="px-4 py-2.5 text-left font-medium hidden sm:table-cell">Sala</th>
               <th className="px-4 py-2.5 text-left font-medium hidden md:table-cell">Criado em</th>
               <th className="px-4 py-2.5 text-left font-medium">Status</th>
+              <th className="px-4 py-2.5 text-right font-medium">Ações</th>
             </tr>
           </thead>
           <tbody>
@@ -59,6 +68,20 @@ export default function Usuarios() {
                   }`}>
                     {u.ativo ? "Ativo" : "Inativo"}
                   </span>
+                </td>
+                <td className="px-4 py-3 text-right">
+                  <button
+                    onClick={() => handleToggleAtivo(u)}
+                    className={`inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1 text-xs font-medium transition-colors ${
+                      u.ativo
+                        ? "border-destructive/30 text-destructive hover:bg-destructive/10"
+                        : "border-status-done/30 text-status-done hover:bg-status-done/10"
+                    }`}
+                    title={u.ativo ? "Inativar usuário" : "Ativar usuário"}
+                  >
+                    <Power className="h-3.5 w-3.5" />
+                    {u.ativo ? "Inativar" : "Ativar"}
+                  </button>
                 </td>
               </tr>
             ))}

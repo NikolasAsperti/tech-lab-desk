@@ -5,7 +5,7 @@ import { Camera, Save } from "lucide-react";
 export default function Perfil() {
   const { user, updateProfile } = useAuth();
   const fileRef = useRef<HTMLInputElement>(null);
-  const [nome, setNome] = useState(user?.nome || "");
+  const [nome] = useState(user?.nome || "");
   const [email] = useState(user?.email || "");
   const [lab, setLab] = useState(user?.sala || "");
   const [telefone, setTelefone] = useState(user?.telefone || "");
@@ -22,7 +22,7 @@ export default function Perfil() {
   };
 
   const handleSave = () => {
-    updateProfile({ nome, sala: lab || undefined, telefone: telefone || undefined });
+    updateProfile({ sala: lab || undefined, telefone: telefone || undefined });
     setSalvo(true);
     setTimeout(() => setSalvo(false), 2500);
   };
@@ -78,7 +78,7 @@ export default function Perfil() {
 
         {/* Fields */}
         <div className="space-y-4">
-          <Field label="Nome completo" value={nome} onChange={setNome} />
+          <Field label="Nome completo" value={nome} disabled />
           <Field label="Email" value={email} disabled />
           <Field label="Laboratório associado (opcional)" value={lab} onChange={setLab} placeholder="Ex: Jobs" />
           <Field label="Telefone (opcional)" value={telefone} onChange={setTelefone} placeholder="(00) 00000-0000" />
