@@ -241,7 +241,7 @@ export default function Chamados() {
         />
       </div>
 
-      {isStaff && (
+      {isAdmin && (
         <div className="flex items-center gap-2 flex-wrap">
           <span className="text-xs font-medium text-muted-foreground">Filtrar por técnico:</span>
           {[{ value: "todos", label: "Todos" }, ...tecnicos.map((t) => ({ value: t.nome, label: t.nome }))].map((opt) => (
