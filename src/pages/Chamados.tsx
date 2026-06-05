@@ -77,7 +77,7 @@ export default function Chamados() {
     filtered = filtered.filter((c) => c.status === activeTab);
   }
 
-  if (isStaff && tecnicoFilter !== "todos") {
+  if (isAdmin && tecnicoFilter !== "todos") {
     filtered = filtered.filter((c) => c.responsavel === tecnicoFilter);
   }
 
