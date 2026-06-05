@@ -41,6 +41,7 @@ export default function Usuarios() {
               <th className="px-4 py-2.5 text-left font-medium hidden sm:table-cell">Sala</th>
               <th className="px-4 py-2.5 text-left font-medium hidden md:table-cell">Criado em</th>
               <th className="px-4 py-2.5 text-left font-medium">Status</th>
+              <th className="px-4 py-2.5 text-right font-medium">Ações</th>
             </tr>
           </thead>
           <tbody>
