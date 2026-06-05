@@ -13,6 +13,7 @@ export default function Login() {
   const [erro, setErro] = useState("");
   const [loading, setLoading] = useState(false);
   const [successMsg, setSuccessMsg] = useState(state?.message || "");
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     if (state?.message) {
