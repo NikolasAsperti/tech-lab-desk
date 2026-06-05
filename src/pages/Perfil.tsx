@@ -78,7 +78,7 @@ export default function Perfil() {
 
         {/* Fields */}
         <div className="space-y-4">
-          <Field label="Nome completo" value={nome} onChange={setNome} />
+          <Field label="Nome completo" value={nome} disabled />
           <Field label="Email" value={email} disabled />
           <Field label="Laboratório associado (opcional)" value={lab} onChange={setLab} placeholder="Ex: Jobs" />
           <Field label="Telefone (opcional)" value={telefone} onChange={setTelefone} placeholder="(00) 00000-0000" />
