@@ -69,6 +69,20 @@ export default function Usuarios() {
                     {u.ativo ? "Ativo" : "Inativo"}
                   </span>
                 </td>
+                <td className="px-4 py-3 text-right">
+                  <button
+                    onClick={() => handleToggleAtivo(u)}
+                    className={`inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1 text-xs font-medium transition-colors ${
+                      u.ativo
+                        ? "border-destructive/30 text-destructive hover:bg-destructive/10"
+                        : "border-status-done/30 text-status-done hover:bg-status-done/10"
+                    }`}
+                    title={u.ativo ? "Inativar usuário" : "Ativar usuário"}
+                  >
+                    <Power className="h-3.5 w-3.5" />
+                    {u.ativo ? "Inativar" : "Ativar"}
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
