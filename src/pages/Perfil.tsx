@@ -5,7 +5,7 @@ import { Camera, Save } from "lucide-react";
 export default function Perfil() {
   const { user, updateProfile } = useAuth();
   const fileRef = useRef<HTMLInputElement>(null);
-  const [nome, setNome] = useState(user?.nome || "");
+  const [nome] = useState(user?.nome || "");
   const [email] = useState(user?.email || "");
   const [lab, setLab] = useState(user?.sala || "");
   const [telefone, setTelefone] = useState(user?.telefone || "");
