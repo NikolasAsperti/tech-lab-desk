@@ -92,10 +92,58 @@ export function TopBar({ onMenuClick, sidebarCollapsed }: TopBarProps) {
           {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
         </button>
 
-        <button className="relative flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors">
-          <Bell className="h-4 w-4" />
-          <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-destructive" />
-        </button>
+        {isTecnico && (
+          <div ref={notifRef} className="relative">
+            <button
+              onClick={handleOpenNotif}
+              className="relative flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
+              aria-label="Notificações"
+            >
+              <Bell className="h-4 w-4" />
+              {unreadCount > 0 && (
+                <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-destructive px-1 text-[10px] font-semibold text-destructive-foreground">
+                  {unreadCount > 9 ? "9+" : unreadCount}
+                </span>
+              )}
+            </button>
+
+            {notifOpen && (
+              <div className="absolute right-0 top-full mt-1 w-80 rounded-md border bg-popover shadow-lg animate-fade-in">
+                <div className="px-3 py-2 border-b">
+                  <p className="text-sm font-medium">Notificações</p>
+                  <p className="text-xs text-muted-foreground">
+                    {unreadCount > 0 ? `${unreadCount} novo(s) chamado(s)` : "Sem novidades"}
+                  </p>
+                </div>
+                <div className="max-h-80 overflow-y-auto py-1">
+                  {novosChamados.length === 0 ? (
+                    <div className="px-3 py-6 text-center text-xs text-muted-foreground">
+                      Nenhum chamado novo no momento.
+                    </div>
+                  ) : (
+                    novosChamados.slice(0, 10).map((c) => (
+                      <button
+                        key={c.id}
+                        onClick={() => { setNotifOpen(false); navigate("/chamados"); }}
+                        className="flex w-full items-start gap-2 px-3 py-2 text-left hover:bg-accent transition-colors"
+                      >
+                        <ClipboardList className="h-4 w-4 mt-0.5 text-primary shrink-0" />
+                        <div className="min-w-0 flex-1">
+                          <p className="text-sm font-medium truncate">{c.titulo}</p>
+                          <p className="text-xs text-muted-foreground truncate">
+                            Aberto por <span className="font-medium text-foreground">{c.criadoPor}</span>
+                          </p>
+                          <p className="text-[10px] text-muted-foreground mt-0.5">{c.criadoEm}</p>
+                        </div>
+                      </button>
+                    ))
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
 
         <div ref={dropdownRef} className="relative">
           <button
