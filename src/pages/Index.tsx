@@ -17,10 +17,11 @@ export default function Dashboard() {
     getMonthlyMetrics().then(setAllMetrics);
   }, []);
 
-  const meusChamados = chamados.filter((c) => c.criadoPorId === user?.id);
-  const abertos = meusChamados.filter((c) => c.status === "aberto").length;
-  const emAndamento = meusChamados.filter((c) => c.status === "em_andamento").length;
-  const concluidos = meusChamados.filter((c) => c.status === "concluido").length;
+  const isStaff = user?.papel === "admin" || user?.papel === "tecnico";
+  const scopo = isStaff ? chamados : chamados.filter((c) => c.criadoPorId === user?.id);
+  const abertos = scopo.filter((c) => c.status === "aberto").length;
+  const emAndamento = scopo.filter((c) => c.status === "em_andamento").length;
+  const concluidos = scopo.filter((c) => c.status === "concluido").length;
 
   const cards = [
     { label: "Chamados Abertos", value: abertos, icon: ClipboardList, accent: "text-status-open" },
