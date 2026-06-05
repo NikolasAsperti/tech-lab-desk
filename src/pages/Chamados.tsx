@@ -25,7 +25,7 @@ const tabs: { key: TabFilter; label: string; staffOnly?: boolean }[] = [
 ];
 
 export default function Chamados() {
-  const { user, isStaff } = useAuth();
+  const { user, isStaff, isAdmin } = useAuth();
   const [allChamados, setAllChamados] = useState<Chamado[]>([]);
   const [tecnicos, setTecnicos] = useState<Usuario[]>([]);
   const [activeTab, setActiveTab] = useState<TabFilter>("todos");
