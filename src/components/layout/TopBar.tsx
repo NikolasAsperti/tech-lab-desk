@@ -1,9 +1,11 @@
 import { useTheme } from "@/components/ThemeProvider";
-import { Sun, Moon, Bell, Menu, ChevronDown, LogOut, Edit } from "lucide-react";
+import { Sun, Moon, Bell, Menu, ChevronDown, LogOut, Edit, ClipboardList } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { cn } from "@/utils/cn";
+import { getChamados } from "@/services/api";
+import type { Chamado } from "@/types";
 
 interface TopBarProps {
   onMenuClick: () => void;
@@ -13,19 +15,59 @@ interface TopBarProps {
 export function TopBar({ onMenuClick, sidebarCollapsed }: TopBarProps) {
   const navigate = useNavigate();
   const { theme, setTheme } = useTheme();
-  const { user, logout } = useAuth();
+  const { user, logout, isTecnico } = useAuth();
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [notifOpen, setNotifOpen] = useState(false);
+  const [chamados, setChamados] = useState<Chamado[]>([]);
+  const [lastSeen, setLastSeen] = useState<string>(() => {
+    if (!user) return "";
+    return localStorage.getItem(`labtech.notif.lastSeen.${user.id}`) || "";
+  });
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const notifRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!isTecnico) return;
+    let active = true;
+    const load = () => getChamados().then((c) => { if (active) setChamados(c); });
+    load();
+    const id = setInterval(load, 5000);
+    return () => { active = false; clearInterval(id); };
+  }, [isTecnico]);
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
         setDropdownOpen(false);
       }
+      if (notifRef.current && !notifRef.current.contains(e.target as Node)) {
+        setNotifOpen(false);
+      }
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, []);
+
+  const novosChamados = isTecnico
+    ? [...chamados]
+        .filter((c) => !lastSeen || c.criadoEm > lastSeen)
+        .sort((a, b) => b.criadoEm.localeCompare(a.criadoEm))
+    : [];
+  const unreadCount = novosChamados.length;
+
+  const handleOpenNotif = () => {
+    setNotifOpen((prev) => {
+      const next = !prev;
+      if (next && isTecnico && chamados.length > 0) {
+        const newest = chamados.reduce((acc, c) => (c.criadoEm > acc ? c.criadoEm : acc), "");
+        if (newest && user) {
+          setLastSeen(newest);
+          localStorage.setItem(`labtech.notif.lastSeen.${user.id}`, newest);
+        }
+      }
+      return next;
+    });
+  };
 
   return (
     <header
