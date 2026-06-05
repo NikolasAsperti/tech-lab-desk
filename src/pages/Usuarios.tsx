@@ -17,6 +17,13 @@ export default function Usuarios() {
     return <Navigate to="/" replace />;
   }
 
+  const handleToggleAtivo = async (u: Usuario) => {
+    const updated = await setUsuarioAtivo(u.id, !u.ativo);
+    if (updated) {
+      setUsuarios((prev) => prev.map((x) => (x.id === u.id ? updated : x)));
+    }
+  };
+
   return (
     <div className="space-y-4">
       <div>
