@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Navigate } from "react-router-dom";
 import type { Usuario } from "@/types";
-import { getUsuarios } from "@/services/api";
+import { getUsuarios, setUsuarioAtivo } from "@/services/api";
+import { Power } from "lucide-react";
 
 export default function Usuarios() {
   const { isAdmin } = useAuth();
