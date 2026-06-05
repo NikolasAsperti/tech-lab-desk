@@ -22,7 +22,7 @@ export default function Perfil() {
   };
 
   const handleSave = () => {
-    updateProfile({ nome, sala: lab || undefined, telefone: telefone || undefined });
+    updateProfile({ sala: lab || undefined, telefone: telefone || undefined });
     setSalvo(true);
     setTimeout(() => setSalvo(false), 2500);
   };
