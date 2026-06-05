@@ -186,6 +186,13 @@ export async function getTecnicos(): Promise<Usuario[]> {
   return [...tecnicos];
 }
 
+export async function setUsuarioAtivo(id: string, ativo: boolean): Promise<Usuario | undefined> {
+  const u = usuarios.find((x) => x.id === id);
+  if (!u) return undefined;
+  u.ativo = ativo;
+  return { ...u };
+}
+
 // -------------------------------------------------------------------
 // Métricas
 // -------------------------------------------------------------------
