@@ -58,7 +58,7 @@ export default function Cadastro() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <InputField label="Nome completo" value={nome} onChange={setNome} placeholder="Seu nome completo" required />
-            <InputField label="Email institucional" type="email" value={email} onChange={setEmail} placeholder="seu.email@labtech.edu.br" required />
+            <InputField label="Email institucional" type="email" value={email} onChange={setEmail} placeholder="seu.email@techlab.edu.br" required />
             <PasswordField label="Senha" value={senha} onChange={setSenha} placeholder="Mínimo 6 caracteres" required />
             <PasswordField label="Confirmar senha" value={confirmar} onChange={setConfirmar} placeholder="Repita a senha" required />
 

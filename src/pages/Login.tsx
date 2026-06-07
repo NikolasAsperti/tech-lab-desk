@@ -66,7 +66,7 @@ export default function Login() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="seu.email@labtech.edu.br"
+                placeholder="seu.email@techlab.edu.br"
                 required
                 className="w-full rounded-md border bg-background px-3 py-2 text-sm outline-none placeholder:text-muted-foreground focus:ring-2 focus:ring-ring transition-shadow"
               />
@@ -113,9 +113,9 @@ export default function Login() {
 
           <div className="mt-6 rounded-md bg-muted p-3 text-xs text-muted-foreground space-y-1">
             <p className="font-medium">Contas de demonstração:</p>
-            <p>Admin: <span className="font-mono">admin@labtech.com</span> / admin123</p>
-            <p>Técnico: <span className="font-mono">tecnico@labtech.com</span> / tecnico123</p>
-            <p>Usuário: <span className="font-mono">usuario@labtech.com</span> / usuario123</p>
+            <p>Admin: <span className="font-mono">admin@techlab.com</span> / admin123</p>
+            <p>Técnico: <span className="font-mono">tecnico@techlab.com</span> / tecnico123</p>
+            <p>Usuário: <span className="font-mono">usuario@techlab.com</span> / usuario123</p>
           </div>
         </div>
       </div>

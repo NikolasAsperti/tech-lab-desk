@@ -5,14 +5,14 @@ export type { Chamado, Maquina, Usuario, ChecklistItem, LabChecklist, MonthlyMet
 
 
 export const usuarios: Usuario[] = [
-  { id: "u0", nome: "Administrador", email: "admin@labtech.com", papel: "admin", criadoEm: "2024-01-01", ativo: true },
-  { id: "u1", nome: "Carlos Silva", email: "tecnico@labtech.com", papel: "tecnico", criadoEm: "2024-01-15", ativo: true },
-  { id: "u2", nome: "Maria Santos", email: "maria.santos@labtech.com", papel: "tecnico", criadoEm: "2024-02-20", ativo: true },
-  { id: "u3", nome: "Usuário Demo", email: "usuario@labtech.com", papel: "usuario", sala: "Boole", criadoEm: "2024-03-10", ativo: true },
-  { id: "u4", nome: "Ana Costa", email: "ana.costa@labtech.com", papel: "usuario", sala: "Jobs", criadoEm: "2024-04-05", ativo: true },
-  { id: "u5", nome: "Pedro Ferreira", email: "pedro.ferreira@labtech.com", papel: "usuario", criadoEm: "2024-05-12", ativo: true },
-  { id: "u6", nome: "Lucia Mendes", email: "lucia.mendes@labtech.com", papel: "tecnico", criadoEm: "2024-06-01", ativo: false },
-  { id: "u7", nome: "Roberto Lima", email: "roberto.lima@labtech.com", papel: "usuario", sala: "Fortran", criadoEm: "2024-07-18", ativo: true },
+  { id: "u0", nome: "Administrador", email: "admin@techlab.com", papel: "admin", criadoEm: "2024-01-01", ativo: true },
+  { id: "u1", nome: "Carlos Silva", email: "tecnico@techlab.com", papel: "tecnico", criadoEm: "2024-01-15", ativo: true },
+  { id: "u2", nome: "Maria Santos", email: "maria.santos@techlab.com", papel: "tecnico", criadoEm: "2024-02-20", ativo: true },
+  { id: "u3", nome: "Usuário Demo", email: "usuario@techlab.com", papel: "usuario", sala: "Boole", criadoEm: "2024-03-10", ativo: true },
+  { id: "u4", nome: "Ana Costa", email: "ana.costa@techlab.com", papel: "usuario", sala: "Jobs", criadoEm: "2024-04-05", ativo: true },
+  { id: "u5", nome: "Pedro Ferreira", email: "pedro.ferreira@techlab.com", papel: "usuario", criadoEm: "2024-05-12", ativo: true },
+  { id: "u6", nome: "Lucia Mendes", email: "lucia.mendes@techlab.com", papel: "tecnico", criadoEm: "2024-06-01", ativo: false },
+  { id: "u7", nome: "Roberto Lima", email: "roberto.lima@techlab.com", papel: "usuario", sala: "Fortran", criadoEm: "2024-07-18", ativo: true },
 ];
 
 export const tecnicos = usuarios.filter((u) => u.papel === "tecnico" && u.ativo);
@@ -374,9 +374,9 @@ export const labChecklists: LabChecklist[] = [
 ];
 
 export const mockLoginUsers: { email: string; senha: string; usuario: Usuario }[] = [
-  { email: "admin@labtech.com", senha: "admin123", usuario: usuarios[0] },
-  { email: "tecnico@labtech.com", senha: "tecnico123", usuario: usuarios[1] },
-  { email: "usuario@labtech.com", senha: "usuario123", usuario: usuarios[3] },
+  { email: "admin@techlab.com", senha: "admin123", usuario: usuarios[0] },
+  { email: "tecnico@techlab.com", senha: "tecnico123", usuario: usuarios[1] },
+  { email: "usuario@techlab.com", senha: "usuario123", usuario: usuarios[3] },
 ];
 
 export function addMockUser(
