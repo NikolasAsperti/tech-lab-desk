@@ -33,7 +33,7 @@ export default function EsqueciSenha() {
                   type="email"
                   value={email}
                   onChange={e => setEmail(e.target.value)}
-                  placeholder="seu.email@labtech.edu.br"
+                  placeholder="seu.email@techlab.edu.br"
                   required
                   className="w-full rounded-md border bg-background px-3 py-2 text-sm outline-none placeholder:text-muted-foreground focus:ring-2 focus:ring-ring transition-shadow"
                 />
