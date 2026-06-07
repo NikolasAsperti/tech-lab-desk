@@ -1,7 +1,7 @@
 import { useTheme } from "@/components/ThemeProvider";
 import { Sun, Moon, Bell, Menu, ChevronDown, LogOut, Edit, ClipboardList } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { cn } from "@/utils/cn";
 import { getChamados } from "@/services/api";
@@ -12,6 +12,9 @@ interface TopBarProps {
   sidebarCollapsed: boolean;
 }
 
+const seenKey = (userId: string) => `labtech.notif.seenIds.${userId}`;
+const initKey = (userId: string) => `labtech.notif.initialized.${userId}`;
+
 export function TopBar({ onMenuClick, sidebarCollapsed }: TopBarProps) {
   const navigate = useNavigate();
   const { theme, setTheme } = useTheme();
@@ -19,23 +22,43 @@ export function TopBar({ onMenuClick, sidebarCollapsed }: TopBarProps) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
   const [chamados, setChamados] = useState<Chamado[]>([]);
-  const [lastSeen, setLastSeen] = useState<string>(() => {
-    if (!user) return "";
-    return localStorage.getItem(`labtech.notif.lastSeen.${user.id}`) || "";
+  const [seenIds, setSeenIds] = useState<Set<string>>(() => {
+    if (!user) return new Set();
+    try {
+      const raw = localStorage.getItem(seenKey(user.id));
+      return raw ? new Set(JSON.parse(raw) as string[]) : new Set();
+    } catch {
+      return new Set();
+    }
   });
   const dropdownRef = useRef<HTMLDivElement>(null);
   const notifRef = useRef<HTMLDivElement>(null);
 
   const notifEnabled = !!user;
 
+  // Carrega chamados periodicamente
   useEffect(() => {
     if (!notifEnabled) return;
     let active = true;
     const load = () => getChamados().then((c) => { if (active) setChamados(c); });
     load();
-    const id = setInterval(load, 5000);
+    const id = setInterval(load, 3000);
     return () => { active = false; clearInterval(id); };
   }, [notifEnabled]);
+
+  // Na primeira vez que o usuário acessa, marca os chamados já existentes como "vistos"
+  // para não inundar a notificação com tudo que existe no mock.
+  useEffect(() => {
+    if (!user || chamados.length === 0) return;
+    const initialized = localStorage.getItem(initKey(user.id));
+    if (!initialized) {
+      const ids = chamados.map((c) => c.id);
+      const set = new Set(ids);
+      setSeenIds(set);
+      localStorage.setItem(seenKey(user.id), JSON.stringify(ids));
+      localStorage.setItem(initKey(user.id), "1");
+    }
+  }, [user, chamados]);
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -50,33 +73,35 @@ export function TopBar({ onMenuClick, sidebarCollapsed }: TopBarProps) {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  const chamadosEscopo = isStaff
-    ? chamados
-    : chamados.filter((c) => c.criadoPorId === user?.id);
+  const chamadosEscopo = useMemo(
+    () => (isStaff ? chamados : chamados.filter((c) => c.criadoPorId === user?.id)),
+    [chamados, isStaff, user?.id]
+  );
 
-  const novosChamados = notifEnabled
-    ? [...chamadosEscopo]
-        .filter((c) => !lastSeen || c.criadoEm > lastSeen)
-        .sort((a, b) => b.criadoEm.localeCompare(a.criadoEm))
-    : [];
+  const novosChamados = useMemo(
+    () =>
+      [...chamadosEscopo]
+        .filter((c) => !seenIds.has(c.id))
+        .sort((a, b) => b.criadoEm.localeCompare(a.criadoEm)),
+    [chamadosEscopo, seenIds]
+  );
+
   const unreadCount = novosChamados.length;
 
-  // Snapshot da lista exibida quando o dropdown abre, para não esvaziar ao marcar como lido
+  // Snapshot para manter a lista visível após marcar como lido
   const [snapshot, setSnapshot] = useState<Chamado[]>([]);
   const itensExibidos = notifOpen ? snapshot : novosChamados;
 
   const handleOpenNotif = () => {
     setNotifOpen((prev) => {
       const next = !prev;
-      if (next && notifEnabled) {
+      if (next && user) {
         setSnapshot(novosChamados);
-        if (chamadosEscopo.length > 0) {
-          const newest = chamadosEscopo.reduce((acc, c) => (c.criadoEm > acc ? c.criadoEm : acc), "");
-          if (newest && user) {
-            setLastSeen(newest);
-            localStorage.setItem(`labtech.notif.lastSeen.${user.id}`, newest);
-          }
-        }
+        // Marca todos os chamados atuais como vistos
+        const allIds = chamadosEscopo.map((c) => c.id);
+        const newSet = new Set([...seenIds, ...allIds]);
+        setSeenIds(newSet);
+        localStorage.setItem(seenKey(user.id), JSON.stringify([...newSet]));
       }
       return next;
     });
@@ -94,8 +119,6 @@ export function TopBar({ onMenuClick, sidebarCollapsed }: TopBarProps) {
       </button>
 
       <div className="flex-1" />
-
-
 
       <div className="flex items-center gap-2">
         <button
@@ -145,9 +168,9 @@ export function TopBar({ onMenuClick, sidebarCollapsed }: TopBarProps) {
                           <p className="text-sm font-medium truncate">{c.titulo}</p>
                           <p className="text-xs text-muted-foreground truncate">
                             {isStaff ? (
-                              <>Aberto por <span className="font-medium text-foreground">{c.criadoPor}</span></>
+                              <><span className="font-medium text-foreground">{c.criadoPor}</span> criou um novo chamado</>
                             ) : (
-                              <>Você criou um chamado</>
+                              <>Você criou um novo chamado</>
                             )}
                           </p>
                           <p className="text-[10px] text-muted-foreground mt-0.5">{c.criadoEm}</p>
@@ -160,7 +183,6 @@ export function TopBar({ onMenuClick, sidebarCollapsed }: TopBarProps) {
             )}
           </div>
         )}
-
 
         <div ref={dropdownRef} className="relative">
           <button
