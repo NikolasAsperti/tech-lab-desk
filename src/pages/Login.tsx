@@ -49,7 +49,7 @@ export default function Login() {
             <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-primary-foreground">
               <Monitor className="h-6 w-6" />
             </div>
-            <h1 className="text-xl font-bold text-card-foreground">LabTech</h1>
+            <h1 className="text-xl font-bold text-card-foreground">TechLab</h1>
             <p className="text-sm text-muted-foreground">Gestão de Chamados — Laboratórios</p>
           </div>
 
