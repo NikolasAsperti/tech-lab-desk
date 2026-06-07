@@ -61,14 +61,21 @@ export function TopBar({ onMenuClick, sidebarCollapsed }: TopBarProps) {
     : [];
   const unreadCount = novosChamados.length;
 
+  // Snapshot da lista exibida quando o dropdown abre, para não esvaziar ao marcar como lido
+  const [snapshot, setSnapshot] = useState<Chamado[]>([]);
+  const itensExibidos = notifOpen ? snapshot : novosChamados;
+
   const handleOpenNotif = () => {
     setNotifOpen((prev) => {
       const next = !prev;
-      if (next && notifEnabled && chamadosEscopo.length > 0) {
-        const newest = chamadosEscopo.reduce((acc, c) => (c.criadoEm > acc ? c.criadoEm : acc), "");
-        if (newest && user) {
-          setLastSeen(newest);
-          localStorage.setItem(`labtech.notif.lastSeen.${user.id}`, newest);
+      if (next && notifEnabled) {
+        setSnapshot(novosChamados);
+        if (chamadosEscopo.length > 0) {
+          const newest = chamadosEscopo.reduce((acc, c) => (c.criadoEm > acc ? c.criadoEm : acc), "");
+          if (newest && user) {
+            setLastSeen(newest);
+            localStorage.setItem(`labtech.notif.lastSeen.${user.id}`, newest);
+          }
         }
       }
       return next;
@@ -118,16 +125,16 @@ export function TopBar({ onMenuClick, sidebarCollapsed }: TopBarProps) {
                 <div className="px-3 py-2 border-b">
                   <p className="text-sm font-medium">Notificações</p>
                   <p className="text-xs text-muted-foreground">
-                    {unreadCount > 0 ? `${unreadCount} novo(s) chamado(s)` : "Sem novidades"}
+                    {itensExibidos.length > 0 ? `${itensExibidos.length} novo(s) chamado(s)` : "Sem novidades"}
                   </p>
                 </div>
                 <div className="max-h-80 overflow-y-auto py-1">
-                  {novosChamados.length === 0 ? (
+                  {itensExibidos.length === 0 ? (
                     <div className="px-3 py-6 text-center text-xs text-muted-foreground">
                       Nenhum chamado novo no momento.
                     </div>
                   ) : (
-                    novosChamados.slice(0, 10).map((c) => (
+                    itensExibidos.slice(0, 10).map((c) => (
                       <button
                         key={c.id}
                         onClick={() => { setNotifOpen(false); navigate("/chamados"); }}
