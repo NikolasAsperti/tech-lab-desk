@@ -98,7 +98,7 @@ export function TopBar({ onMenuClick, sidebarCollapsed }: TopBarProps) {
           {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
         </button>
 
-        {isTecnico && (
+        {notifEnabled && (
           <div ref={notifRef} className="relative">
             <button
               onClick={handleOpenNotif}
@@ -137,7 +137,11 @@ export function TopBar({ onMenuClick, sidebarCollapsed }: TopBarProps) {
                         <div className="min-w-0 flex-1">
                           <p className="text-sm font-medium truncate">{c.titulo}</p>
                           <p className="text-xs text-muted-foreground truncate">
-                            Aberto por <span className="font-medium text-foreground">{c.criadoPor}</span>
+                            {isStaff ? (
+                              <>Aberto por <span className="font-medium text-foreground">{c.criadoPor}</span></>
+                            ) : (
+                              <>Você criou um chamado</>
+                            )}
                           </p>
                           <p className="text-[10px] text-muted-foreground mt-0.5">{c.criadoEm}</p>
                         </div>
