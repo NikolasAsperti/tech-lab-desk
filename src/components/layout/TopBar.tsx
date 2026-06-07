@@ -15,7 +15,7 @@ interface TopBarProps {
 export function TopBar({ onMenuClick, sidebarCollapsed }: TopBarProps) {
   const navigate = useNavigate();
   const { theme, setTheme } = useTheme();
-  const { user, logout, isTecnico } = useAuth();
+  const { user, logout, isTecnico, isStaff } = useAuth();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
   const [chamados, setChamados] = useState<Chamado[]>([]);
@@ -26,14 +26,16 @@ export function TopBar({ onMenuClick, sidebarCollapsed }: TopBarProps) {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const notifRef = useRef<HTMLDivElement>(null);
 
+  const notifEnabled = !!user;
+
   useEffect(() => {
-    if (!isTecnico) return;
+    if (!notifEnabled) return;
     let active = true;
     const load = () => getChamados().then((c) => { if (active) setChamados(c); });
     load();
     const id = setInterval(load, 5000);
     return () => { active = false; clearInterval(id); };
-  }, [isTecnico]);
+  }, [notifEnabled]);
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -48,8 +50,12 @@ export function TopBar({ onMenuClick, sidebarCollapsed }: TopBarProps) {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  const novosChamados = isTecnico
-    ? [...chamados]
+  const chamadosEscopo = isStaff
+    ? chamados
+    : chamados.filter((c) => c.criadoPorId === user?.id);
+
+  const novosChamados = notifEnabled
+    ? [...chamadosEscopo]
         .filter((c) => !lastSeen || c.criadoEm > lastSeen)
         .sort((a, b) => b.criadoEm.localeCompare(a.criadoEm))
     : [];
@@ -58,8 +64,8 @@ export function TopBar({ onMenuClick, sidebarCollapsed }: TopBarProps) {
   const handleOpenNotif = () => {
     setNotifOpen((prev) => {
       const next = !prev;
-      if (next && isTecnico && chamados.length > 0) {
-        const newest = chamados.reduce((acc, c) => (c.criadoEm > acc ? c.criadoEm : acc), "");
+      if (next && notifEnabled && chamadosEscopo.length > 0) {
+        const newest = chamadosEscopo.reduce((acc, c) => (c.criadoEm > acc ? c.criadoEm : acc), "");
         if (newest && user) {
           setLastSeen(newest);
           localStorage.setItem(`labtech.notif.lastSeen.${user.id}`, newest);
