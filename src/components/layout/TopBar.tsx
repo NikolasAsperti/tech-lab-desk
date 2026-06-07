@@ -129,12 +129,12 @@ export function TopBar({ onMenuClick, sidebarCollapsed }: TopBarProps) {
                   </p>
                 </div>
                 <div className="max-h-80 overflow-y-auto py-1">
-                  {novosChamados.length === 0 ? (
+                  {itensExibidos.length === 0 ? (
                     <div className="px-3 py-6 text-center text-xs text-muted-foreground">
                       Nenhum chamado novo no momento.
                     </div>
                   ) : (
-                    novosChamados.slice(0, 10).map((c) => (
+                    itensExibidos.slice(0, 10).map((c) => (
                       <button
                         key={c.id}
                         onClick={() => { setNotifOpen(false); navigate("/chamados"); }}
