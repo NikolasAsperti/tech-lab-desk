@@ -125,7 +125,7 @@ export function TopBar({ onMenuClick, sidebarCollapsed }: TopBarProps) {
                 <div className="px-3 py-2 border-b">
                   <p className="text-sm font-medium">Notificações</p>
                   <p className="text-xs text-muted-foreground">
-                    {unreadCount > 0 ? `${unreadCount} novo(s) chamado(s)` : "Sem novidades"}
+                    {itensExibidos.length > 0 ? `${itensExibidos.length} novo(s) chamado(s)` : "Sem novidades"}
                   </p>
                 </div>
                 <div className="max-h-80 overflow-y-auto py-1">
