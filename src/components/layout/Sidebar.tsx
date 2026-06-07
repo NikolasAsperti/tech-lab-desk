@@ -39,7 +39,7 @@ export function Sidebar({ collapsed, onToggle, mobileOpen, onMobileClose }: Side
           <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground font-bold text-sm">
             LT
           </div>
-          {!collapsed && <span className="font-semibold text-sidebar-foreground">LabTech</span>}
+          {!collapsed && <span className="font-semibold text-sidebar-foreground">TechLab</span>}
         </div>
 
         <nav className="flex-1 space-y-1 p-2 overflow-y-auto">
