@@ -31,6 +31,7 @@ import {
   addChamado as mockAddChamado,
   addLab as mockAddLab,
   addMaquina as mockAddMaquina,
+  updateMaquinaStatus as mockUpdateMaquinaStatus,
 } from "@/data/mock-data";
 
 
