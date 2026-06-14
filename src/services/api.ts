@@ -24,10 +24,13 @@ import {
   maquinas,
   usuarios,
   tecnicos,
+  extraLabs,
   getMonthlyMetrics as mockGetMonthlyMetrics,
   mockLoginUsers,
   addMockUser,
   addChamado as mockAddChamado,
+  addLab as mockAddLab,
+  addMaquina as mockAddMaquina,
 } from "@/data/mock-data";
 
 
