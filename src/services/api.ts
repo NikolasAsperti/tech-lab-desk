@@ -175,7 +175,26 @@ export async function getMaquinasByLab(sala: string): Promise<Maquina[]> {
 }
 
 export async function getLabNames(): Promise<string[]> {
-  return [...new Set(maquinas.map((m) => m.sala))];
+  return [...new Set([...maquinas.map((m) => m.sala), ...extraLabs])];
+}
+
+export async function createLab(nome: string): Promise<{ success: boolean; error?: string }> {
+  const ok = mockAddLab(nome);
+  if (!ok) return { success: false, error: "Laboratório já existe ou nome inválido." };
+  return { success: true };
+}
+
+export async function createMaquina(data: {
+  sala: string;
+  nome: string;
+  processador: string;
+  placaMae: string;
+  placaVideo: string;
+  ram: string;
+  armazenamento: string;
+  so: string;
+}): Promise<Maquina> {
+  return mockAddMaquina(data);
 }
 
 // -------------------------------------------------------------------
