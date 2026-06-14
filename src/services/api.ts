@@ -198,6 +198,10 @@ export async function createMaquina(data: {
   return mockAddMaquina(data);
 }
 
+export async function updateMaquinaStatus(id: string, status: Maquina["status"]): Promise<boolean> {
+  return mockUpdateMaquinaStatus(id, status);
+}
+
 // -------------------------------------------------------------------
 // Usuários
 // -------------------------------------------------------------------

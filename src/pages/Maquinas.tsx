@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import type { Maquina } from "@/types";
-import { getMaquinas, getLabNames, createLab, createMaquina } from "@/services/api";
+import { getMaquinas, getLabNames, createLab, createMaquina, updateMaquinaStatus } from "@/services/api";
 import { useAuth } from "@/contexts/AuthContext";
 import { Monitor, Laptop, Cpu, HardDrive, MemoryStick, CircuitBoard, Plus, CheckCircle2 } from "lucide-react";
 import { Modal, ModalHeader, ModalTitle } from "@/components/ui/Modal";
