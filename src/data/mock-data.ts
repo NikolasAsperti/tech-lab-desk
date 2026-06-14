@@ -308,6 +308,7 @@ const statusMaq: Array<"funcionando" | "em_manutencao" | "defeituoso"> =
   ["funcionando", "funcionando", "funcionando", "funcionando", "funcionando", "em_manutencao", "defeituoso"];
 
 export const maquinas: Maquina[] = [];
+export const extraLabs: string[] = [];
 
 labNames.forEach((lab, labIdx) => {
   const spec = labSpecs[lab];
@@ -324,6 +325,44 @@ labNames.forEach((lab, labIdx) => {
     });
   }
 });
+
+export function addLab(nome: string): boolean {
+  const trimmed = nome.trim();
+  if (!trimmed) return false;
+  const existing = new Set([...labNames, ...extraLabs, ...maquinas.map(m => m.sala)]);
+  if (existing.has(trimmed)) return false;
+  extraLabs.push(trimmed);
+  return true;
+}
+
+export function addMaquina(data: {
+  sala: string;
+  nome: string;
+  processador: string;
+  placaMae: string;
+  placaVideo: string;
+  ram: string;
+  armazenamento: string;
+  so: string;
+}): Maquina {
+  const nova: Maquina = {
+    id: data.nome.trim(),
+    tipo: "Desktop",
+    so: data.so,
+    sala: data.sala,
+    ultimaManutencao: new Date().toISOString().substring(0, 10),
+    status: "funcionando",
+    hardware: {
+      processador: data.processador,
+      placaMae: data.placaMae,
+      placaVideo: data.placaVideo,
+      ram: data.ram,
+      armazenamento: data.armazenamento,
+    },
+  };
+  maquinas.push(nova);
+  return nova;
+}
 
 export const labChecklists: LabChecklist[] = [
   {
