@@ -364,6 +364,14 @@ export function addMaquina(data: {
   return nova;
 }
 
+export function updateMaquinaStatus(id: string, status: Maquina["status"]): boolean {
+  const m = maquinas.find((x) => x.id === id);
+  if (!m) return false;
+  m.status = status;
+  return true;
+}
+
+
 export const labChecklists: LabChecklist[] = [
   {
     sala: "Jobs", nome: "Laboratório de Programação Básica",

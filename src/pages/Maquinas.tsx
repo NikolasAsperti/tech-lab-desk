@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import type { Maquina } from "@/types";
-import { getMaquinas, getLabNames, createLab, createMaquina } from "@/services/api";
+import { getMaquinas, getLabNames, createLab, createMaquina, updateMaquinaStatus } from "@/services/api";
 import { useAuth } from "@/contexts/AuthContext";
 import { Monitor, Laptop, Cpu, HardDrive, MemoryStick, CircuitBoard, Plus, CheckCircle2 } from "lucide-react";
 import { Modal, ModalHeader, ModalTitle } from "@/components/ui/Modal";
@@ -211,6 +211,33 @@ export default function Maquinas() {
                 <span className="inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium bg-secondary text-secondary-foreground">{selectedMaquina.tipo}</span>
                 <span className="inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium bg-secondary text-secondary-foreground">Lab {selectedMaquina.sala}</span>
               </div>
+
+              {isAdmin && (
+                <div className="rounded-lg border bg-muted/30 p-4 space-y-2">
+                  <label className="text-xs font-medium text-muted-foreground">Alterar Status</label>
+                  <div className="flex gap-2">
+                    {(["funcionando", "em_manutencao", "defeituoso"] as const).map((s) => (
+                      <button
+                        key={s}
+                        onClick={async () => {
+                          await updateMaquinaStatus(selectedMaquina.id, s);
+                          await reloadData();
+                          const updated = allMaquinas.find((m) => m.id === selectedMaquina.id);
+                          if (updated) setSelectedMaquina(updated);
+                          showSuccess(`Status alterado para "${statusLabels[s]}"`);
+                        }}
+                        className={`flex-1 rounded-md border px-2 py-1.5 text-xs font-medium transition-colors ${
+                          selectedMaquina.status === s
+                            ? statusStyles[s]
+                            : "bg-background text-muted-foreground hover:text-foreground"
+                        }`}
+                      >
+                        {statusLabels[s]}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               <div className="rounded-lg border bg-muted/30 p-4 space-y-3">
                 <h3 className="text-sm font-semibold text-card-foreground flex items-center gap-2">

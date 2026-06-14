@@ -31,6 +31,7 @@ import {
   addChamado as mockAddChamado,
   addLab as mockAddLab,
   addMaquina as mockAddMaquina,
+  updateMaquinaStatus as mockUpdateMaquinaStatus,
 } from "@/data/mock-data";
 
 
@@ -195,6 +196,10 @@ export async function createMaquina(data: {
   so: string;
 }): Promise<Maquina> {
   return mockAddMaquina(data);
+}
+
+export async function updateMaquinaStatus(id: string, status: Maquina["status"]): Promise<boolean> {
+  return mockUpdateMaquinaStatus(id, status);
 }
 
 // -------------------------------------------------------------------
